@@ -1,0 +1,8 @@
+{
+    "ignoredFiles": [
+        "Assets/*",
+        "Packages/*",
+        "ProjectSettings/*"
+    ],
+    "compressWiki": "true"
+}
