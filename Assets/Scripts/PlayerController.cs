@@ -23,21 +23,23 @@ namespace Infection
 
         void Update()
         {
-            isGrounded = Physics.CheckSphere(groundTrigger.position, groundDistance, groundMask);
+            // Movement for local player
+            if (!isLocalPlayer) return;
 
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+
+            isGrounded = Physics.CheckSphere(groundTrigger.position, groundDistance, groundMask);
             if (isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
             }
 
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
-
             Vector3 moveDirection = transform.right * horizontal + transform.forward * vertical;
             characterController.Move(moveDirection * speed * Time.deltaTime);
 
             // Gravity
-            velocity.y = velocity.y + Physics.gravity.y * Time.deltaTime;
+            velocity.y += Physics.gravity.y * Time.deltaTime;
             characterController.Move(velocity * Time.deltaTime);
         }
     }
