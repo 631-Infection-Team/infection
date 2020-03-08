@@ -15,23 +15,39 @@ namespace Infection
         public float speed = 12.0f;
         public LayerMask groundMask;
 
-        void Start()
+        private float horizontal;
+        private float vertical;
+
+        private void Start()
         {
             characterController = GetComponent<CharacterController>();
             groundTrigger = gameObject.transform.Find("Ground Trigger").transform;
         }
 
-        void Update()
+        private void Update()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
+        }
+
+        private void FixedUpdate()
+        {
+            if (!isLocalPlayer || characterController == null)
+            {
+                return;
+            }
+
             isGrounded = Physics.CheckSphere(groundTrigger.position, groundDistance, groundMask);
 
             if (isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
             }
-
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
 
             Vector3 moveDirection = transform.right * horizontal + transform.forward * vertical;
             characterController.Move(moveDirection * speed * Time.deltaTime);
