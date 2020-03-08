@@ -43,7 +43,6 @@ namespace Infection
             }
 
             isGrounded = Physics.CheckSphere(groundTrigger.position, groundDistance, groundMask);
-
             if (isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
@@ -53,7 +52,7 @@ namespace Infection
             characterController.Move(moveDirection * speed * Time.deltaTime);
 
             // Gravity
-            velocity.y = velocity.y + Physics.gravity.y * Time.deltaTime;
+            velocity.y += Physics.gravity.y * Time.deltaTime;
             characterController.Move(velocity * Time.deltaTime);
         }
     }
