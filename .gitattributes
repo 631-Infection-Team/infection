@@ -58,3 +58,36 @@
 *.meta linguist-generated
 *.prefab linguist-generated
 *.unity linguist-generated
+
+## Documents
+##
+*.pdf  filter=lfs diff=lfs merge=lfs -text
+
+## Unity files (un-comment to enable)
+# *.cubemap       filter=lfs diff=lfs merge=lfs -text
+# *.unitypackage filter=lfs diff=lfs merge=lfs -text
+#
+## Possible solution to track terrain .asset files (adjust path & uncomment)
+/Assets/Terrain/*.asset filter=lfs diff=lfs merge=lfs -text
+# #only if subfolders with terrains exist:
+/Assets/Terrain/**/*.asset filter=lfs diff=lfs merge=lfs -text
+
+##################################################################
+# Unity YAML
+#
+# Use Unity's semantic merge tool "Smart Merge"
+# to assist in merging Unity-specific files.
+
+# Un-comment the following lines to enable.
+#
+*.anim merge=unityyamlmerge eol=lf
+*.asset merge=unityyamlmerge eol=lf
+*.controller merge=unityyamlmerge eol=lf
+*.mat merge=unityyamlmerge eol=lf
+*.meta merge=unityyamlmerge eol=lf
+*.physicsMaterial merge=unityyamlmerge eol=lf
+*.physicsMaterial2D merge=unityyamlmerge eol=lf
+*.prefab merge=unityyamlmerge eol=lf
+*.unity merge=unityyamlmerge eol=lf
+
+##################################################################
