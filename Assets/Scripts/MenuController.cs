@@ -10,7 +10,7 @@ public class MenuController : MonoBehaviour
         Debug.Log("Join Lobby");
 
         // For Testing
-        SceneManager.LoadScene("02_Prototype");
+        SceneManager.LoadScene("03_Prototype");
     }
 
     public void CreateLobby()

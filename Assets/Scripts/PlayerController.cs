@@ -5,15 +5,14 @@ namespace Infection
 {
     public class PlayerController : NetworkBehaviour
     {
-        CharacterController characterController;
-        Transform groundTrigger;
-        float groundDistance = 0.4f;
-        Vector3 velocity;
-        bool isGrounded;
+        private CharacterController characterController;
+        private Transform groundTrigger;
+        private Vector3 velocity;
+        private bool isGrounded;
 
         [Header("Movement")]
-        public float speed = 12.0f;
-        public LayerMask groundMask;
+        [SerializeField]
+        private float speed = 12.0f;
 
         void Start()
         {
@@ -21,26 +20,25 @@ namespace Infection
             groundTrigger = gameObject.transform.Find("Ground Trigger").transform;
         }
 
-        void Update()
+        void FixedUpdate()
         {
-            // Movement for local player
             if (!isLocalPlayer) return;
 
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
-            isGrounded = Physics.CheckSphere(groundTrigger.position, groundDistance, groundMask);
+            isGrounded = Physics.CheckSphere(groundTrigger.position, 0.4f, LayerMask.GetMask("Ground"));
             if (isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f;
             }
 
-            Vector3 moveDirection = transform.right * horizontal + transform.forward * vertical;
-            characterController.Move(moveDirection * speed * Time.deltaTime);
+            Vector3 moveDirection = gameObject.transform.right * horizontal + gameObject.transform.forward * vertical;
+            characterController.Move(moveDirection * speed * Time.fixedDeltaTime);
 
             // Gravity
-            velocity.y += Physics.gravity.y * Time.deltaTime;
-            characterController.Move(velocity * Time.deltaTime);
+            velocity.y += Physics.gravity.y * Time.fixedDeltaTime;
+            characterController.Move(velocity * Time.fixedDeltaTime);
         }
     }
 }
