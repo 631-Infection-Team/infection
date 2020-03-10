@@ -1,10 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-public class MenuController : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
+    public static MainMenu Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void JoinLobby()
     {
         Debug.Log("Join Lobby");
@@ -25,6 +33,10 @@ public class MenuController : MonoBehaviour
 
     public void Quit()
     {
-        Application.Quit();
+        #if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
