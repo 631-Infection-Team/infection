@@ -6,29 +6,30 @@ using UnityEditor;
 
 public class MainMenu : MonoBehaviour
 {
-    public static MainMenu Instance { get; private set; }
+    private GameObject networkRoomManager = null;
+    private NetworkRoomManagerExt roomManager = null;
 
-    private void Awake()
+    private void Start()
     {
-        Instance = this;
+        networkRoomManager = GameObject.Find("NetworkRoomManager");
+        roomManager = networkRoomManager.GetComponent<NetworkRoomManagerExt>();
     }
 
     public void JoinLobby()
     {
-        Debug.Log("Join Lobby");
-
-        // For Testing
-        SceneManager.LoadScene("03_Prototype");
+        roomManager.StartClient();
     }
 
     public void CreateLobby()
     {
-        Debug.Log("Create Lobby");
+        roomManager.StartHost();
+        roomManager.ServerChangeScene("02_Lobby");
     }
 
     public void Settings()
     {
-        Debug.Log("Open Settings");
+        // For Testing
+        roomManager.ServerChangeScene("03_Prototype");
     }
 
     public void Quit()

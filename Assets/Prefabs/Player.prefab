@@ -2212,6 +2212,7 @@ GameObject:
   - component: {fileID: 2517449117176014475}
   - component: {fileID: 97122798034539206}
   - component: {fileID: 4236705716002909735}
+  - component: {fileID: 1147261098638332191}
   - component: {fileID: 4003687026440030702}
   m_Layer: 0
   m_Name: Player
@@ -2384,6 +2385,21 @@ MonoBehaviour:
   useLocalTransformOnly: 0
   ownerChangeIndicator: 1
   receivedStatesCounter: 0
+--- !u!114 &1147261098638332191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63bebb1308b8a194b95122a1d848f7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  index: 0
 --- !u!114 &4003687026440030702
 MonoBehaviour:
   m_ObjectHideFlags: 0
