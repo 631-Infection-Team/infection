@@ -23,7 +23,6 @@ public class MainMenu : MonoBehaviour
     public void CreateLobby()
     {
         roomManager.StartHost();
-        roomManager.ServerChangeScene("02_Lobby");
     }
 
     public void Settings()
