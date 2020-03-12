@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
     public void Settings()
     {
         // For Testing
-        roomManager.ServerChangeScene("03_Prototype");
+        // roomManager.ServerChangeScene("03_Prototype");
     }
 
     public void Quit()
