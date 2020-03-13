@@ -4,19 +4,19 @@ using UnityEngine;
 [System.Serializable]
 public class Controller : NetworkBehaviour
 {
-    public Camera MainCamera;
-    public Transform CameraPosition;
+    [SerializeField] private Camera MainCamera;
+    [SerializeField] private Transform CameraPosition;
     private CharacterController m_CharacterController;
 
     [Header("Control Settings")]
     public float PlayerSpeed = 5.0f;
     public float RunningSpeed = 7.0f;
     public float JumpSpeed = 5.0f;
-    private float m_GroundedTimer;
+    private float m_GroundedTimer = 0.0f;
     private float m_SpeedAtJump = 0.0f;
     private float m_VerticalSpeed = 0.0f;
-    private float m_VerticalAngle;
-    private float m_HorizontalAngle;
+    private float m_VerticalAngle = 0.0f;
+    private float m_HorizontalAngle = 0.0f;
 
     public float Speed { get; private set; } = 0.0f;
     public bool LockControl { get; set; }
