@@ -1569,6 +1569,7 @@ GameObject:
   - component: {fileID: 4236705716002909735}
   - component: {fileID: 1147261098638332191}
   - component: {fileID: 4003687026440030702}
+  - component: {fileID: 9217567687700334097}
   - component: {fileID: 114541340716960544}
   m_Layer: 0
   m_Name: Player
@@ -1765,11 +1766,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  MainCamera: {fileID: 0}
-  CameraPosition: {fileID: 3353437781472270840}
   PlayerSpeed: 5
   RunningSpeed: 7
   JumpSpeed: 5
+--- !u!114 &9217567687700334097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fe7487096967e488f8857752590731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  currentCamera: {fileID: 7749279577112159195}
+  CameraParent: {fileID: 3353437781472270840}
 --- !u!114 &114541340716960544
 MonoBehaviour:
   m_ObjectHideFlags: 0
