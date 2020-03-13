@@ -40,4 +40,22 @@ public class Weapon : MonoBehaviour
     public float reloadTime = 2.0f;
     public int clipSize = 4;
     public float damage = 1.0f;
+    public Camera camera = null;
+    public float range = 100f;
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("Fire"))
+        {
+            FireWeapon();
+        }
+    }
+
+    private void FireWeapon()
+    {
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit, range))
+        {
+            Debug.Log(hit.transform.name);
+        }
+    }
 }
