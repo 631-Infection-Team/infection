@@ -3,20 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerGame : NetworkBehaviour
+namespace Infection
 {
-    [SyncVar] public int index;
-
-    private void Start()
+    public class PlayerGame : NetworkBehaviour
     {
-        if (isLocalPlayer)
-        {
-            // Hide model for LocalPlayer. Show them a different model.
-            SkinnedMeshRenderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        [SyncVar] public int index;
 
-            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+        private void Start()
+        {
+            if (isLocalPlayer)
             {
-                skinnedMeshRenderer.enabled = false;
+                // Hide model for LocalPlayer. Show them a different model.
+                SkinnedMeshRenderer[] skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+                foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+                {
+                    skinnedMeshRenderer.enabled = false;
+                }
             }
         }
     }

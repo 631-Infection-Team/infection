@@ -4,103 +4,106 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-public class MainMenu : MonoBehaviour
+namespace Infection
 {
-    private GameObject networkRoomManager = null;
-    private NetworkRoomManagerExt roomManager = null;
-
-    [SerializeField] private Panel activePanel;
-    [SerializeField] private Queue<Panel> panelStack = new Queue<Panel>();
-    private enum Panel
+    public class MainMenu : MonoBehaviour
     {
-        MAIN,
-        PLAY,
-        CREATE,
-        SETTINGS,
-        QUIT
-    }
+        private GameObject networkRoomManager = null;
+        private NetworkRoomManagerExt roomManager = null;
 
-    [Header("Panels")]
-    [SerializeField] private GameObject main = null;
-    [SerializeField] private GameObject play = null;
-    [SerializeField] private GameObject create = null;
-    [SerializeField] private GameObject settings = null;
-    [SerializeField] private GameObject quit = null;
-
-    private void Start()
-    {
-        networkRoomManager = GameObject.Find("NetworkRoomManager");
-        roomManager = networkRoomManager.GetComponent<NetworkRoomManagerExt>();
-
-        SetActivePanel(Panel.MAIN);
-    }
-
-    private void SetActivePanel(Panel panel)
-    {
-        activePanel = panel;
-        panelStack.Enqueue(panel);
-
-        if (panel == Panel.MAIN)
+        [SerializeField] private Panel activePanel;
+        [SerializeField] private Queue<Panel> panelStack = new Queue<Panel>();
+        private enum Panel
         {
-            main.SetActive(true);
-
-            play.SetActive(false);
-            create.SetActive(false);
-            settings.SetActive(false);
-            quit.SetActive(false);
+            MAIN,
+            PLAY,
+            CREATE,
+            SETTINGS,
+            QUIT
         }
-        else if (panel == Panel.PLAY)
+
+        [Header("Panels")]
+        [SerializeField] private GameObject main = null;
+        [SerializeField] private GameObject play = null;
+        [SerializeField] private GameObject create = null;
+        [SerializeField] private GameObject settings = null;
+        [SerializeField] private GameObject quit = null;
+
+        private void Start()
         {
-            play.SetActive(true);
+            networkRoomManager = GameObject.Find("NetworkRoomManager");
+            roomManager = networkRoomManager.GetComponent<NetworkRoomManagerExt>();
+
+            SetActivePanel(Panel.MAIN);
         }
-        else if (panel == Panel.CREATE)
+
+        private void SetActivePanel(Panel panel)
         {
-            create.SetActive(true);
+            activePanel = panel;
+            panelStack.Enqueue(panel);
+
+            if (panel == Panel.MAIN)
+            {
+                main.SetActive(true);
+
+                play.SetActive(false);
+                create.SetActive(false);
+                settings.SetActive(false);
+                quit.SetActive(false);
+            }
+            else if (panel == Panel.PLAY)
+            {
+                play.SetActive(true);
+            }
+            else if (panel == Panel.CREATE)
+            {
+                create.SetActive(true);
+            }
+            else if (panel == Panel.SETTINGS)
+            {
+                settings.SetActive(true);
+            }
+            else if (panel == Panel.QUIT)
+            {
+                quit.SetActive(true);
+            }
         }
-        else if (panel == Panel.SETTINGS)
+
+        public void GoBack()
         {
-            settings.SetActive(true);
+            if (panelStack.Count > 0)
+            {
+                SetActivePanel(panelStack.Dequeue());
+            }
         }
-        else if (panel == Panel.QUIT)
+
+        public void Play()
         {
-            quit.SetActive(true);
+            SetActivePanel(Panel.PLAY);
+            roomManager.StartClient();
         }
-    }
 
-    public void GoBack()
-    {
-        if (panelStack.Count > 0)
+        public void Create()
         {
-            SetActivePanel(panelStack.Dequeue());
+            SetActivePanel(Panel.CREATE);
+            roomManager.StartHost();
         }
-    }
 
-    public void Play()
-    {
-        SetActivePanel(Panel.PLAY);
-        roomManager.StartClient();
-    }
+        public void Settings()
+        {
+            SetActivePanel(Panel.SETTINGS);
+        }
 
-    public void Create()
-    {
-        SetActivePanel(Panel.CREATE);
-        roomManager.StartHost();
-    }
-
-    public void Settings()
-    {
-        SetActivePanel(Panel.SETTINGS);
-    }
-
-    public void Quit()
-    {
-        // Show a panel asking if you're sure you want to quit.
-        SetActivePanel(Panel.QUIT);
+        public void Quit()
+        {
+            // Show a panel asking if you're sure you want to quit.
+            SetActivePanel(Panel.QUIT);
 
 #if UNITY_EDITOR
-        EditorApplication.isPlaying = false;
+            EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
+        }
     }
 }
