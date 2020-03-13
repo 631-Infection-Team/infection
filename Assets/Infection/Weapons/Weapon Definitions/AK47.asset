@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AK47
   m_EditorClassIdentifier: 
   weaponName: AK47
-  weaponClass: {fileID: 0}
+  weaponClass: {fileID: 11400000, guid: 20b3eb510d696c3459a2273ef8b912a4, type: 2}
   triggerType: 0
   weaponType: 0
   damage: 8

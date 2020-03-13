@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8bf3ddcc50594ce7b9433590224d9825, type: 3}
   m_Name: Submachine Gun
-  m_EditorClassIdentifier: Assembly-CSharp:Infection.Combat:WeaponClass
-  weaponClassName: New Weapon Class
+  m_EditorClassIdentifier: 
+  weaponClassName: Submachine Gun
