@@ -3,12 +3,10 @@ using UnityEngine;
 
 namespace Infection
 {
-    [System.Serializable]
     public class Controller : NetworkBehaviour
     {
-        [SerializeField] private Camera MainCamera;
-        [SerializeField] private Transform CameraPosition;
         private CharacterController m_CharacterController;
+        private CameraController m_CameraController;
 
         [Header("Control Settings")]
         public float PlayerSpeed = 5.0f;
@@ -31,13 +29,9 @@ namespace Infection
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
 
-                MainCamera.gameObject.SetActive(true);
-                MainCamera.transform.SetParent(CameraPosition, false);
-                MainCamera.transform.localPosition = Vector3.zero;
-                MainCamera.transform.localRotation = Quaternion.identity;
-
                 Grounded = true;
 
+                m_CameraController = GetComponent<CameraController>();
                 m_CharacterController = GetComponent<CharacterController>();
                 m_VerticalAngle = 0.0f;
                 m_HorizontalAngle = transform.localEulerAngles.y;
@@ -119,10 +113,11 @@ namespace Infection
 
                     // Camera look up/down
                     m_VerticalAngle = Mathf.Clamp(-Input.GetAxis("Mouse Y") + m_VerticalAngle, -89.0f, 89.0f);
-                    currentAngles = CameraPosition.transform.localEulerAngles;
+
+                    currentAngles = m_CameraController.currentCamera.transform.localEulerAngles;
                     currentAngles.x = m_VerticalAngle;
 
-                    CameraPosition.transform.localEulerAngles = currentAngles;
+                    m_CameraController.CameraParent.transform.localEulerAngles = currentAngles;
                     Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
                 }
 
