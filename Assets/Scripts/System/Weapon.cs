@@ -3,36 +3,30 @@
 using UnityEditor;
 #endif
 
-public class Weapon : MonoBehaviour
+namespace Infection
 {
-    static RaycastHit[] s_HitInfoBuffer = new RaycastHit[8];
-
-    public enum TriggerType
+    public class Weapon : MonoBehaviour
     {
-        Auto,
-        Manual
-    }
+        static RaycastHit[] s_HitInfoBuffer = new RaycastHit[8];
 
-    public enum WeaponType
-    {
-        Raycast,
-        Projectile
-    }
+        public enum TriggerType
+        {
+            Auto,
+            Manual
+        }
 
-    public enum WeaponState
-    {
-        Idle,
-        Firing,
-        Reloading
-    }
+        public enum WeaponType
+        {
+            Raycast,
+            Projectile
+        }
 
-    [System.Serializable]
-    public class AdvancedSettings
-    {
-        public float spreadAngle = 0.0f;
-        public int projectilePerShot = 1;
-        public float screenShakeMultiplier = 1.0f;
-    }
+        public enum WeaponState
+        {
+            Idle,
+            Firing,
+            Reloading
+        }
 
     public TriggerType triggerType = TriggerType.Manual;
     public WeaponType weaponType = WeaponType.Raycast;
