@@ -20,7 +20,7 @@ namespace Infection.Combat
 
         [SerializeField] private WeaponDefinition weaponDefinition = null;
 
-        public Camera camera = null;
+        public Camera mainCamera = null;
         public float range = 100f;
 
         private void Update()
@@ -33,7 +33,7 @@ namespace Infection.Combat
 
         private void FireWeapon()
         {
-            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit, range))
+            if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out var hit, range))
             {
                 Debug.Log(weaponDefinition.WeaponName + " hit target " + hit.transform.name);
             }
