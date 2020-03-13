@@ -2214,6 +2214,7 @@ GameObject:
   - component: {fileID: 4236705716002909735}
   - component: {fileID: 1147261098638332191}
   - component: {fileID: 4003687026440030702}
+  - component: {fileID: 114541340716960544}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2419,6 +2420,26 @@ MonoBehaviour:
   PlayerSpeed: 5
   RunningSpeed: 7
   JumpSpeed: 5
+--- !u!114 &114541340716960544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerType: 1
+  weaponType: 0
+  fireRate: 0.5
+  reloadTime: 2
+  clipSize: 4
+  damage: 1
+  camera: {fileID: 7749279577112159195}
+  range: 100
 --- !u!1 &752081357128970030
 GameObject:
   m_ObjectHideFlags: 0
