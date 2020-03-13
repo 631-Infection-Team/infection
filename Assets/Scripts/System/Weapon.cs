@@ -28,19 +28,28 @@ namespace Infection
             Reloading
         }
 
-        [System.Serializable]
-        public class AdvancedSettings
-        {
-            public float spreadAngle = 0.0f;
-            public int projectilePerShot = 1;
-            public float screenShakeMultiplier = 1.0f;
-        }
+    public TriggerType triggerType = TriggerType.Manual;
+    public WeaponType weaponType = WeaponType.Raycast;
+    public float fireRate = 0.5f;
+    public float reloadTime = 2.0f;
+    public int clipSize = 4;
+    public float damage = 1.0f;
+    public Camera camera = null;
+    public float range = 100f;
 
-        public TriggerType triggerType = TriggerType.Manual;
-        public WeaponType weaponType = WeaponType.Raycast;
-        public float fireRate = 0.5f;
-        public float reloadTime = 2.0f;
-        public int clipSize = 4;
-        public float damage = 1.0f;
+    private void Update()
+    {
+        if (Input.GetButtonDown("Fire"))
+        {
+            FireWeapon();
+        }
+    }
+
+    private void FireWeapon()
+    {
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit, range))
+        {
+            Debug.Log(hit.transform.name);
+        }
     }
 }
