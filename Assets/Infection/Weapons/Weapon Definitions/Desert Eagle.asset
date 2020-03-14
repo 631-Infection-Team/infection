@@ -19,5 +19,5 @@ MonoBehaviour:
   damage: 12
   fireRate: 0.5
   reloadTime: 3.5
-  clipSize: 7
-  maxReserves: 21
+  clipSize: 8
+  maxReserves: 24
