@@ -1569,8 +1569,8 @@ GameObject:
   - component: {fileID: 4236705716002909735}
   - component: {fileID: 1147261098638332191}
   - component: {fileID: 3643402698118278937}
-  - component: {fileID: 4003687026440030702}
-  - component: {fileID: 9217567687700334097}
+  - component: {fileID: 2975567359837406289}
+  - component: {fileID: 1421573166695990451}
   - component: {fileID: 114541340716960544}
   m_Layer: 0
   m_Name: Player
@@ -1767,7 +1767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &4003687026440030702
+--- !u!114 &2975567359837406289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1781,10 +1781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  PlayerSpeed: 5
-  RunningSpeed: 7
-  JumpSpeed: 5
---- !u!114 &9217567687700334097
+--- !u!114 &1421573166695990451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1799,7 +1796,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   currentCamera: {fileID: 0}
-  CameraParent: {fileID: 0}
+  LockControl: 0
+  viewbobTimer: 0.5
+  viewbobScale: 0.5
 --- !u!114 &114541340716960544
 MonoBehaviour:
   m_ObjectHideFlags: 0

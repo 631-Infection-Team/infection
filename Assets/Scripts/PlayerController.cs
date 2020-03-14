@@ -7,18 +7,18 @@ namespace Infection
     {
         private CharacterController characterController;
 
-        [Header("Control Settings")]
-        [SerializeField] private float PlayerSpeed = 5.0f;
-        [SerializeField] private float RunningSpeed = 7.0f;
-        [SerializeField] private float JumpSpeed = 5.0f;
-        private float groundedTimer = 0.0f;
-        private float speedAtJump = 0.0f;
-        private float verticalSpeed = 0.0f;
-        private float horizontalSpeed = 0.0f;
+        private readonly float JumpSpeed = 5.0f;
+        private float groundedTimer;
+        private float speedAtJump;
+        private float verticalSpeed;
+        private float horizontalSpeed;
+        private Vector3 lastPosition;
 
-        public float Speed { get; private set; } = 0.0f;
+        public float WalkSpeed { get; private set; } = 5f;
+        public float RunSpeed { get; private set; } = 8f;
         public bool LockControl { get; set; }
         public bool Grounded { get; private set; }
+        public Vector3 Velocity { get; private set; }
 
         [Client]
         private void Start()
@@ -65,7 +65,6 @@ namespace Infection
                     Grounded = true;
                 }
 
-                Speed = 0;
                 Vector3 move = Vector3.zero;
 
                 if (!LockControl)
@@ -78,7 +77,7 @@ namespace Infection
                         lostFooting = true;
                     }
 
-                    float actualSpeed = run ? RunningSpeed : PlayerSpeed;
+                    float actualSpeed = run ? RunSpeed : WalkSpeed;
 
                     if (lostFooting)
                     {
@@ -108,7 +107,8 @@ namespace Infection
                     currentAngles.y = horizontalSpeed;
 
                     transform.localEulerAngles = currentAngles;
-                    Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
+                    Velocity = (transform.position - lastPosition) / Time.deltaTime;
+                    lastPosition = transform.position;
                 }
 
                 verticalSpeed = verticalSpeed - 10.0f * Time.deltaTime;

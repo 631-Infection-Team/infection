@@ -5,19 +5,22 @@ namespace Infection
 {
     public class CameraController : NetworkBehaviour
     {
+        public Camera currentCamera;
+        public bool LockControl;
+
+        [SerializeField] private float viewbobTimer = 1.25f;
+        [SerializeField] private float viewbobScale = 1.25f;
         private float targetVerticalAngle;
         private float targetHorizontalAngle;
-
-        public Camera currentCamera;
-        public bool LockControl { get; set; }
+        private PlayerController playerController;
 
         [Client]
-
         private void Start()
         {
             if (isLocalPlayer)
             {
                 currentCamera = Camera.main;
+                playerController = GetComponent<PlayerController>();
             }
         }
 
@@ -42,8 +45,9 @@ namespace Infection
                     if (targetHorizontalAngle < 0) targetHorizontalAngle += 360.0f;
 
                     Vector3 currentAngles = currentCamera.transform.localEulerAngles;
-                    currentAngles.x = targetVerticalAngle;
-                    currentAngles.y = targetHorizontalAngle;
+                    currentAngles.x = targetVerticalAngle + Mathf.Cos(Time.time * viewbobTimer) * viewbobScale;
+                    currentAngles.y = targetHorizontalAngle + Mathf.Sin(Time.time * viewbobTimer) * viewbobScale;
+                    currentAngles.z = Vector3.Dot(playerController.Velocity, -transform.right) / playerController.WalkSpeed;
 
                     currentCamera.transform.localEulerAngles = currentAngles;
                 }
