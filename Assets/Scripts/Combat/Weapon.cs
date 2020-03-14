@@ -8,7 +8,9 @@ namespace Infection.Combat
 {
     public class Weapon : MonoBehaviour
     {
-        static RaycastHit[] s_HitInfoBuffer = new RaycastHit[8];
+        private CameraController m_CameraController;
+        [SerializeField] private WeaponDefinition weaponDefinition = null;
+        public float range = 100f;
 
         public enum WeaponState
         {
@@ -18,10 +20,10 @@ namespace Infection.Combat
             Switching
         }
 
-        [SerializeField] private WeaponDefinition weaponDefinition = null;
-
-        public Camera camera = null;
-        public float range = 100f;
+        private void Start()
+        {
+            m_CameraController = GetComponent<CameraController>();
+        }
 
         private void Update()
         {
@@ -33,9 +35,12 @@ namespace Infection.Combat
 
         private void FireWeapon()
         {
-            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit, range))
+            if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
             {
-                Debug.Log(weaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                if (weaponDefinition)
+                {
+                    Debug.Log(weaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                }
             }
         }
     }

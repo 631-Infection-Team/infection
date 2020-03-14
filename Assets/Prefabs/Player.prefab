@@ -1568,6 +1568,7 @@ GameObject:
   - component: {fileID: 97122798034539206}
   - component: {fileID: 4236705716002909735}
   - component: {fileID: 1147261098638332191}
+  - component: {fileID: 3643402698118278937}
   - component: {fileID: 4003687026440030702}
   - component: {fileID: 9217567687700334097}
   - component: {fileID: 114541340716960544}
@@ -1752,6 +1753,20 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   index: 0
+--- !u!114 &3643402698118278937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f8877a19635d5f4086f64899a42411c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &4003687026440030702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1797,13 +1812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerType: 1
-  weaponType: 0
-  fireRate: 0.5
-  reloadTime: 2
-  clipSize: 4
-  damage: 1
-  camera: {fileID: 7749279577112159195}
+  weaponDefinition: {fileID: 0}
   range: 100
 --- !u!1 &752081357128970030
 GameObject:
