@@ -37,7 +37,10 @@ namespace Infection.Combat
         {
             if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
             {
-                Debug.Log(weaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                if (weaponDefinition)
+                {
+                    Debug.Log(weaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                }
             }
         }
     }

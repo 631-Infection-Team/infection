@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-namespace Infection
+namespace Infection.UI
 {
     public class MainMenu : MonoBehaviour
     {
@@ -86,7 +86,6 @@ namespace Infection
         public void Create()
         {
             SetActivePanel(Panel.CREATE);
-            roomManager.StartHost();
         }
 
         public void Settings()

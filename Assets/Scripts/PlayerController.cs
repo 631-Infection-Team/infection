@@ -3,10 +3,9 @@ using UnityEngine;
 
 namespace Infection
 {
-    public class Controller : NetworkBehaviour
+    public class PlayerController : NetworkBehaviour
     {
         private CharacterController m_CharacterController;
-        private CameraController m_CameraController;
 
         [Header("Control Settings")]
         public float PlayerSpeed = 5.0f;
@@ -15,26 +14,21 @@ namespace Infection
         private float m_GroundedTimer = 0.0f;
         private float m_SpeedAtJump = 0.0f;
         private float m_VerticalSpeed = 0.0f;
-        private float m_VerticalAngle = 0.0f;
         private float m_HorizontalAngle = 0.0f;
 
         public float Speed { get; private set; } = 0.0f;
         public bool LockControl { get; set; }
         public bool Grounded { get; private set; }
 
+        [Client]
         private void Start()
         {
             if (isLocalPlayer)
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-
                 Grounded = true;
-
-                m_CameraController = GetComponent<CameraController>();
-                m_CharacterController = GetComponent<CharacterController>();
-                m_VerticalAngle = 0.0f;
                 m_HorizontalAngle = transform.localEulerAngles.y;
+
+                m_CharacterController = GetComponent<CharacterController>();
             }
         }
 
@@ -43,6 +37,11 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
+                float vertical = Input.GetAxis("Vertical");
+                float horizontal = Input.GetAxis("Horizontal");
+                float lookHorizontal = Input.GetAxis("Mouse X");
+                bool jump = Input.GetButtonDown("Jump");
+                bool run = Input.GetButtonDown("Run");
                 bool lostFooting = false;
 
                 //we define our own grounded and not use the Character controller one as the character controller can flicker
@@ -72,14 +71,14 @@ namespace Infection
                 if (!LockControl)
                 {
                     // Jumping
-                    if (Grounded && Input.GetButtonDown("Jump"))
+                    if (Grounded && jump)
                     {
                         m_VerticalSpeed = JumpSpeed;
                         Grounded = false;
                         lostFooting = true;
                     }
 
-                    bool running = Input.GetButton("Run");
+                    bool running = run;
                     float actualSpeed = running ? RunningSpeed : PlayerSpeed;
 
                     if (lostFooting)
@@ -88,7 +87,7 @@ namespace Infection
                     }
 
                     // Move around with WASD
-                    move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                    move = new Vector3(horizontal, 0, vertical);
 
                     if (move.sqrMagnitude > 1.0f)
                     {
@@ -101,23 +100,15 @@ namespace Infection
 
                     m_CharacterController.Move(move);
 
-                    // Turn player
-                    float turnPlayer = Input.GetAxis("Mouse X");
+                    float turnPlayer = lookHorizontal;
                     m_HorizontalAngle = m_HorizontalAngle + turnPlayer;
                     if (m_HorizontalAngle > 360) m_HorizontalAngle -= 360.0f;
                     if (m_HorizontalAngle < 0) m_HorizontalAngle += 360.0f;
 
                     Vector3 currentAngles = transform.localEulerAngles;
                     currentAngles.y = m_HorizontalAngle;
+
                     transform.localEulerAngles = currentAngles;
-
-                    // Camera look up/down
-                    m_VerticalAngle = Mathf.Clamp(-Input.GetAxis("Mouse Y") + m_VerticalAngle, -89.0f, 89.0f);
-
-                    currentAngles = m_CameraController.currentCamera.transform.localEulerAngles;
-                    currentAngles.x = m_VerticalAngle;
-
-                    m_CameraController.CameraParent.transform.localEulerAngles = currentAngles;
                     Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
                 }
 
