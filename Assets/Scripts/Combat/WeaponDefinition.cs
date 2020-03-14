@@ -7,7 +7,7 @@ namespace Infection.Combat
     public enum TriggerType
     {
         Auto,
-        Semi,
+        Burst,
         Manual
     }
 
@@ -43,6 +43,9 @@ namespace Infection.Combat
         public int ClipSize => clipSize;
         public int MaxReserves => maxReserves;
 
+        /// <summary>
+        /// Change weapon name to match file name when renaming asset.
+        /// </summary>
         private void OnValidate()
         {
 #if UNITY_EDITOR
