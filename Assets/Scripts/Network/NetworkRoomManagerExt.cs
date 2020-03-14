@@ -100,8 +100,8 @@ namespace Infection
         /// <returns>False to not allow this player to replace the room player.</returns>
         public override bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
         {
-            PlayerGame playerGame = gamePlayer.GetComponent<PlayerGame>();
-            playerGame.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
+            Player player = gamePlayer.GetComponent<Player>();
+            player.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
 
             return true;
         }

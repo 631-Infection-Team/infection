@@ -5,15 +5,13 @@ using UnityEngine;
 
 namespace Infection
 {
-    public class PlayerGame : NetworkBehaviour
+    public class Player : NetworkBehaviour
     {
         [SyncVar] public int index;
-        [SyncVar] public int health;
+        [SyncVar] public int health = 100;
 
         private void Start()
         {
-            health = 100;
-
             if (isLocalPlayer)
             {
                 // Hide model for LocalPlayer. Show them a different model.
@@ -24,6 +22,16 @@ namespace Infection
                     skinnedMeshRenderer.enabled = false;
                 }
             }
+        }
+
+        public bool Alive()
+        {
+            return health > 0;
+        }
+
+        public void TakeDamage(int dmg)
+        {
+            health = Mathf.Clamp(health - dmg, 0, 100);
         }
     }
 }
