@@ -48,7 +48,9 @@ namespace Infection.Combat
         /// </summary>
         private void OnValidate()
         {
+#if UNITY_EDITOR
             weaponName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
+#endif
         }
     }
 }
