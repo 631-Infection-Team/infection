@@ -17,5 +17,10 @@ namespace Infection.UI
         {
             roomManager.StartHost();
         }
+
+        public void Back()
+        {
+            roomManager.StopHost();
+        }
     }
 }

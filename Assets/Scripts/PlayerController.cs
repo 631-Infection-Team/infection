@@ -5,16 +5,16 @@ namespace Infection
 {
     public class PlayerController : NetworkBehaviour
     {
-        private CharacterController m_CharacterController;
+        private CharacterController characterController;
 
         [Header("Control Settings")]
-        public float PlayerSpeed = 5.0f;
-        public float RunningSpeed = 7.0f;
-        public float JumpSpeed = 5.0f;
-        private float m_GroundedTimer = 0.0f;
-        private float m_SpeedAtJump = 0.0f;
-        private float m_VerticalSpeed = 0.0f;
-        private float m_HorizontalAngle = 0.0f;
+        [SerializeField] private float PlayerSpeed = 5.0f;
+        [SerializeField] private float RunningSpeed = 7.0f;
+        [SerializeField] private float JumpSpeed = 5.0f;
+        private float groundedTimer = 0.0f;
+        private float speedAtJump = 0.0f;
+        private float verticalSpeed = 0.0f;
+        private float horizontalSpeed = 0.0f;
 
         public float Speed { get; private set; } = 0.0f;
         public bool LockControl { get; set; }
@@ -26,9 +26,9 @@ namespace Infection
             if (isLocalPlayer)
             {
                 Grounded = true;
-                m_HorizontalAngle = transform.localEulerAngles.y;
+                horizontalSpeed = transform.localEulerAngles.y;
 
-                m_CharacterController = GetComponent<CharacterController>();
+                characterController = GetComponent<CharacterController>();
             }
         }
 
@@ -41,18 +41,18 @@ namespace Infection
                 float horizontal = Input.GetAxis("Horizontal");
                 float lookHorizontal = Input.GetAxis("Mouse X");
                 bool jump = Input.GetButtonDown("Jump");
-                bool run = Input.GetButtonDown("Run");
+                bool run = Input.GetButton("Run");
                 bool lostFooting = false;
 
                 //we define our own grounded and not use the Character controller one as the character controller can flicker
                 //between grounded/not grounded on small step and the like. So we actually make the controller "not grounded" only
                 //if the character controller reported not being grounded for at least .5 second;
-                if (!m_CharacterController.isGrounded)
+                if (!characterController.isGrounded)
                 {
                     if (Grounded)
                     {
-                        m_GroundedTimer += Time.deltaTime;
-                        if (m_GroundedTimer >= 0.5f)
+                        groundedTimer += Time.deltaTime;
+                        if (groundedTimer >= 0.5f)
                         {
                             lostFooting = true;
                             Grounded = false;
@@ -61,7 +61,7 @@ namespace Infection
                 }
                 else
                 {
-                    m_GroundedTimer = 0.0f;
+                    groundedTimer = 0.0f;
                     Grounded = true;
                 }
 
@@ -73,17 +73,16 @@ namespace Infection
                     // Jumping
                     if (Grounded && jump)
                     {
-                        m_VerticalSpeed = JumpSpeed;
+                        verticalSpeed = JumpSpeed;
                         Grounded = false;
                         lostFooting = true;
                     }
 
-                    bool running = run;
-                    float actualSpeed = running ? RunningSpeed : PlayerSpeed;
+                    float actualSpeed = run ? RunningSpeed : PlayerSpeed;
 
                     if (lostFooting)
                     {
-                        m_SpeedAtJump = actualSpeed;
+                        speedAtJump = actualSpeed;
                     }
 
                     // Move around with WASD
@@ -94,33 +93,33 @@ namespace Infection
                         move.Normalize();
                     }
 
-                    float usedSpeed = Grounded ? actualSpeed : m_SpeedAtJump;
+                    float usedSpeed = Grounded ? actualSpeed : speedAtJump;
                     move = move * usedSpeed * Time.deltaTime;
                     move = transform.TransformDirection(move);
 
-                    m_CharacterController.Move(move);
+                    characterController.Move(move);
 
                     float turnPlayer = lookHorizontal;
-                    m_HorizontalAngle = m_HorizontalAngle + turnPlayer;
-                    if (m_HorizontalAngle > 360) m_HorizontalAngle -= 360.0f;
-                    if (m_HorizontalAngle < 0) m_HorizontalAngle += 360.0f;
+                    horizontalSpeed = horizontalSpeed + turnPlayer;
+                    if (horizontalSpeed > 360) horizontalSpeed -= 360.0f;
+                    if (horizontalSpeed < 0) horizontalSpeed += 360.0f;
 
                     Vector3 currentAngles = transform.localEulerAngles;
-                    currentAngles.y = m_HorizontalAngle;
+                    currentAngles.y = horizontalSpeed;
 
                     transform.localEulerAngles = currentAngles;
                     Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
                 }
 
-                m_VerticalSpeed = m_VerticalSpeed - 10.0f * Time.deltaTime;
-                m_VerticalSpeed = Mathf.Clamp(m_VerticalSpeed, -10f, JumpSpeed);
+                verticalSpeed = verticalSpeed - 10.0f * Time.deltaTime;
+                verticalSpeed = Mathf.Clamp(verticalSpeed, -10f, JumpSpeed);
 
-                var verticalMove = new Vector3(0, m_VerticalSpeed * Time.deltaTime, 0);
-                var flag = m_CharacterController.Move(verticalMove);
+                var verticalMove = new Vector3(0, verticalSpeed * Time.deltaTime, 0);
+                var flag = characterController.Move(verticalMove);
 
                 if ((flag & CollisionFlags.Below) != 0)
                 {
-                    m_VerticalSpeed = 0;
+                    verticalSpeed = 0;
                 }
             }
         }

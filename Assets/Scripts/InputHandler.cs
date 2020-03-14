@@ -16,6 +16,9 @@ namespace Infection
             {
                 cameraController = GetComponent<CameraController>();
                 playerController = GetComponent<PlayerController>();
+
+                playerController.LockControl = false;
+                cameraController.LockControl = false;
             }
         }
 
@@ -31,17 +34,17 @@ namespace Infection
                     LockControl = !LockControl;
                     playerController.LockControl = LockControl;
                     cameraController.LockControl = LockControl;
+                }
 
-                    if (LockControl)
-                    {
-                        Cursor.lockState = CursorLockMode.None;
-                        Cursor.visible = true;
-                    }
-                    else
-                    {
-                        Cursor.lockState = CursorLockMode.Locked;
-                        Cursor.visible = false;
-                    }
+                if (LockControl)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
                 }
             }
         }
