@@ -5,21 +5,22 @@ namespace Infection
 {
     public class CameraController : NetworkBehaviour
     {
-        private float verticalAngle;
-
         public Camera currentCamera;
-        public Transform CameraParent;
-        public bool LockControl { get; set; }
+        public bool LockControl;
+
+        [SerializeField] private float viewbobTimer = 1.25f;
+        [SerializeField] private float viewbobScale = 1.25f;
+        private float targetVerticalAngle;
+        private float targetHorizontalAngle;
+        private PlayerController playerController;
 
         [Client]
         private void Start()
         {
             if (isLocalPlayer)
             {
-                currentCamera.gameObject.SetActive(true);
-                currentCamera.transform.SetParent(CameraParent, false);
-                currentCamera.transform.localPosition = Vector3.zero;
-                currentCamera.transform.localRotation = Quaternion.identity;
+                currentCamera = Camera.main;
+                playerController = GetComponent<PlayerController>();
             }
         }
 
@@ -29,15 +30,24 @@ namespace Infection
             if (isLocalPlayer)
             {
                 float vertical = Input.GetAxis("Mouse Y");
+                float horizontal = Input.GetAxis("Mouse X");
+
+                currentCamera.transform.position = transform.position;
 
                 if (!LockControl)
                 {
-                    verticalAngle -= vertical;
-                    if (verticalAngle > 90f) verticalAngle = 90f;
-                    if (verticalAngle < -90f) verticalAngle = -90f;
+                    targetVerticalAngle -= vertical;
+                    if (targetVerticalAngle > 90f) targetVerticalAngle = 90f;
+                    if (targetVerticalAngle < -90f) targetVerticalAngle = -90f;
+
+                    targetHorizontalAngle += horizontal;
+                    if (targetHorizontalAngle > 360) targetHorizontalAngle -= 360.0f;
+                    if (targetHorizontalAngle < 0) targetHorizontalAngle += 360.0f;
 
                     Vector3 currentAngles = currentCamera.transform.localEulerAngles;
-                    currentAngles.x = verticalAngle;
+                    currentAngles.x = targetVerticalAngle + Mathf.Cos(Time.time * viewbobTimer) * viewbobScale;
+                    currentAngles.y = targetHorizontalAngle + Mathf.Sin(Time.time * viewbobTimer) * viewbobScale;
+                    currentAngles.z = Vector3.Dot(playerController.Velocity, -transform.right) / playerController.WalkSpeed;
 
                     currentCamera.transform.localEulerAngles = currentAngles;
                 }
