@@ -25,10 +25,10 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
+                characterController = GetComponent<CharacterController>();
+
                 Grounded = true;
                 horizontalSpeed = transform.localEulerAngles.y;
-
-                characterController = GetComponent<CharacterController>();
             }
         }
 
@@ -43,6 +43,7 @@ namespace Infection
                 bool jump = Input.GetButtonDown("Jump");
                 bool run = Input.GetButton("Run");
                 bool lostFooting = false;
+                Vector3 move;
 
                 //we define our own grounded and not use the Character controller one as the character controller can flicker
                 //between grounded/not grounded on small step and the like. So we actually make the controller "not grounded" only
@@ -64,8 +65,6 @@ namespace Infection
                     groundedTimer = 0.0f;
                     Grounded = true;
                 }
-
-                Vector3 move = Vector3.zero;
 
                 if (!LockControl)
                 {

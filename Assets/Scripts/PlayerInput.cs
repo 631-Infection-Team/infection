@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Infection
 {
-    public class InputHandler : NetworkBehaviour
+    public class PlayerInput : NetworkBehaviour
     {
         private CameraController cameraController;
         private PlayerController playerController;
