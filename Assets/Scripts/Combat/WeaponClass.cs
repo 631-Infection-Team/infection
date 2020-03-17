@@ -16,7 +16,6 @@ namespace Infection.Combat
 
         private void OnValidate()
         {
-
 #if UNITY_EDITOR
             weaponClassName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
 #endif
