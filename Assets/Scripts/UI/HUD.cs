@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Mirror;
 using UnityEngine;
 
-public class HUD : MonoBehaviour
+namespace Infection
 {
-    // Start is called before the first frame update
-    void Start()
+    public class HUD : NetworkBehaviour
     {
-        
-    }
+        [SerializeField] private GameObject pauseMenu;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public bool isPaused;
+
+        [Client]
+        public void TogglePause()
+        {
+            isPaused = !isPaused;
+            pauseMenu.SetActive(isPaused);
+        }
     }
 }
