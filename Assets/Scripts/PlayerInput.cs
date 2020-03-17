@@ -5,8 +5,10 @@ namespace Infection
 {
     public class PlayerInput : NetworkBehaviour
     {
-        private CameraController cameraController;
-        private PlayerController playerController;
+        [SerializeField] private CameraController cameraController;
+        [SerializeField] private PlayerController playerController;
+        [SerializeField] private GameObject HUD;
+
         public bool LockControl { get; set; }
 
         [Client]
@@ -14,9 +16,6 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
-                cameraController = GetComponent<CameraController>();
-                playerController = GetComponent<PlayerController>();
-
                 playerController.LockControl = false;
                 cameraController.LockControl = false;
             }
@@ -34,6 +33,8 @@ namespace Infection
                     LockControl = !LockControl;
                     playerController.LockControl = LockControl;
                     cameraController.LockControl = LockControl;
+
+                    HUD.GetComponent<HUD>().TogglePause();
                 }
 
                 if (LockControl)
