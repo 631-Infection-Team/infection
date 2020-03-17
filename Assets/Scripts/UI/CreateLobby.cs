@@ -4,23 +4,36 @@ namespace Infection.UI
 {
     public class CreateLobby : MonoBehaviour
     {
-        private GameObject networkRoomManager = null;
-        private NetworkRoomManagerExt roomManager = null;
+        [SerializeField] private GameObject networkRoomManager = null;
+        private NetRoomManager roomManager = null;
 
         private void Start()
         {
-            networkRoomManager = GameObject.Find("NetworkRoomManager");
-            roomManager = networkRoomManager.GetComponent<NetworkRoomManagerExt>();
+            if (networkRoomManager)
+            {
+                roomManager = networkRoomManager.GetComponent<NetRoomManager>();
+            }
+            else
+            {
+                Debug.LogError("Network Room Manager not assigned in Inspector.");
+            }
+
         }
 
         public void StartHost()
         {
-            roomManager.StartHost();
+            if (roomManager)
+            {
+                roomManager.StartHost();
+            }
         }
 
         public void Back()
         {
-            roomManager.StopHost();
+            if (roomManager)
+            {
+                roomManager.StopHost();
+            }
         }
     }
 }

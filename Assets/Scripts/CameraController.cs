@@ -11,7 +11,7 @@ namespace Infection
         [SerializeField] private float viewbobTimer = 1.25f;
         [SerializeField] private float viewbobScale = 1.25f;
         private float targetVerticalAngle;
-        private float targetHorizontalAngle;
+        //private float targetHorizontalAngle;
         private PlayerController playerController;
 
         [Client]
@@ -19,7 +19,6 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
-                currentCamera = Camera.main;
                 playerController = GetComponent<PlayerController>();
             }
         }
@@ -29,24 +28,24 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
-                float vertical = Input.GetAxis("Mouse Y");
-                float horizontal = Input.GetAxis("Mouse X");
+                float lookY = Input.GetAxis("Mouse Y");
+                //float lookX = Input.GetAxis("Mouse X");
 
                 currentCamera.transform.position = transform.position;
 
                 if (!LockControl)
                 {
-                    targetVerticalAngle -= vertical;
+                    targetVerticalAngle -= lookY;
                     if (targetVerticalAngle > 90f) targetVerticalAngle = 90f;
                     if (targetVerticalAngle < -90f) targetVerticalAngle = -90f;
 
-                    targetHorizontalAngle += horizontal;
-                    if (targetHorizontalAngle > 360) targetHorizontalAngle -= 360.0f;
-                    if (targetHorizontalAngle < 0) targetHorizontalAngle += 360.0f;
+                    //targetHorizontalAngle += lookX;
+                    //if (targetHorizontalAngle > 360) targetHorizontalAngle -= 360.0f;
+                    //if (targetHorizontalAngle < 0) targetHorizontalAngle += 360.0f;
 
                     Vector3 currentAngles = currentCamera.transform.localEulerAngles;
-                    currentAngles.x = targetVerticalAngle + Mathf.Cos(Time.time * viewbobTimer) * viewbobScale;
-                    currentAngles.y = targetHorizontalAngle + Mathf.Sin(Time.time * viewbobTimer) * viewbobScale;
+                    currentAngles.x = targetVerticalAngle - Mathf.Cos(Time.time * viewbobTimer) * viewbobScale;
+                    currentAngles.y = Mathf.Sin(Time.time * viewbobTimer) * viewbobScale;
                     currentAngles.z = Vector3.Dot(playerController.Velocity, -transform.right) / playerController.WalkSpeed;
 
                     currentCamera.transform.localEulerAngles = currentAngles;

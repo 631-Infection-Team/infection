@@ -20,7 +20,7 @@ using Mirror;
 
 namespace Infection
 {
-    public class NetworkRoomManagerExt : NetworkRoomManager
+    public class NetRoomManager : NetworkRoomManager
     {
         #region Server Callbacks
 
