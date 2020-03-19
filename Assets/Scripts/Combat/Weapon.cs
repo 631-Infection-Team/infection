@@ -72,6 +72,19 @@ namespace Infection.Combat
             }
         }
 
+        public void EquipWeapon(WeaponDefinition newWeapon)
+        {
+            if (!currentWeapon.weapon || (currentWeapon.weapon && stowedWeapon.weapon))
+            {
+                currentWeapon.weapon = newWeapon;
+            }
+            else if (currentWeapon.weapon && !stowedWeapon.weapon)
+            {
+                stowedWeapon.weapon = newWeapon;
+                StartCoroutine(SwitchWeapon());
+            }
+        }
+
         /// <summary>
         /// Fire the currently equipped weapon.
         /// </summary>
@@ -90,7 +103,7 @@ namespace Infection.Combat
                 if (reserves <= 0)
                 {
                     Debug.Log("Out of ammo!");
-                    StartCoroutine(SwitchWeapon(stowedWeapon));
+                    StartCoroutine(SwitchWeapon());
                     yield break;
                 }
 
@@ -154,7 +167,7 @@ namespace Infection.Combat
         /// </summary>
         /// <param name="weapon">New weapon to equip</param>
         /// <returns>Switching state</returns>
-        private IEnumerator SwitchWeapon(WeaponSlot weapon)
+        private IEnumerator SwitchWeapon()
         {
             // Cannot switch weapon not in idle state
             if (currentState != WeaponState.Idle)
@@ -167,10 +180,11 @@ namespace Infection.Combat
             // TODO: Play putting away weapon animation
             yield return new WaitForSeconds(currentWeapon.weapon.HolsterTime);
 
-            stowedWeapon = currentWeapon;
-            currentWeapon = weapon;
+            WeaponSlot temp = currentWeapon;
+            currentWeapon = stowedWeapon;
+            stowedWeapon = temp;
             // TODO: Play pulling out weapon animation
-            yield return new WaitForSeconds(weapon.weapon.ReadyTime);
+            yield return new WaitForSeconds(temp.weapon.ReadyTime);
             currentState = WeaponState.Idle;
         }
     }
