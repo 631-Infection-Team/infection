@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,8 +10,8 @@ namespace Infection.Combat
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] private WeaponDefinition currentWeapon = null;
-        [SerializeField] private WeaponDefinition stowedWeapon = null;
+        [SerializeField] private WeaponSlot currentWeapon;
+        [SerializeField] private WeaponSlot stowedWeapon;
         [SerializeField] private float range = 100f;
 
         private CameraController m_CameraController = null;
@@ -28,20 +29,34 @@ namespace Infection.Combat
             Switching
         }
 
+        [Serializable]
+        public struct WeaponSlot
+        {
+            public WeaponDefinition weapon;
+            public int magazine;
+            public int reserves;
+        }
+
         private void Start()
         {
             m_CameraController = GetComponent<CameraController>();
 
-            if (currentWeapon)
+            // TODO: For now, we are giving player max ammo at Start
+            if (currentWeapon.weapon)
             {
-                magazine = currentWeapon.ClipSize;
-                reserves = currentWeapon.MaxReserves;
+                currentWeapon.magazine = currentWeapon.weapon.ClipSize;
+                currentWeapon.reserves = currentWeapon.weapon.MaxReserves;
+            }
+            if (stowedWeapon.weapon)
+            {
+                stowedWeapon.magazine = stowedWeapon.weapon.ClipSize;
+                stowedWeapon.reserves = stowedWeapon.weapon.MaxReserves;
             }
         }
 
         private void Update()
         {
-            if (currentWeapon)
+            if (currentWeapon.weapon)
             {
                 // Automatic fire
                 if (Input.GetButton("Fire"))
@@ -75,7 +90,7 @@ namespace Infection.Combat
                 if (reserves <= 0)
                 {
                     Debug.Log("Out of ammo!");
-                    // TODO: Handle the case. Maybe switch weapon?
+                    StartCoroutine(SwitchWeapon(stowedWeapon));
                     yield break;
                 }
 
@@ -86,12 +101,12 @@ namespace Infection.Combat
             currentState = WeaponState.Firing;
             if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
             {
-                Debug.Log(currentWeapon.WeaponName + " hit target " + hit.transform.name);
+                Debug.Log(currentWeapon.weapon.WeaponName + " hit target " + hit.transform.name);
             }
 
             // Subtract ammo and wait for next shot
             magazine--;
-            yield return new WaitForSeconds(currentWeapon.FireRate);
+            yield return new WaitForSeconds(currentWeapon.weapon.FireRate);
             currentState = WeaponState.Idle;
         }
 
@@ -116,7 +131,7 @@ namespace Infection.Combat
             }
 
             // Weapon already fully reloaded
-            if (magazine >= currentWeapon.ClipSize)
+            if (magazine >= currentWeapon.weapon.ClipSize)
             {
                 Debug.Log("Magazine fully loaded, no need to reload.");
                 // TODO: Display a message in the HUD to indicate that the magazine is already filled up
@@ -126,11 +141,11 @@ namespace Infection.Combat
             // Reloading animation
             currentState = WeaponState.Reloading;
             // TODO: Play animation
-            yield return new WaitForSeconds(currentWeapon.ReloadTime);
+            yield return new WaitForSeconds(currentWeapon.weapon.ReloadTime);
             currentState = WeaponState.Idle;
 
             // Fill up magazine with ammo from reserves
-            int ammoToAdd = reserves -= currentWeapon.ClipSize - magazine;
+            int ammoToAdd = reserves -= currentWeapon.weapon.ClipSize - magazine;
             magazine += ammoToAdd;
         }
 
@@ -139,7 +154,7 @@ namespace Infection.Combat
         /// </summary>
         /// <param name="weapon">New weapon to equip</param>
         /// <returns>Switching state</returns>
-        private IEnumerator SwitchWeapon(WeaponDefinition weapon)
+        private IEnumerator SwitchWeapon(WeaponSlot weapon)
         {
             // Cannot switch weapon not in idle state
             if (currentState != WeaponState.Idle)
@@ -150,12 +165,12 @@ namespace Infection.Combat
             // Begin switching weapons
             currentState = WeaponState.Switching;
             // TODO: Play putting away weapon animation
-            yield return new WaitForSeconds(currentWeapon.HolsterTime);
+            yield return new WaitForSeconds(currentWeapon.weapon.HolsterTime);
 
             stowedWeapon = currentWeapon;
             currentWeapon = weapon;
             // TODO: Play pulling out weapon animation
-            yield return new WaitForSeconds(weapon.ReadyTime);
+            yield return new WaitForSeconds(weapon.weapon.ReadyTime);
             currentState = WeaponState.Idle;
         }
     }
