@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,7 +10,8 @@ namespace Infection.Combat
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] private WeaponDefinition currentWeapon = null;
+        [SerializeField] private WeaponSlot currentWeapon;
+        [SerializeField] private WeaponSlot stowedWeapon;
         [SerializeField] private float range = 100f;
 
         private CameraController m_CameraController = null;
@@ -27,98 +29,163 @@ namespace Infection.Combat
             Switching
         }
 
+        [Serializable]
+        public struct WeaponSlot
+        {
+            public WeaponDefinition weapon;
+            public int magazine;
+            public int reserves;
+        }
+
         private void Start()
         {
             m_CameraController = GetComponent<CameraController>();
 
-            if (currentWeapon)
+            // TODO: For now, we are giving player max ammo at Start
+            if (currentWeapon.weapon)
             {
-                magazine = currentWeapon.ClipSize;
-                reserves = currentWeapon.MaxReserves;
+                currentWeapon.magazine = currentWeapon.weapon.ClipSize;
+                currentWeapon.reserves = currentWeapon.weapon.MaxReserves;
+            }
+            if (stowedWeapon.weapon)
+            {
+                stowedWeapon.magazine = stowedWeapon.weapon.ClipSize;
+                stowedWeapon.reserves = stowedWeapon.weapon.MaxReserves;
             }
         }
 
         private void Update()
         {
-            if (currentWeapon)
+            if (currentWeapon.weapon)
             {
                 // Automatic fire
                 if (Input.GetButton("Fire"))
                 {
-                    if (Time.time - timeSinceFire > 1f / currentWeapon.FireRate)
-                    {
-                        timeSinceFire = Time.time;
-                        FireWeapon();
-                    }
+                    StartCoroutine(FireWeapon());
                 }
 
-                // Stop firing
-                if (Input.GetButtonUp("Fire") && (currentState != WeaponState.Reloading || currentState != WeaponState.Switching))
-                {
-                    currentState = WeaponState.Idle;
-                }
-
+                // Reload weapon
                 if (Input.GetButtonDown("Reload"))
                 {
-                    if (currentState == WeaponState.Idle)
-                    {
-                        StartCoroutine(ReloadWeapon());
-                    }
-                }
-            }
-        }
-
-        private void FireWeapon()
-        {
-            if (currentWeapon)
-            {
-                if (currentState == WeaponState.Reloading || currentState == WeaponState.Switching)
-                {
-                    return;
-                }
-
-                if (magazine <= 0)
-                {
-                    if (reserves <= 0)
-                    {
-                        Debug.Log("Out of ammo!");
-                        // TODO: Handle the case. Maybe switch weapon?
-                        return;
-                    }
-
                     StartCoroutine(ReloadWeapon());
                 }
-
-                if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
-                {
-                    currentState = WeaponState.Firing;
-                    Debug.Log(currentWeapon.WeaponName + " hit target " + hit.transform.name);
-                }
-
-                magazine--;
             }
         }
 
-        private IEnumerator ReloadWeapon()
+        public void EquipWeapon(WeaponDefinition newWeapon)
         {
-            if (currentWeapon)
+            if (!currentWeapon.weapon || (currentWeapon.weapon && stowedWeapon.weapon))
             {
-                if (currentState == WeaponState.Reloading)
+                currentWeapon.weapon = newWeapon;
+            }
+            else if (currentWeapon.weapon && !stowedWeapon.weapon)
+            {
+                stowedWeapon.weapon = newWeapon;
+                StartCoroutine(SwitchWeapon());
+            }
+        }
+
+        /// <summary>
+        /// Fire the currently equipped weapon.
+        /// </summary>
+        /// <returns>Firing state</returns>
+        private IEnumerator FireWeapon()
+        {
+            // Cannot fire weapon when state is not idle
+            if (currentState != WeaponState.Idle)
+            {
+                yield break;
+            }
+
+            // Out of ammo
+            if (magazine <= 0)
+            {
+                if (reserves <= 0)
                 {
+                    Debug.Log("Out of ammo!");
+                    StartCoroutine(SwitchWeapon());
                     yield break;
                 }
 
-                currentState = WeaponState.Reloading;
-
-                yield return new WaitForSeconds(currentWeapon.ReloadTime);
-
-                int ammoToAdd = reserves -= currentWeapon.ClipSize - magazine;
-                magazine += ammoToAdd;
-
-                currentState = WeaponState.Idle;
-
-                magazine--;
+                StartCoroutine(ReloadWeapon());
             }
+
+            // Fire the weapon
+            currentState = WeaponState.Firing;
+            if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+            {
+                Debug.Log(currentWeapon.weapon.WeaponName + " hit target " + hit.transform.name);
+            }
+
+            // Subtract ammo and wait for next shot
+            magazine--;
+            yield return new WaitForSeconds(currentWeapon.weapon.FireRate);
+            currentState = WeaponState.Idle;
+        }
+
+        /// <summary>
+        /// Reloads currently equipped weapon.
+        /// </summary>
+        /// <returns>Reload state</returns>
+        private IEnumerator ReloadWeapon()
+        {
+            // Already reloading or not in idle state
+            if (currentState == WeaponState.Reloading || currentState != WeaponState.Idle)
+            {
+                yield break;
+            }
+
+            // No more ammo
+            if (reserves <= 0)
+            {
+                Debug.Log("No more ammo in reserves!");
+                // TODO: Display a message in the HUD to indicate that the player has no more ammo
+                yield break;
+            }
+
+            // Weapon already fully reloaded
+            if (magazine >= currentWeapon.weapon.ClipSize)
+            {
+                Debug.Log("Magazine fully loaded, no need to reload.");
+                // TODO: Display a message in the HUD to indicate that the magazine is already filled up
+                yield break;
+            }
+
+            // Reloading animation
+            currentState = WeaponState.Reloading;
+            // TODO: Play animation
+            yield return new WaitForSeconds(currentWeapon.weapon.ReloadTime);
+            currentState = WeaponState.Idle;
+
+            // Fill up magazine with ammo from reserves
+            int ammoToAdd = reserves -= currentWeapon.weapon.ClipSize - magazine;
+            magazine += ammoToAdd;
+        }
+
+        /// <summary>
+        /// Switch current weapon to stowed weapon.
+        /// </summary>
+        /// <param name="weapon">New weapon to equip</param>
+        /// <returns>Switching state</returns>
+        private IEnumerator SwitchWeapon()
+        {
+            // Cannot switch weapon not in idle state
+            if (currentState != WeaponState.Idle)
+            {
+                yield break;
+            }
+
+            // Begin switching weapons
+            currentState = WeaponState.Switching;
+            // TODO: Play putting away weapon animation
+            yield return new WaitForSeconds(currentWeapon.weapon.HolsterTime);
+
+            WeaponSlot temp = currentWeapon;
+            currentWeapon = stowedWeapon;
+            stowedWeapon = temp;
+            // TODO: Play pulling out weapon animation
+            yield return new WaitForSeconds(temp.weapon.ReadyTime);
+            currentState = WeaponState.Idle;
         }
     }
 }

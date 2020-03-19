@@ -30,6 +30,8 @@ namespace Infection.Combat
         [SerializeField] private float damage = 1.0f;
         [SerializeField, Tooltip("Time between shots in seconds")] private float fireRate = 0.1f;
         [SerializeField] private float reloadTime = 2.0f;
+        [SerializeField, Tooltip("Time to pull out weapon")] private float readyTime = 0.5f;
+        [SerializeField, Tooltip("Time to put away weapon")] private float holsterTime = 0.7f;
         [SerializeField] private int clipSize = 4;
         [SerializeField] private int maxReserves = 16;
 
@@ -40,6 +42,8 @@ namespace Infection.Combat
         public float Damage => damage;
         public float FireRate => fireRate;
         public float ReloadTime => reloadTime;
+        public float ReadyTime => readyTime;
+        public float HolsterTime => holsterTime;
         public int ClipSize => clipSize;
         public int MaxReserves => maxReserves;
 
