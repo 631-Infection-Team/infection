@@ -13,11 +13,11 @@ namespace Infection.Combat
         [SerializeField] private float range = 100f;
 
         private CameraController m_CameraController = null;
-        private WeaponState m_currentState = WeaponState.Idle;
-        private bool m_aimDownSights = false;
-        private int m_magazine = 0;
-        private int m_reserves = 0;
-        private float m_timeSinceFire = Mathf.Infinity;
+        private WeaponState currentState = WeaponState.Idle;
+        private bool aimingDownSights = false;
+        private int magazine = 0;
+        private int reserves = 0;
+        private float timeSinceFire = Mathf.Infinity;
 
         public enum WeaponState
         {
@@ -30,83 +30,95 @@ namespace Infection.Combat
         private void Start()
         {
             m_CameraController = GetComponent<CameraController>();
-            m_magazine = currentWeapon.ClipSize;
-            m_reserves = currentWeapon.MaxReserves;
+
+            if (currentWeapon)
+            {
+                magazine = currentWeapon.ClipSize;
+                reserves = currentWeapon.MaxReserves;
+            }
         }
 
         private void Update()
         {
-            // Automatic fire
-            if (Input.GetButton("Fire"))
+            if (currentWeapon)
             {
-                if (Time.time - m_timeSinceFire > 1f / currentWeapon.FireRate)
+                // Automatic fire
+                if (Input.GetButton("Fire"))
                 {
-                    m_timeSinceFire = Time.time;
-                    FireWeapon();
+                    if (Time.time - timeSinceFire > 1f / currentWeapon.FireRate)
+                    {
+                        timeSinceFire = Time.time;
+                        FireWeapon();
+                    }
                 }
-            }
 
-            // Stop firing
-            if (Input.GetButtonUp("Fire") && (m_currentState != WeaponState.Reloading || m_currentState != WeaponState.Switching))
-            {
-                m_currentState = WeaponState.Idle;
-            }
-
-            if (Input.GetButtonDown("Reload"))
-            {
-                if (m_currentState == WeaponState.Idle)
+                // Stop firing
+                if (Input.GetButtonUp("Fire") && (currentState != WeaponState.Reloading || currentState != WeaponState.Switching))
                 {
-                    StartCoroutine(ReloadWeapon());
+                    currentState = WeaponState.Idle;
+                }
+
+                if (Input.GetButtonDown("Reload"))
+                {
+                    if (currentState == WeaponState.Idle)
+                    {
+                        StartCoroutine(ReloadWeapon());
+                    }
                 }
             }
         }
 
         private void FireWeapon()
         {
-            if (m_currentState == WeaponState.Reloading || m_currentState == WeaponState.Switching)
+            if (currentWeapon)
             {
-                return;
-            }
-
-            if (m_magazine <= 0)
-            {
-                if (m_reserves <= 0)
+                if (currentState == WeaponState.Reloading || currentState == WeaponState.Switching)
                 {
-                    Debug.Log("Out of ammo!");
-                    // TODO: Handle the case. Maybe switch weapon?
                     return;
                 }
 
-                StartCoroutine(ReloadWeapon());
-            }
-
-            if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
-            {
-                if (currentWeapon)
+                if (magazine <= 0)
                 {
-                    m_currentState = WeaponState.Firing;
+                    if (reserves <= 0)
+                    {
+                        Debug.Log("Out of ammo!");
+                        // TODO: Handle the case. Maybe switch weapon?
+                        return;
+                    }
+
+                    StartCoroutine(ReloadWeapon());
+                }
+
+                if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+                {
+                    currentState = WeaponState.Firing;
                     Debug.Log(currentWeapon.WeaponName + " hit target " + hit.transform.name);
                 }
-            }
 
-            m_magazine--;
+                magazine--;
+            }
         }
 
         private IEnumerator ReloadWeapon()
         {
-            if (m_currentState == WeaponState.Reloading)
+            if (currentWeapon)
             {
-                yield break;
+                if (currentState == WeaponState.Reloading)
+                {
+                    yield break;
+                }
+
+                currentState = WeaponState.Reloading;
+
+                yield return new WaitForSeconds(currentWeapon.ReloadTime);
+
+                int ammoToAdd = reserves -= currentWeapon.ClipSize - magazine;
+                magazine += ammoToAdd;
+
+                currentState = WeaponState.Idle;
+
+                magazine--;
             }
-
-            m_currentState = WeaponState.Reloading;
-
-            yield return new WaitForSeconds(currentWeapon.ReloadTime);
-
-            int ammoToAdd = m_reserves -= currentWeapon.ClipSize - m_magazine;
-            m_magazine += ammoToAdd;
-
-            m_currentState = WeaponState.Idle;
         }
     }
 }
