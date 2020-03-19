@@ -27,6 +27,7 @@ namespace Infection
             }
         }
 
+        [Client]
         private void Update()
         {
             if (isLocalPlayer && currentCamera && playerController)

@@ -11,8 +11,7 @@ namespace Infection
 
         public bool LockControl;
 
-        [Client]
-        private void Start()
+        public override void OnStartLocalPlayer()
         {
             if (isLocalPlayer)
             {
@@ -47,6 +46,16 @@ namespace Infection
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
+            }
+        }
+
+        [Client]
+        private void OnDestroy()
+        {
+            if (isLocalPlayer)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
         }
     }
