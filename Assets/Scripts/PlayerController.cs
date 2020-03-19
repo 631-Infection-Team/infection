@@ -28,10 +28,9 @@ namespace Infection
             horizontalSpeed = transform.localEulerAngles.y;
         }
 
-        [Client]
         private void Update()
         {
-            if (isLocalPlayer)
+            if (isLocalPlayer && characterController)
             {
                 float vertical = Input.GetAxis("Vertical");
                 float horizontal = Input.GetAxis("Horizontal");
@@ -106,11 +105,11 @@ namespace Infection
                     lastPosition = transform.position;
                 }
 
-                verticalSpeed = verticalSpeed - 10.0f * Time.deltaTime;
+                verticalSpeed -= 10.0f * Time.deltaTime;
                 verticalSpeed = Mathf.Clamp(verticalSpeed, -10f, JumpSpeed);
 
-                var verticalMove = new Vector3(0, verticalSpeed * Time.deltaTime, 0);
-                var flag = characterController.Move(verticalMove);
+                Vector3 verticalMove = new Vector3(0, verticalSpeed * Time.deltaTime, 0);
+                CollisionFlags flag = characterController.Move(verticalMove);
 
                 if ((flag & CollisionFlags.Below) != 0)
                 {

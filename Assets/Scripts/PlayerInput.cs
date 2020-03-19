@@ -20,7 +20,6 @@ namespace Infection
             }
         }
 
-        [Client]
         private void Update()
         {
             if (isLocalPlayer)
@@ -49,7 +48,6 @@ namespace Infection
             }
         }
 
-        [Client]
         private void OnDestroy()
         {
             if (isLocalPlayer)
