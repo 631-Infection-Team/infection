@@ -20,16 +20,12 @@ namespace Infection
         public bool Grounded { get; private set; }
         public Vector3 Velocity { get; private set; }
 
-        [Client]
-        private void Start()
+        public override void OnStartLocalPlayer()
         {
-            if (isLocalPlayer)
-            {
-                characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
 
-                Grounded = true;
-                horizontalSpeed = transform.localEulerAngles.y;
-            }
+            Grounded = true;
+            horizontalSpeed = transform.localEulerAngles.y;
         }
 
         [Client]

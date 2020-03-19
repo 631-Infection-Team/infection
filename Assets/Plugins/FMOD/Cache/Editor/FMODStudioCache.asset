@@ -24,7 +24,6 @@ MonoBehaviour:
   - {fileID: 114260126057394426}
   stringsBankWriteTime: 637199849180941026
   cacheVersion: 3
---- !u!114 &114260126057394426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,7 +43,6 @@ MonoBehaviour:
   - Name: Desktop
     Value: 730
   Exists: 1
---- !u!114 &114540464694579416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -67,7 +65,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1109
---- !u!114 &114945084482401276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
