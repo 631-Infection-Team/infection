@@ -9,7 +9,7 @@ namespace Infection
         [SerializeField] private PlayerController playerController;
         [SerializeField] private GameObject HUD;
 
-        public bool LockControl { get; set; }
+        public bool LockControl;
 
         [Client]
         private void Start()

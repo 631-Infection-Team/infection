@@ -8,8 +8,8 @@ namespace Infection
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerInitializer : NetworkBehaviour
     {
-        [SerializeField] private Behaviour[] componentsToDisable;
-        [SerializeField] private GameObject[] gameObjectsToDisable;
+        [SerializeField] private Behaviour[] componentsToDisable = null;
+        [SerializeField] private GameObject[] gameObjectsToDisable = null;
         [SerializeField] private string remoteLayerName = "RemotePlayer";
 
         private void Start()
@@ -32,7 +32,7 @@ namespace Infection
             string id = GetComponent<NetworkIdentity>().netId.ToString();
             Player player = GetComponent<Player>();
 
-            GameManager.RegisterPlayer(id, player);
+            MatchManager.RegisterPlayer(id, player);
         }
 
         private void AssignRemoteLayer()
@@ -58,7 +58,7 @@ namespace Infection
 
         private void OnDisable()
         {
-            GameManager.UnRegisterPlayer(transform.name);
+            MatchManager.UnRegisterPlayer(transform.name);
         }
     }
 }

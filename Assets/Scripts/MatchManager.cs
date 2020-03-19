@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Infection
 {
-    public class GameManager : MonoBehaviour
+    public class MatchManager : MonoBehaviour
     {
-        public static GameManager instance;
+        public static MatchManager instance;
+        public float respawnTime = 3f;
         public delegate void OnPlayerKilledCallback(string player, string source);
         public OnPlayerKilledCallback onPlayerKilledCallback;
 
-        private const string PLAYER_ID_PREFIX = "Player_";
         private static Dictionary<string, Player> players = new Dictionary<string, Player>();
 
         private void Awake()
@@ -20,10 +20,8 @@ namespace Infection
 
         public static void RegisterPlayer(string id, Player player)
         {
-            string playerID = PLAYER_ID_PREFIX + id;
-
-            players.Add(playerID, player);
-            player.transform.name = playerID;
+            players.Add("player_" + id, player);
+            player.transform.name = "player_" + id;
         }
 
         public static void UnRegisterPlayer(string playerID)
