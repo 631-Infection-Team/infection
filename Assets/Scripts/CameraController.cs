@@ -32,7 +32,7 @@ namespace Infection
             if (isLocalPlayer && currentCamera && playerController)
             {
                 float lookY = Input.GetAxis("Mouse Y");
-                currentCamera.transform.position = transform.position;
+                // currentCamera.transform.position = transform.position;
 
                 if (!LockControl)
                 {
