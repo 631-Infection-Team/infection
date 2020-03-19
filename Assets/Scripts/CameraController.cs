@@ -6,6 +6,7 @@ namespace Infection
     public class CameraController : NetworkBehaviour
     {
         public Camera currentCamera;
+        public Camera weaponCamera;
         public bool LockControl;
 
         private float targetVerticalAngle;
@@ -14,6 +15,16 @@ namespace Infection
         public override void OnStartLocalPlayer()
         {
             playerController = GetComponent<PlayerController>();
+
+            if (currentCamera)
+            {
+                currentCamera.enabled = true;
+            }
+
+            if (weaponCamera)
+            {
+                weaponCamera.enabled = true;
+            }
         }
 
         private void Update()
