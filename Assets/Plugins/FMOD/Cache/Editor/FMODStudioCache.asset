@@ -13,18 +13,17 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 114231236878171434}
-  - {fileID: 114682833084757766}
+  - {fileID: 114260126057394426}
+  - {fileID: 114945084482401276}
   EditorEvents:
-  - {fileID: 114443849742036694}
+  - {fileID: 114540464694579416}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 114682833084757766}
+  - {fileID: 114945084482401276}
   StringsBanks:
-  - {fileID: 114231236878171434}
-  stringsBankWriteTime: 637197828517802743
+  - {fileID: 114260126057394426}
+  stringsBankWriteTime: 637199849180941026
   cacheVersion: 3
---- !u!114 &114231236878171434
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -38,13 +37,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/FMOD/Main/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637197828517802743
+  lastModified: 637199849180941026
   LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 730
   Exists: 1
---- !u!114 &114443849742036694
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,7 +57,7 @@ MonoBehaviour:
   Path: event:/Test
   guid: 994ff4c41019794aa4cd4f6e9a4ce122
   Banks:
-  - {fileID: 114682833084757766}
+  - {fileID: 114945084482401276}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -67,7 +65,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1109
---- !u!114 &114682833084757766
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,7 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/FMOD/Main/Build/Desktop/Master.bank
   SubDir: 
-  lastModified: 637197828517802743
+  lastModified: 637199849180931048
   LoadResult: 0
   FileSizes: []
   Exists: 1
