@@ -5,8 +5,14 @@ namespace Infection
 {
     public class PlayerController : NetworkBehaviour
     {
-        private CharacterController characterController;
+        public float WalkSpeed = 5f;
+        public float RunSpeed = 8f;
+        public bool LockControl = false;
+        public bool Grounded = false;
+        public Vector3 Velocity = Vector3.zero;
 
+        private NetworkAnimator networkAnimator;
+        private CharacterController characterController;
         private readonly float JumpSpeed = 5.0f;
         private float groundedTimer;
         private float speedAtJump;
@@ -14,14 +20,9 @@ namespace Infection
         private float horizontalSpeed;
         private Vector3 lastPosition;
 
-        public float WalkSpeed { get; private set; } = 5f;
-        public float RunSpeed { get; private set; } = 8f;
-        public bool LockControl { get; set; }
-        public bool Grounded { get; private set; }
-        public Vector3 Velocity { get; private set; }
-
         public override void OnStartLocalPlayer()
         {
+            networkAnimator = GetComponent<NetworkAnimator>();
             characterController = GetComponent<CharacterController>();
 
             Grounded = true;
@@ -48,6 +49,7 @@ namespace Infection
                     if (Grounded)
                     {
                         groundedTimer += Time.deltaTime;
+
                         if (groundedTimer >= 0.5f)
                         {
                             lostFooting = true;
@@ -66,6 +68,7 @@ namespace Infection
                     // Jumping
                     if (Grounded && jump)
                     {
+                        networkAnimator.SetTrigger("Jump");
                         verticalSpeed = JumpSpeed;
                         Grounded = false;
                         lostFooting = true;

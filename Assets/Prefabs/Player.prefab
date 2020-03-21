@@ -215,6 +215,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  WalkSpeed: 5
+  RunSpeed: 8
+  LockControl: 0
+  Grounded: 0
+  Velocity: {x: 0, y: 0, z: 0}
+  animator: {fileID: 2609805880003653059}
 --- !u!114 &1421573166695990451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,7 +250,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeapon: {fileID: 0}
+  currentWeapon:
+    weapon: {fileID: 0}
+    magazine: 0
+    reserves: 0
+  stowedWeapon:
+    weapon: {fileID: 0}
+    magazine: 0
+    reserves: 0
   range: 100
 --- !u!114 &4236705716002909735
 MonoBehaviour:
@@ -559,7 +572,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2939211140228628483}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1046985734989644731}
