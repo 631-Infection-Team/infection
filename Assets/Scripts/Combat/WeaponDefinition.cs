@@ -25,15 +25,15 @@ namespace Infection.Combat
     {
         [SerializeField] private string weaponName = "New Weapon";
         [SerializeField] private WeaponClass weaponClass = null;
-        [SerializeField] private TriggerType triggerType = TriggerType.Manual;
+        [SerializeField] private TriggerType triggerType = TriggerType.Auto;
         [SerializeField] private WeaponType weaponType = WeaponType.Raycast;
-        [SerializeField] private float damage = 1.0f;
+        [SerializeField] private float damage = 8.0f;
         [SerializeField, Tooltip("Time between shots in seconds")] private float fireRate = 0.1f;
         [SerializeField] private float reloadTime = 2.0f;
         [SerializeField, Tooltip("Time to pull out weapon")] private float readyTime = 0.5f;
         [SerializeField, Tooltip("Time to put away weapon")] private float holsterTime = 0.7f;
-        [SerializeField] private int clipSize = 4;
-        [SerializeField] private int maxReserves = 16;
+        [SerializeField] private int clipSize = 30;
+        [SerializeField] private int maxReserves = 120;
 
         public string WeaponName => weaponName;
         public WeaponClass WeaponClass => weaponClass;

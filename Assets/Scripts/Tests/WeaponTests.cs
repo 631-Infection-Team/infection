@@ -21,6 +21,9 @@ namespace Tests
         {
             GameObject testPlayer = new GameObject();
             Weapon weapon = testPlayer.AddComponent<Weapon>();
+            WeaponDefinition ak47 = ScriptableObject.CreateInstance<WeaponDefinition>();
+            WeaponSlot weaponSlot = new WeaponSlot(ak47, 30, 120);
+            weapon.EquipWeapon(weaponSlot);
         }
 
         [Test]
