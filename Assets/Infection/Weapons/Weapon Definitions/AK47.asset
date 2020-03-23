@@ -18,6 +18,8 @@ MonoBehaviour:
   weaponType: 0
   damage: 8
   fireRate: 0.1
-  reloadTime: 4
+  reloadTime: 2
+  readyTime: 0.5
+  holsterTime: 0.7
   clipSize: 30
   maxReserves: 120
