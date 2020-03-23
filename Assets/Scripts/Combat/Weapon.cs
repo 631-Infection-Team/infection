@@ -13,6 +13,9 @@ namespace Infection.Combat
         [SerializeField] private WeaponSlot[] heldWeapons = new WeaponSlot[2];
         [SerializeField] private float range = 100f;
 
+        public WeaponState CurrentState => currentState;
+        public WeaponSlot CurrentWeapon => heldWeapons[currentWeaponIndex];
+
         private CameraController m_CameraController = null;
         private int currentWeaponIndex = 0;
         private WeaponState currentState = WeaponState.Idle;
@@ -52,14 +55,25 @@ namespace Infection.Combat
 
         public void EquipWeapon(WeaponSlot newWeapon)
         {
+            // Player has no weapons
+            // TODO: Find a better solution to check this
+            if (heldWeapons[0] == null && currentWeaponIndex == 0)
+            {
+                heldWeapons[0] = newWeapon;
+                return;
+            }
+
+            // Player has an empty slot in inventory
             int emptySlot = Array.FindIndex(heldWeapons, w => w == null);
             if (emptySlot > -1)
             {
+                // Equip the new weapon and switch to it
                 heldWeapons[emptySlot] = newWeapon;
                 StartCoroutine(SwitchWeapon((currentWeaponIndex + 1) % heldWeapons.Length));
             }
             else
             {
+                // No more space in inventory, replace current weapon with new one
                 ReplaceWeapon(currentWeaponIndex, newWeapon);
             }
         }
@@ -81,7 +95,7 @@ namespace Infection.Combat
         /// Fire the currently equipped weapon.
         /// </summary>
         /// <returns>Firing state</returns>
-        private IEnumerator FireWeapon()
+        public IEnumerator FireWeapon()
         {
             // Cannot fire weapon when state is not idle
             if (currentState != WeaponState.Idle)
@@ -110,7 +124,7 @@ namespace Infection.Combat
 
             // Fire the weapon
             currentState = WeaponState.Firing;
-            if (Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+            if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
             {
                 Debug.Log(heldWeapons[currentWeaponIndex].weapon.WeaponName + " hit target " + hit.transform.name);
             }
@@ -125,7 +139,7 @@ namespace Infection.Combat
         /// Reloads currently equipped weapon.
         /// </summary>
         /// <returns>Reload state</returns>
-        private IEnumerator ReloadWeapon()
+        public IEnumerator ReloadWeapon()
         {
             // Already reloading or not in idle state
             if (currentState == WeaponState.Reloading || currentState != WeaponState.Idle)
@@ -165,7 +179,7 @@ namespace Infection.Combat
         /// </summary>
         /// <param name="index">Index of weapon to switch to</param>
         /// <returns>Switching state</returns>
-        private IEnumerator SwitchWeapon(int index)
+        public IEnumerator SwitchWeapon(int index)
         {
             // Cannot switch weapon not in idle state
             if (currentState != WeaponState.Idle)

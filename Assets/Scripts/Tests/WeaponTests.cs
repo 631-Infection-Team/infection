@@ -16,32 +16,46 @@ namespace Tests
             Debug.Log("Test");
         }
 
-        [Test]
-        public void FiringWeaponForFiveSecondsTest()
+        [UnityTest]
+        public IEnumerator FireWeaponForFiveSecondsTest()
         {
             GameObject testPlayer = new GameObject();
             Weapon weapon = testPlayer.AddComponent<Weapon>();
+            // Use default values
             WeaponDefinition ak47 = ScriptableObject.CreateInstance<WeaponDefinition>();
-            WeaponSlot weaponSlot = new WeaponSlot(ak47, 30, 120);
-            weapon.EquipWeapon(weaponSlot);
+
+            // Equip weapon
+            weapon.EquipWeapon(new WeaponSlot(ak47, 30, 120));
+            yield return new WaitUntil(() => weapon.CurrentState == Weapon.WeaponState.Idle);
+
+            // Check if weapon is equipped and ready
+            Assert.True(weapon.CurrentWeapon.weapon.Equals(ak47));
+            Assert.True(weapon.CurrentState == Weapon.WeaponState.Idle);
+
+            // Fire weapon
+            yield return weapon.FireWeapon();
+            yield return new WaitUntil(() => weapon.CurrentState == Weapon.WeaponState.Idle);
+
+            // Check remaining ammo
+            Assert.True(weapon.CurrentWeapon.magazine == 29);
         }
 
-        [Test]
-        public void FireWeaponUntilEmptyMagazineTest()
+        [UnityTest]
+        public IEnumerator FireWeaponUntilEmptyMagazineTest()
         {
-
+            yield return null;
         }
 
-        [Test]
-        public void FireWeaponUntilEmptyMagazineWithNoReservesTest()
+        [UnityTest]
+        public IEnumerator FireWeaponUntilEmptyMagazineWithNoReservesTest()
         {
-
+            yield return null;
         }
 
-        [Test]
-        public void SwitchWeaponTest()
+        [UnityTest]
+        public IEnumerator SwitchWeaponTest()
         {
-
+            yield return null;
         }
 
         // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
