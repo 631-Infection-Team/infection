@@ -10,11 +10,17 @@ namespace Infection.Combat
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] private WeaponSlot[] heldWeapons = new WeaponSlot[2];
+        [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float range = 100f;
 
         public WeaponState CurrentState => currentState;
-        public WeaponSlot CurrentWeapon => heldWeapons[currentWeaponIndex];
+        public WeaponItem CurrentWeapon
+        {
+            get => heldWeapons[currentWeaponIndex];
+            private set => heldWeapons[currentWeaponIndex] = value;
+        }
+
+        public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
 
         private CameraController m_CameraController = null;
         private int currentWeaponIndex = 0;
@@ -37,7 +43,7 @@ namespace Infection.Combat
 
         private void Update()
         {
-            if (heldWeapons[currentWeaponIndex].weapon)
+            if (CurrentWeapon.WeaponDefinition)
             {
                 // Automatic fire
                 if (Input.GetButton("Fire"))
@@ -53,13 +59,13 @@ namespace Infection.Combat
             }
         }
 
-        public void EquipWeapon(WeaponSlot newWeapon)
+        public void EquipWeapon(WeaponItem newWeapon)
         {
             // Player has no weapons
-            // TODO: Find a better solution to check this
-            if (heldWeapons[0] == null && currentWeaponIndex == 0)
+            // TODO: Find solution for edge case where player has other weapons but current weapon is null
+            if (CurrentWeapon == null)
             {
-                heldWeapons[0] = newWeapon;
+                CurrentWeapon = newWeapon;
                 return;
             }
 
@@ -74,7 +80,8 @@ namespace Infection.Combat
             else
             {
                 // No more space in inventory, replace current weapon with new one
-                ReplaceWeapon(currentWeaponIndex, newWeapon);
+                WeaponItem old = ReplaceWeapon(currentWeaponIndex, newWeapon);
+                Debug.Log("Replaced " + old.WeaponDefinition.WeaponName + " with " + newWeapon.WeaponDefinition.WeaponName);
             }
         }
 
@@ -84,10 +91,10 @@ namespace Infection.Combat
         /// <param name="index">Index of weapon inventory</param>
         /// <param name="newWeapon">New weapon to replace old</param>
         /// <returns>Old weapon that was replaced</returns>
-        public WeaponSlot ReplaceWeapon(int index, WeaponSlot newWeapon)
+        public WeaponItem ReplaceWeapon(int index, WeaponItem newWeapon)
         {
-            WeaponSlot oldWeapon = heldWeapons[currentWeaponIndex];
-            heldWeapons[currentWeaponIndex] = newWeapon;
+            WeaponItem oldWeapon = CurrentWeapon;
+            CurrentWeapon = newWeapon;
             return oldWeapon;
         }
 
@@ -104,15 +111,15 @@ namespace Infection.Combat
             }
 
             // Out of ammo
-            if (heldWeapons[currentWeaponIndex].magazine <= 0)
+            if (CurrentWeapon.Magazine <= 0)
             {
-                if (heldWeapons[currentWeaponIndex].reserves <= 0)
+                if (CurrentWeapon.Reserves <= 0)
                 {
                     // TODO: Display a message in the HUD to indicate that the player has no more ammo
                     Debug.Log("Out of ammo!");
-                    // Switch to a weapon that still has ammo left if such weapon exists
-                    int nextWeapon = Array.FindIndex(heldWeapons, w => w.magazine > 0 || w.reserves > 0);
-                    if (nextWeapon >= -1)
+                    // Switch to a different weapon if it exists and if it still has ammo left
+                    int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.Magazine + w.Reserves > 0);
+                    if (nextWeapon > -1)
                     {
                         StartCoroutine(SwitchWeapon(nextWeapon));
                     }
@@ -120,18 +127,19 @@ namespace Infection.Combat
                 }
 
                 StartCoroutine(ReloadWeapon());
+                yield break;
             }
 
             // Fire the weapon
             currentState = WeaponState.Firing;
             if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
             {
-                Debug.Log(heldWeapons[currentWeaponIndex].weapon.WeaponName + " hit target " + hit.transform.name);
+                Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
             }
 
             // Subtract ammo and wait for next shot
-            heldWeapons[currentWeaponIndex].magazine--;
-            yield return new WaitForSeconds(heldWeapons[currentWeaponIndex].weapon.FireRate);
+            CurrentWeapon.ConsumeMagazine(1);
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
             currentState = WeaponState.Idle;
         }
 
@@ -148,7 +156,7 @@ namespace Infection.Combat
             }
 
             // No more ammo
-            if (heldWeapons[currentWeaponIndex].reserves <= 0)
+            if (CurrentWeapon.Reserves <= 0)
             {
                 Debug.Log("No more ammo in reserves!");
                 // TODO: Display a message in the HUD to indicate that the player has no more ammo
@@ -156,7 +164,7 @@ namespace Infection.Combat
             }
 
             // Weapon already fully reloaded
-            if (heldWeapons[currentWeaponIndex].magazine >= heldWeapons[currentWeaponIndex].weapon.ClipSize)
+            if (CurrentWeapon.Magazine >= CurrentWeapon.WeaponDefinition.ClipSize)
             {
                 Debug.Log("Magazine fully loaded, no need to reload.");
                 // TODO: Display a message in the HUD to indicate that the magazine is already filled up
@@ -166,12 +174,11 @@ namespace Infection.Combat
             // Reloading animation
             currentState = WeaponState.Reloading;
             // TODO: Play animation
-            yield return new WaitForSeconds(heldWeapons[currentWeaponIndex].weapon.ReloadTime);
-            currentState = WeaponState.Idle;
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
             // Fill up magazine with ammo from reserves
-            int ammoToAdd = heldWeapons[currentWeaponIndex].reserves -= heldWeapons[currentWeaponIndex].weapon.ClipSize - heldWeapons[currentWeaponIndex].magazine;
-            heldWeapons[currentWeaponIndex].magazine += ammoToAdd;
+            CurrentWeapon.ReloadMagazine();
+            currentState = WeaponState.Idle;
         }
 
         /// <summary>
@@ -189,12 +196,14 @@ namespace Infection.Combat
 
             // Begin switching weapons
             currentState = WeaponState.Switching;
+            Debug.Log("Switching weapon");
             // TODO: Play putting away weapon animation
-            yield return new WaitForSeconds(heldWeapons[currentWeaponIndex].weapon.HolsterTime);
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
             currentWeaponIndex = index;
             // TODO: Play pulling out weapon animation
-            yield return new WaitForSeconds(heldWeapons[currentWeaponIndex].weapon.ReadyTime);
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
+            Debug.Log("Weapon switch done");
             currentState = WeaponState.Idle;
         }
     }
