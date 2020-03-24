@@ -19,5 +19,8 @@ MonoBehaviour:
   damage: 12
   fireRate: 0.5
   reloadTime: 3.5
+  readyTime: 0.5
+  holsterTime: 0.7
   clipSize: 8
   maxReserves: 24
+  crosshair: {fileID: 21300000, guid: 8f6900ca085225a4d86f1144627c2819, type: 3}

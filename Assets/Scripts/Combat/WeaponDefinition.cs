@@ -34,7 +34,7 @@ namespace Infection.Combat
         [SerializeField, Tooltip("Time to put away weapon")] private float holsterTime = 0.7f;
         [SerializeField] private int clipSize = 30;
         [SerializeField] private int maxReserves = 120;
-        [SerializeField] private Sprite cursor = null;
+        [SerializeField] private Sprite crosshair = null;
 
         public string WeaponName => weaponName;
         public WeaponClass WeaponClass => weaponClass;
@@ -47,7 +47,7 @@ namespace Infection.Combat
         public float HolsterTime => holsterTime;
         public int ClipSize => clipSize;
         public int MaxReserves => maxReserves;
-        public Sprite Cursor => cursor;
+        public Sprite Crosshair => crosshair;
 
         /// <summary>
         /// The time it takes to empty a full magazine without reloading or stopping.
