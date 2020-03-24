@@ -9,7 +9,8 @@ namespace Infection
     {
         [SerializeField] private GameObject pauseMenu;
         [SerializeField] private TextMeshProUGUI weaponNameDisplay = null;
-        [SerializeField] private TextMeshProUGUI weaponAmmoDisplay = null;
+        [SerializeField] private TextMeshProUGUI magazineDisplay = null;
+        [SerializeField] private TextMeshProUGUI reservesDisplay = null;
         [SerializeField] private Weapon playerWeapon = null;
 
         public bool isPaused;
@@ -43,7 +44,8 @@ namespace Infection
         [Client]
         private void UpdateWeaponAmmoDisplay()
         {
-            weaponAmmoDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine} | {playerWeapon.CurrentWeapon.Reserves}";
+            magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
+            reservesDisplay.text = $"{playerWeapon.CurrentWeapon.Reserves}";
         }
 
         [Client]
