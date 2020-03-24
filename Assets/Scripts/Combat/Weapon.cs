@@ -45,10 +45,28 @@ namespace Infection.Combat
         {
             if (CurrentWeapon.WeaponDefinition)
             {
-                // Automatic fire
-                if (Input.GetButton("Fire"))
+                switch (CurrentWeapon.WeaponDefinition.TriggerType)
                 {
-                    StartCoroutine(FireWeapon());
+                    case TriggerType.Auto:
+                        // Automatic fire is the same as burst
+                    case TriggerType.Burst:
+                    {
+                        // Currently you can hold down Fire to fire burst mode weapons
+                        if (Input.GetButton("Fire"))
+                        {
+                            StartCoroutine(FireWeapon());
+                        }
+                        break;
+                    }
+                    case TriggerType.Manual:
+                    {
+                        // Manual fire
+                        if (Input.GetButtonDown("Fire"))
+                        {
+                            StartCoroutine(FireWeapon());
+                        }
+                        break;
+                    }
                 }
 
                 // Reload weapon
@@ -59,6 +77,10 @@ namespace Infection.Combat
             }
         }
 
+        /// <summary>
+        /// Equip a new weapon in an empty slot. If there are no empty slots, replace currently equipped weapon.
+        /// </summary>
+        /// <param name="newWeapon">New weapon to equip</param>
         public void EquipWeapon(WeaponItem newWeapon)
         {
             // Player has no weapons
@@ -130,16 +152,31 @@ namespace Infection.Combat
                 yield break;
             }
 
-            // Fire the weapon
-            currentState = WeaponState.Firing;
-            if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+            // Firing burst type weapon
+            if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
             {
-                Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                int burst = 3;
+                for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
+                {
+                    // Fire the weapon
+                    currentState = WeaponState.Firing;
+                    Fire();
+                    // Wait a third of the fire rate between each shot in the burst
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
+                }
+
+                // Wait twice as long between bursts
+                yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 2.0f);
+            }
+            else
+            {
+                // Firing automatic or manual type weapon
+                // Fire the weapon
+                currentState = WeaponState.Firing;
+                Fire();
+                yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
             }
 
-            // Subtract ammo and wait for next shot
-            CurrentWeapon.ConsumeMagazine(1);
-            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
             currentState = WeaponState.Idle;
         }
 
@@ -188,8 +225,8 @@ namespace Infection.Combat
         /// <returns>Switching state</returns>
         public IEnumerator SwitchWeapon(int index)
         {
-            // Cannot switch weapon not in idle state
-            if (currentState != WeaponState.Idle)
+            // Cannot switch weapon when not in idle state or current weapon already out
+            if (currentState != WeaponState.Idle || currentWeaponIndex == index)
             {
                 yield break;
             }
@@ -205,6 +242,21 @@ namespace Infection.Combat
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
             currentState = WeaponState.Idle;
+        }
+
+        /// <summary>
+        /// Fire the weapon. Waiting for weapon state is not handled here.
+        /// This method is only used to raycast and consume ammo.
+        /// </summary>
+        private void Fire()
+        {
+            if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+            {
+                Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+            }
+
+            // Subtract ammo
+            CurrentWeapon.ConsumeMagazine(1);
         }
     }
 }
