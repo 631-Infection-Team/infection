@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -10,24 +11,6 @@ namespace Infection.Combat
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
-        [SerializeField] private float range = 100f;
-
-        public WeaponState CurrentState => currentState;
-        public WeaponItem CurrentWeapon
-        {
-            get => heldWeapons[currentWeaponIndex];
-            private set => heldWeapons[currentWeaponIndex] = value;
-        }
-
-        public event Action OnAmmoChange = null;
-        public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
-
-        private CameraController m_CameraController = null;
-        private int currentWeaponIndex = 0;
-        private WeaponState currentState = WeaponState.Idle;
-        private bool aimingDownSights = false;
-
         public enum WeaponState
         {
             Idle,
@@ -36,6 +19,44 @@ namespace Infection.Combat
             Switching
         }
 
+        [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
+        [SerializeField] private float raycastRange = 100f;
+
+        // Unity events. Add listeners from the inspector.
+        [SerializeField] private UnityEvent onEquip = null;
+        [SerializeField] private UnityEvent onFire = null;
+        [SerializeField] private UnityEvent onReload = null;
+        [SerializeField] private UnityEvent onSwitch = null;
+        [SerializeField] private UnityEvent onReplace = null;
+
+        /// <summary>
+        /// Current state of the weapon. This can be idle, firing, reloading, or switching.
+        /// </summary>
+        public WeaponState CurrentState => currentState;
+
+        /// <summary>
+        /// The weapon currently in use. Returns one weapon item from the player's held weapons.
+        /// </summary>
+        public WeaponItem CurrentWeapon
+        {
+            get => heldWeapons[currentWeaponIndex];
+            private set => heldWeapons[currentWeaponIndex] = value;
+        }
+
+        /// <summary>
+        /// The player cannot hold additional weapons as their held weapons array is full.
+        /// </summary>
+        public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
+
+        // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
+        public event Action OnAmmoChange = null;
+        public event Action OnWeaponChange = null;
+
+        private CameraController m_CameraController = null;
+        private int currentWeaponIndex = 0;
+        private WeaponState currentState = WeaponState.Idle;
+        private bool aimingDownSights = false;
+
         private void Awake()
         {
             m_CameraController = GetComponent<CameraController>();
@@ -43,6 +64,7 @@ namespace Infection.Combat
 
         private void Start()
         {
+            // This is only to remind you that if this weapon script is attached to a player, it also needs weapon input.
             if (GetComponent<WeaponInput>() == null)
             {
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
@@ -60,6 +82,8 @@ namespace Infection.Combat
             if (CurrentWeapon == null)
             {
                 CurrentWeapon = newWeapon;
+                OnWeaponChange?.Invoke();
+                onEquip?.Invoke();
                 return;
             }
 
@@ -77,6 +101,8 @@ namespace Infection.Combat
                 WeaponItem old = ReplaceWeapon(currentWeaponIndex, newWeapon);
                 Debug.Log("Replaced " + old.WeaponDefinition.WeaponName + " with " + newWeapon.WeaponDefinition.WeaponName);
             }
+
+            onEquip?.Invoke();
         }
 
         /// <summary>
@@ -89,6 +115,11 @@ namespace Infection.Combat
         {
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
+
+            // Update listeners
+            OnWeaponChange?.Invoke();
+            onReplace?.Invoke();
+
             return oldWeapon;
         }
 
@@ -187,7 +218,11 @@ namespace Infection.Combat
 
             // Fill up magazine with ammo from reserves
             CurrentWeapon.ReloadMagazine();
+
+            // Update listeners
             OnAmmoChange?.Invoke();
+            onReload?.Invoke();
+
             currentState = WeaponState.Idle;
         }
 
@@ -210,8 +245,14 @@ namespace Infection.Combat
             // TODO: Play putting away weapon animation
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
+            // Change the weapon
             currentWeaponIndex = index;
+
+            // Update listeners
             OnAmmoChange?.Invoke();
+            OnWeaponChange?.Invoke();
+            onSwitch?.Invoke();
+
             // TODO: Play pulling out weapon animation
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
@@ -227,7 +268,7 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+                    if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, raycastRange))
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                     }
@@ -240,7 +281,10 @@ namespace Infection.Combat
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
+            
+            // Update listeners
             OnAmmoChange?.Invoke();
+            onFire?.Invoke();
         }
     }
 }
