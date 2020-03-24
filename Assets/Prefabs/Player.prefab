@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 3643402698118278937}
   - component: {fileID: 2975567359837406289}
   - component: {fileID: 1421573166695990451}
+  - component: {fileID: 114745719847411298}
   - component: {fileID: 114541340716960544}
   - component: {fileID: 4236705716002909735}
   m_Layer: 11
@@ -220,7 +221,6 @@ MonoBehaviour:
   LockControl: 0
   Grounded: 0
   Velocity: {x: 0, y: 0, z: 0}
-  animator: {fileID: 2609805880003653059}
 --- !u!114 &1421573166695990451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,6 +238,18 @@ MonoBehaviour:
   currentCamera: {fileID: 8693192415258708414}
   weaponCamera: {fileID: 705847042633891411}
   LockControl: 0
+--- !u!114 &114745719847411298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6be0a1f94847a5a7c2ed8807f1a357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114541340716960544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,14 +262,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeapon:
-    weapon: {fileID: 0}
-    magazine: 0
-    reserves: 0
-  stowedWeapon:
-    weapon: {fileID: 0}
-    magazine: 0
-    reserves: 0
+  heldWeapons:
+  - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
+    magazine: 30
+    reserves: 120
+  - weaponDefinition: {fileID: 11400000, guid: f9db732861f5630429333ccc34703c85, type: 2}
+    magazine: 8
+    reserves: 24
   range: 100
 --- !u!114 &4236705716002909735
 MonoBehaviour:
@@ -1104,6 +1115,11 @@ PrefabInstance:
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 6633803981920603189}
+    - target: {fileID: 3973022533197991997, guid: 6ca088554fae7b54fbfa60b9f0c54d11,
+        type: 3}
+      propertyPath: playerWeapon
+      value: 
+      objectReference: {fileID: 114541340716960544}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ca088554fae7b54fbfa60b9f0c54d11, type: 3}
 --- !u!1 &2139682947923509041 stripped
