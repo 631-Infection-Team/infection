@@ -20,13 +20,13 @@ namespace Infection.Combat
             private set => heldWeapons[currentWeaponIndex] = value;
         }
 
+        public event Action OnAmmoChange = null;
         public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
 
         private CameraController m_CameraController = null;
         private int currentWeaponIndex = 0;
         private WeaponState currentState = WeaponState.Idle;
         private bool aimingDownSights = false;
-        private float timeSinceFire = Mathf.Infinity;
 
         public enum WeaponState
         {
@@ -36,44 +36,16 @@ namespace Infection.Combat
             Switching
         }
 
-        private void Start()
+        private void Awake()
         {
             m_CameraController = GetComponent<CameraController>();
         }
 
-        private void Update()
+        private void Start()
         {
-            if (CurrentWeapon.WeaponDefinition)
+            if (GetComponent<WeaponInput>() == null)
             {
-                switch (CurrentWeapon.WeaponDefinition.TriggerType)
-                {
-                    case TriggerType.Auto:
-                        // Automatic fire is the same as burst
-                    case TriggerType.Burst:
-                    {
-                        // Currently you can hold down Fire to fire burst mode weapons
-                        if (Input.GetButton("Fire"))
-                        {
-                            StartCoroutine(FireWeapon());
-                        }
-                        break;
-                    }
-                    case TriggerType.Manual:
-                    {
-                        // Manual fire
-                        if (Input.GetButtonDown("Fire"))
-                        {
-                            StartCoroutine(FireWeapon());
-                        }
-                        break;
-                    }
-                }
-
-                // Reload weapon
-                if (Input.GetButtonDown("Reload"))
-                {
-                    StartCoroutine(ReloadWeapon());
-                }
+                Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
         }
 
@@ -215,6 +187,7 @@ namespace Infection.Combat
 
             // Fill up magazine with ammo from reserves
             CurrentWeapon.ReloadMagazine();
+            OnAmmoChange?.Invoke();
             currentState = WeaponState.Idle;
         }
 
@@ -238,6 +211,7 @@ namespace Infection.Combat
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
             currentWeaponIndex = index;
+            OnAmmoChange?.Invoke();
             // TODO: Play pulling out weapon animation
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
@@ -250,13 +224,23 @@ namespace Infection.Combat
         /// </summary>
         private void Fire()
         {
-            if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+            switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
-                Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                case WeaponType.Raycast:
+                    if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, range))
+                    {
+                        Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                    }
+                    break;
+
+                case WeaponType.Projectile:
+                    // TODO: Implement projectile weapon firing
+                    break;
             }
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
+            OnAmmoChange?.Invoke();
         }
     }
 }
