@@ -263,13 +263,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heldWeapons:
-  - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
+  - weaponDefinition: {fileID: 11400000, guid: 5dea9e4d6c8aff44ab08e516d43fa6bb, type: 2}
     magazine: 30
     reserves: 120
   - weaponDefinition: {fileID: 11400000, guid: f9db732861f5630429333ccc34703c85, type: 2}
-    magazine: 8
-    reserves: 24
+    magazine: 15
+    reserves: 45
   raycastRange: 100
+  weaponHolder: {fileID: 8226169054192976122}
   onEquip:
     m_PersistentCalls:
       m_Calls: []
@@ -549,9 +550,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 1000
-  field of view: 40
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 1
@@ -636,7 +637,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 15159
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -886,7 +887,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8226169054192976122}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: WeaponHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

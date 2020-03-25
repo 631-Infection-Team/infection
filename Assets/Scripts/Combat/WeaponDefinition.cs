@@ -38,8 +38,9 @@ namespace Infection.Combat
         [Header("Ammunition")]
         [SerializeField] private int clipSize = 30;
         [SerializeField] private int maxReserves = 120;
-        [Header("User Interface")]
+        [Header("Rendering")]
         [SerializeField] private Sprite crosshair = null;
+        [SerializeField] private GameObject modelPrefab = null;
 
         public string WeaponName => weaponName;
         public WeaponClass WeaponClass => weaponClass;
@@ -53,6 +54,7 @@ namespace Infection.Combat
         public int ClipSize => clipSize;
         public int MaxReserves => maxReserves;
         public Sprite Crosshair => crosshair;
+        public GameObject ModelPrefab => modelPrefab;
 
         /// <summary>
         /// The time it takes to empty a full magazine without reloading or stopping.

@@ -21,6 +21,8 @@ namespace Infection.Combat
 
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
+        [SerializeField] private Transform weaponHolder = null;
+        [SerializeField] private Transform muzzle = null;
 
         // Unity events. Add listeners from the inspector.
         [Header("Events for weapon behavior changes"), Tooltip("You may these to trigger sound effects")]
@@ -72,6 +74,9 @@ namespace Infection.Combat
             {
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
+
+            // Spawn the weapon model
+            UpdateWeaponModel();
         }
 
         /// <summary>
@@ -85,8 +90,12 @@ namespace Infection.Combat
             if (CurrentWeapon == null)
             {
                 CurrentWeapon = newWeapon;
+                UpdateWeaponModel();
+
+                // Update listeners
                 OnWeaponChange?.Invoke();
                 onEquip?.Invoke();
+
                 return;
             }
 
@@ -118,6 +127,7 @@ namespace Infection.Combat
         {
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
+            UpdateWeaponModel();
 
             // Update listeners
             OnWeaponChange?.Invoke();
@@ -250,6 +260,7 @@ namespace Infection.Combat
 
             // Change the weapon
             currentWeaponIndex = index;
+            UpdateWeaponModel();
 
             // Update listeners
             OnAmmoChange?.Invoke();
@@ -274,7 +285,7 @@ namespace Infection.Combat
                     if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, raycastRange))
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
-                        Debug.DrawRay(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, Color.red, 0.5f);
+                        Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
                     break;
 
@@ -289,6 +300,30 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
+        }
+
+        /// <summary>
+        /// Removes old weapon model and spawns a new weapon model from the currently equipped weapon.
+        /// This process destroys all child game objects from the weapon holder and instantiates a new object
+        /// from the model prefab in the weapon definition.
+        /// </summary>
+        private void UpdateWeaponModel()
+        {
+            // Reset muzzle transform
+            muzzle = null;
+
+            if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
+            {
+                // Destroy all children
+                foreach (Transform child in weaponHolder) {
+                    Destroy(child.gameObject);
+                }
+
+                // Spawn weapon model
+                GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
+                // Set muzzle transform
+                muzzle = weaponModel.transform.GetChild(0);
+            }
         }
     }
 }
