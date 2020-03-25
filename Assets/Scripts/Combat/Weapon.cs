@@ -23,6 +23,7 @@ namespace Infection.Combat
         [SerializeField] private float raycastRange = 100f;
 
         // Unity events. Add listeners from the inspector.
+        [Header("Events for weapon behavior changes"), Tooltip("You may these to trigger sound effects")]
         [SerializeField] private UnityEvent onEquip = null;
         [SerializeField] private UnityEvent onFire = null;
         [SerializeField] private UnityEvent onReload = null;
@@ -271,6 +272,7 @@ namespace Infection.Combat
                     if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, raycastRange))
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                        Debug.DrawRay(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, Color.red, 0.5f);
                     }
                     break;
 
@@ -281,7 +283,7 @@ namespace Infection.Combat
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
-            
+
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
