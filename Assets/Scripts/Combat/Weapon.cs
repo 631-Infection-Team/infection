@@ -52,6 +52,8 @@ namespace Infection.Combat
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         public event Action OnAmmoChange = null;
         public event Action OnWeaponChange = null;
+        public event OnAlert OnAlertEvent = null;
+        public delegate IEnumerator OnAlert(string message, float duration);
 
         private CameraController m_CameraController = null;
         private int currentWeaponIndex = 0;
@@ -141,8 +143,8 @@ namespace Infection.Combat
             {
                 if (CurrentWeapon.Reserves <= 0)
                 {
-                    // TODO: Display a message in the HUD to indicate that the player has no more ammo
                     Debug.Log("Out of ammo!");
+                    StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 2f));
                     // Switch to a different weapon if it exists and if it still has ammo left
                     int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.Magazine + w.Reserves > 0);
                     if (nextWeapon > -1)
@@ -200,7 +202,7 @@ namespace Infection.Combat
             if (CurrentWeapon.Reserves <= 0)
             {
                 Debug.Log("No more ammo in reserves!");
-                // TODO: Display a message in the HUD to indicate that the player has no more ammo
+                StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 1f));
                 yield break;
             }
 
@@ -208,7 +210,7 @@ namespace Infection.Combat
             if (CurrentWeapon.Magazine >= CurrentWeapon.WeaponDefinition.ClipSize)
             {
                 Debug.Log("Magazine fully loaded, no need to reload.");
-                // TODO: Display a message in the HUD to indicate that the magazine is already filled up
+                StartCoroutine(OnAlertEvent?.Invoke("Magazine full", 1f));
                 yield break;
             }
 

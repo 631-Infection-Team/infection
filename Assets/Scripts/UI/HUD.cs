@@ -1,4 +1,6 @@
-﻿using Infection.Combat;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Infection.Combat;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -11,6 +13,7 @@ namespace Infection
         [SerializeField] private Image crosshair = null;
         [SerializeField] private GameObject pauseMenu = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;
+        [SerializeField] private TextMeshProUGUI alertMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI weaponNameDisplay = null;
         [SerializeField] private TextMeshProUGUI magazineDisplay = null;
         [SerializeField] private TextMeshProUGUI reservesDisplay = null;
@@ -20,8 +23,9 @@ namespace Infection
 
         private void Start()
         {
-            // Clear status message at start
-            UpdateStatusMessage("");
+            // Clear status and alert messages at start
+            statusMessageDisplay.text = "";
+            alertMessageDisplay.text = "";
 
             // Set weapon info at start
             UpdateWeaponAmmoDisplay();
@@ -31,8 +35,8 @@ namespace Infection
 
         private void Update()
         {
-            // Update status message display to reflect weapon state
             string statusMessage = "";
+            // Update status message display to reflect weapon state
             switch (playerWeapon.CurrentState)
             {
                 case Weapon.WeaponState.Reloading:
@@ -42,7 +46,7 @@ namespace Infection
                     statusMessage = "Switching";
                     break;
             }
-            UpdateStatusMessage(statusMessage);
+            statusMessageDisplay.text = statusMessage;
         }
 
         private void OnEnable()
@@ -50,6 +54,7 @@ namespace Infection
             playerWeapon.OnAmmoChange += UpdateWeaponAmmoDisplay;
             playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange += UpdateCrosshair;
+            playerWeapon.OnAlertEvent += UpdateAlertMessage;
         }
 
         private void OnDisable()
@@ -57,6 +62,7 @@ namespace Infection
             playerWeapon.OnAmmoChange -= UpdateWeaponAmmoDisplay;
             playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange -= UpdateCrosshair;
+            playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
         [Client]
@@ -67,9 +73,11 @@ namespace Infection
         }
 
         [Client]
-        private void UpdateStatusMessage(string message)
+        private IEnumerator UpdateAlertMessage(string message, float duration)
         {
-            statusMessageDisplay.text = message;
+            alertMessageDisplay.text = message;
+            yield return new WaitForSeconds(duration);
+            alertMessageDisplay.text = "";
         }
 
         [Client]
