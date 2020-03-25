@@ -23,17 +23,22 @@ namespace Infection.Combat
     [CreateAssetMenu(menuName = "Infection/Combat/Weapon")]
     public class WeaponDefinition : ScriptableObject
     {
+        [Header("Weapon Properties")]
         [SerializeField] private string weaponName = "New Weapon";
         [SerializeField] private WeaponClass weaponClass = null;
         [SerializeField] private TriggerType triggerType = TriggerType.Auto;
         [SerializeField] private WeaponType weaponType = WeaponType.Raycast;
+        [Header("Firing")]
         [SerializeField] private float damage = 8.0f;
         [SerializeField, Tooltip("Time between shots in seconds")] private float fireRate = 0.1f;
+        [Header("Timers")]
         [SerializeField] private float reloadTime = 2.0f;
         [SerializeField, Tooltip("Time to pull out weapon")] private float readyTime = 0.5f;
         [SerializeField, Tooltip("Time to put away weapon")] private float holsterTime = 0.7f;
+        [Header("Ammunition")]
         [SerializeField] private int clipSize = 30;
         [SerializeField] private int maxReserves = 120;
+        [Header("User Interface")]
         [SerializeField] private Sprite crosshair = null;
 
         public string WeaponName => weaponName;

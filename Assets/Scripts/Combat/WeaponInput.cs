@@ -42,6 +42,11 @@ namespace Infection.Combat
                 {
                     StartCoroutine(m_Weapon.ReloadWeapon());
                 }
+
+                // Aiming down the sights
+                if (Input.GetButton("Aim"))
+                {
+                }
             }
         }
     }
