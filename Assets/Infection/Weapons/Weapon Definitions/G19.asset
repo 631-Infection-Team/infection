@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cf29a0e59a24190a38c2bf1438fc39d, type: 3}
-  m_Name: Desert Eagle
+  m_Name: G19
   m_EditorClassIdentifier: 
-  weaponName: Desert Eagle
+  weaponName: G19
   weaponClass: {fileID: 11400000, guid: 86a6568dea7898941ab036b5a263b05e, type: 2}
   triggerType: 2
   weaponType: 0
   damage: 12
-  fireRate: 0.5
-  reloadTime: 3.5
-  readyTime: 0.5
-  holsterTime: 0.7
-  clipSize: 8
-  maxReserves: 24
+  fireRate: 0.3
+  reloadTime: 2.3
+  readyTime: 0.2
+  holsterTime: 0.3
+  clipSize: 15
+  maxReserves: 45
   crosshair: {fileID: 21300000, guid: 8f6900ca085225a4d86f1144627c2819, type: 3}
+  modelPrefab: {fileID: 5159399308938523075, guid: ef945e593775e144d9b331d2a0f80fb8,
+    type: 3}
