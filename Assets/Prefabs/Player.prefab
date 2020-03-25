@@ -271,6 +271,7 @@ MonoBehaviour:
     reserves: 45
   raycastRange: 100
   weaponHolder: {fileID: 8226169054192976122}
+  muzzle: {fileID: 0}
   onEquip:
     m_PersistentCalls:
       m_Calls: []
