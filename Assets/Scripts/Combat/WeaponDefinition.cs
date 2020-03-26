@@ -23,17 +23,24 @@ namespace Infection.Combat
     [CreateAssetMenu(menuName = "Infection/Combat/Weapon")]
     public class WeaponDefinition : ScriptableObject
     {
+        [Header("Weapon Properties")]
         [SerializeField] private string weaponName = "New Weapon";
         [SerializeField] private WeaponClass weaponClass = null;
         [SerializeField] private TriggerType triggerType = TriggerType.Auto;
         [SerializeField] private WeaponType weaponType = WeaponType.Raycast;
+        [Header("Firing")]
         [SerializeField] private float damage = 8.0f;
         [SerializeField, Tooltip("Time between shots in seconds")] private float fireRate = 0.1f;
+        [Header("Timers")]
         [SerializeField] private float reloadTime = 2.0f;
         [SerializeField, Tooltip("Time to pull out weapon")] private float readyTime = 0.5f;
         [SerializeField, Tooltip("Time to put away weapon")] private float holsterTime = 0.7f;
+        [Header("Ammunition")]
         [SerializeField] private int clipSize = 30;
         [SerializeField] private int maxReserves = 120;
+        [Header("Rendering")]
+        [SerializeField] private Sprite crosshair = null;
+        [SerializeField] private GameObject modelPrefab = null;
 
         public string WeaponName => weaponName;
         public WeaponClass WeaponClass => weaponClass;
@@ -46,6 +53,8 @@ namespace Infection.Combat
         public float HolsterTime => holsterTime;
         public int ClipSize => clipSize;
         public int MaxReserves => maxReserves;
+        public Sprite Crosshair => crosshair;
+        public GameObject ModelPrefab => modelPrefab;
 
         /// <summary>
         /// The time it takes to empty a full magazine without reloading or stopping.
