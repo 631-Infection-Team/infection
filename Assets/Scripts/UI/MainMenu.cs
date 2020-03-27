@@ -7,9 +7,11 @@ namespace Infection.UI
 {
     public class MainMenu : MonoBehaviour
     {
+        [SerializeField] private Transform[] disableOnChange;
+
         public void SetActivePanel(Transform panel)
         {
-            foreach (Transform child in transform.Find("Canvas"))
+            foreach (Transform child in disableOnChange)
             {
                 child.gameObject.SetActive(child == panel);
             }
