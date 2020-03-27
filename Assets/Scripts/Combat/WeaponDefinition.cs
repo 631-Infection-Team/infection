@@ -62,10 +62,12 @@ namespace Infection.Combat
         private int maxReserves = 120;
 
         [Header("Rendering")]
-        [SerializeField]
+        [SerializeField, Tooltip("Crosshair specific to this weapon")]
         private Sprite crosshair = null;
-        [SerializeField]
+        [SerializeField, Tooltip("Prefab for the weapon model with predefined transforms")]
         private GameObject modelPrefab = null;
+        [SerializeField, Tooltip("Override controller for animations used by WeaponHolder animator")]
+        private AnimatorOverrideController animatorOverride = null;
 
         public string WeaponName => weaponName;
         public WeaponClass WeaponClass => weaponClass;
