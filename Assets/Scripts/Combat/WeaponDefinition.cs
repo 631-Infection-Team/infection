@@ -24,23 +24,48 @@ namespace Infection.Combat
     public class WeaponDefinition : ScriptableObject
     {
         [Header("Weapon Properties")]
-        [SerializeField] private string weaponName = "New Weapon";
-        [SerializeField] private WeaponClass weaponClass = null;
-        [SerializeField] private TriggerType triggerType = TriggerType.Auto;
-        [SerializeField] private WeaponType weaponType = WeaponType.Raycast;
+        [SerializeField]
+        private string weaponName = "New Weapon";
+        [SerializeField]
+        private WeaponClass weaponClass = null;
+        [SerializeField]
+        private TriggerType triggerType = TriggerType.Auto;
+        [SerializeField]
+        private WeaponType weaponType = WeaponType.Raycast;
+
         [Header("Firing")]
-        [SerializeField] private float damage = 8.0f;
-        [SerializeField, Tooltip("Time between shots in seconds")] private float fireRate = 0.1f;
+        [SerializeField]
+        private float damage = 8.0f;
+        [SerializeField, Tooltip("Time between shots in seconds, lower is faster"), Range(0.001f, 10.0f)]
+        private float fireRate = 0.1f;
+        [SerializeField, Tooltip("Amount of recoil from each shot, higher is more intense"), Range(0.001f, 10.0f)]
+        private float recoilMultiplier = 0.1f;
+
+        [Header("Special Action")]
+        [SerializeField, Tooltip("Amount of magnification in field of view when aiming"), Range(0.001f, 10.0f)]
+        private float aimZoomMultiplier = 1.10f;
+
         [Header("Timers")]
-        [SerializeField] private float reloadTime = 2.0f;
-        [SerializeField, Tooltip("Time to pull out weapon")] private float readyTime = 0.5f;
-        [SerializeField, Tooltip("Time to put away weapon")] private float holsterTime = 0.7f;
+        [SerializeField, Tooltip("Time to reload current weapon, lower is faster"), Range(0.001f, 10.0f)]
+        private float reloadTime = 2.0f;
+        [SerializeField, Tooltip("Time to pull out weapon, lower is faster"), Range(0.001f, 10.0f)]
+        private float readyTime = 0.5f;
+        [SerializeField, Tooltip("Time to put away weapon, lower is faster"), Range(0.001f, 10.0f)]
+        private float holsterTime = 0.7f;
+        [SerializeField, Tooltip("Time to aim down the sights, lower is faster"), Range(0.001f, 10.0f)]
+        private float aimTime = 0.2f;
+
         [Header("Ammunition")]
-        [SerializeField] private int clipSize = 30;
-        [SerializeField] private int maxReserves = 120;
+        [SerializeField, Tooltip("Maximum number of rounds in the magazine")]
+        private int clipSize = 30;
+        [SerializeField, Tooltip("Maximum number of rounds kept in reserves")]
+        private int maxReserves = 120;
+
         [Header("Rendering")]
-        [SerializeField] private Sprite crosshair = null;
-        [SerializeField] private GameObject modelPrefab = null;
+        [SerializeField]
+        private Sprite crosshair = null;
+        [SerializeField]
+        private GameObject modelPrefab = null;
 
         public string WeaponName => weaponName;
         public WeaponClass WeaponClass => weaponClass;
@@ -48,6 +73,8 @@ namespace Infection.Combat
         public WeaponType WeaponType => weaponType;
         public float Damage => damage;
         public float FireRate => fireRate;
+        public float RecoilMultiplier => recoilMultiplier;
+
         public float ReloadTime => reloadTime;
         public float ReadyTime => readyTime;
         public float HolsterTime => holsterTime;
