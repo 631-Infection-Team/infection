@@ -5,18 +5,33 @@ namespace Infection.Combat
     [RequireComponent(typeof(Weapon))]
     public class WeaponInput : MonoBehaviour
     {
-        private Weapon m_Weapon = null;
+        /// <summary>
+        /// Prevent the player from controlling the weapon. Used for when the game is paused.
+        /// </summary>
+        public bool LockControl
+        {
+            get => _lockControl;
+            set => _lockControl = value;
+        }
+
+        private Weapon _weapon = null;
+        private bool _lockControl = false;
 
         private void Awake()
         {
-            m_Weapon = GetComponent<Weapon>();
+            _weapon = GetComponent<Weapon>();
         }
 
         private void Update()
         {
-            if (m_Weapon.CurrentWeapon.WeaponDefinition)
+            if (LockControl)
             {
-                switch (m_Weapon.CurrentWeapon.WeaponDefinition.TriggerType)
+                return;
+            }
+
+            if (_weapon.CurrentWeapon.WeaponDefinition)
+            {
+                switch (_weapon.CurrentWeapon.WeaponDefinition.TriggerType)
                 {
                     case TriggerType.Auto:
                         // Automatic fire is the same as burst
@@ -24,7 +39,7 @@ namespace Infection.Combat
                         // Currently you can hold down Fire to fire burst mode weapons
                         if (Input.GetButton("Fire"))
                         {
-                            StartCoroutine(m_Weapon.FireWeapon());
+                            StartCoroutine(_weapon.FireWeapon());
                         }
                         break;
 
@@ -32,7 +47,7 @@ namespace Infection.Combat
                         // Manual fire
                         if (Input.GetButtonDown("Fire"))
                         {
-                            StartCoroutine(m_Weapon.FireWeapon());
+                            StartCoroutine(_weapon.FireWeapon());
                         }
                         break;
                 }
@@ -40,7 +55,7 @@ namespace Infection.Combat
                 // Reload weapon
                 if (Input.GetButtonDown("Reload"))
                 {
-                    StartCoroutine(m_Weapon.ReloadWeapon());
+                    StartCoroutine(_weapon.ReloadWeapon());
                 }
 
                 // Aiming down the sights

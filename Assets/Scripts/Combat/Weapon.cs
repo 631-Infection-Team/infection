@@ -20,8 +20,11 @@ namespace Infection.Combat
             Switching
         }
 
+        [Header("Weapon")]
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
+
+        [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
         [SerializeField] private Transform muzzle = null;
 
@@ -58,8 +61,11 @@ namespace Infection.Combat
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
+        // Components
         private Animator _weaponHolderAnimator = null;
         private CameraController _cameraController = null;
+
+        // Properties
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
         private bool _aimingDownSights = false;

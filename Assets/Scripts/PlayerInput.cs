@@ -1,13 +1,15 @@
-﻿using Mirror;
+﻿using Infection.Combat;
+using Mirror;
 using UnityEngine;
 
 namespace Infection
 {
     public class PlayerInput : NetworkBehaviour
     {
-        [SerializeField] private CameraController cameraController;
-        [SerializeField] private PlayerController playerController;
-        [SerializeField] private GameObject HUD;
+        [SerializeField] private CameraController cameraController = null;
+        [SerializeField] private PlayerController playerController = null;
+        [SerializeField] private WeaponInput weaponInput = null;
+        [SerializeField] private GameObject HUD = null;
 
         public bool LockControl;
 
@@ -17,6 +19,7 @@ namespace Infection
             {
                 playerController.LockControl = false;
                 cameraController.LockControl = false;
+                weaponInput.LockControl = false;
             }
         }
 
@@ -31,6 +34,7 @@ namespace Infection
                     LockControl = !LockControl;
                     playerController.LockControl = LockControl;
                     cameraController.LockControl = LockControl;
+                    weaponInput.LockControl = LockControl;
 
                     HUD.GetComponent<HUD>().TogglePause();
                 }
