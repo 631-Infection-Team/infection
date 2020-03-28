@@ -272,6 +272,9 @@ MonoBehaviour:
     magazine: 15
     reserves: 45
   raycastRange: 100
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 8721
   weaponHolder: {fileID: 8226169054192976122}
   muzzle: {fileID: 0}
   onEquip:

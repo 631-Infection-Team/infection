@@ -23,6 +23,7 @@ namespace Infection.Combat
         [Header("Weapon")]
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
+        [SerializeField] private LayerMask raycastMask = 0;
 
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
@@ -309,7 +310,13 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    if (_cameraController && Physics.Raycast(_cameraController.currentCamera.transform.position, _cameraController.currentCamera.transform.forward, out var hit, raycastRange))
+                    Transform cameraTransform = _cameraController.currentCamera.transform;
+                    // Create ray
+                    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                    // Raycast using LayerMask
+                    bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
+                    // Determine objects hit
+                    if (_cameraController && raycast)
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
