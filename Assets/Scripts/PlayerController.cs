@@ -10,8 +10,9 @@ namespace Infection
         public bool LockControl = false;
         public bool Grounded = false;
         public Vector3 Velocity = Vector3.zero;
+        public GameObject playerModel;
 
-        private NetworkAnimator networkAnimator;
+        private Animator animator;
         private CharacterController characterController;
         private readonly float JumpSpeed = 5.0f;
         private float groundedTimer;
@@ -22,8 +23,8 @@ namespace Infection
 
         public override void OnStartLocalPlayer()
         {
-            networkAnimator = GetComponent<NetworkAnimator>();
             characterController = GetComponent<CharacterController>();
+            animator = playerModel.GetComponent<Animator>();
 
             Grounded = true;
             horizontalSpeed = transform.localEulerAngles.y;
@@ -52,6 +53,8 @@ namespace Infection
 
                         if (groundedTimer >= 0.5f)
                         {
+                            animator.SetBool("Grounded", false);
+
                             lostFooting = true;
                             Grounded = false;
                         }
@@ -59,6 +62,9 @@ namespace Infection
                 }
                 else
                 {
+                    animator.SetBool("Jump_b", false);
+                    animator.SetBool("Grounded", true);
+
                     groundedTimer = 0.0f;
                     Grounded = true;
                 }
@@ -68,7 +74,8 @@ namespace Infection
                     // Jumping
                     if (Grounded && jump)
                     {
-                        networkAnimator.SetTrigger("Jump");
+                        animator.SetBool("Jump_b", true);
+
                         verticalSpeed = JumpSpeed;
                         Grounded = false;
                         lostFooting = true;
@@ -93,6 +100,7 @@ namespace Infection
                     move = move * usedSpeed * Time.deltaTime;
                     move = transform.TransformDirection(move);
 
+                    animator.SetFloat("Speed_f", Mathf.Abs(vertical));
                     characterController.Move(move);
 
                     float turnPlayer = lookHorizontal;

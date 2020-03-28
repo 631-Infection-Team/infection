@@ -11,10 +11,12 @@ namespace Infection
 
         private float targetVerticalAngle;
         private PlayerController playerController;
+        private Animator animator;
 
         public override void OnStartLocalPlayer()
         {
             playerController = GetComponent<PlayerController>();
+            animator = playerController.playerModel.GetComponent<Animator>();
 
             if (currentCamera)
             {
@@ -32,13 +34,18 @@ namespace Infection
             if (isLocalPlayer && currentCamera && playerController)
             {
                 float lookY = Input.GetAxis("Mouse Y");
-                // currentCamera.transform.position = transform.position;
 
                 if (!LockControl)
                 {
                     targetVerticalAngle -= lookY;
                     if (targetVerticalAngle > 90f) targetVerticalAngle = 90f;
                     if (targetVerticalAngle < -90f) targetVerticalAngle = -90f;
+
+                    if (animator)
+                    {
+                        animator.SetFloat("Head_Vertical_f", -(targetVerticalAngle / 90f));
+                        animator.SetFloat("Body_Vertical_f", -(targetVerticalAngle / 90f) / 2);
+                    }
 
                     Vector3 currentAngles = currentCamera.transform.localEulerAngles;
                     currentAngles.x = targetVerticalAngle;
