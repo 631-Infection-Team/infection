@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 954c1f8e5b1e80946ac76a7ab1a6d127
+guid: 120ad36468d2f8d44b303f5a9d538e1b
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -11,8 +11,7 @@ TrueTypeFontImporter:
   fontName: Inter
   fontNames:
   - Inter
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: 2ff7c8745f2dd594c86bbfa5c424e1c7, type: 3}
+  fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
