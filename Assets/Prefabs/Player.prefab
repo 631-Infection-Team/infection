@@ -201,6 +201,7 @@ MonoBehaviour:
   syncInterval: 0.1
   cameraController: {fileID: 1421573166695990451}
   playerController: {fileID: 2975567359837406289}
+  weaponInput: {fileID: 114745719847411298}
   HUD: {fileID: 2139682947923509041}
   LockControl: 0
 --- !u!114 &2975567359837406289
