@@ -151,25 +151,7 @@ namespace Infection.Combat
                 yield break;
             }
 
-            // Out of ammo
-            if (CurrentWeapon.Magazine <= 0)
-            {
-                if (CurrentWeapon.Reserves <= 0)
-                {
-                    Debug.Log("Out of ammo!");
-                    StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 2f));
-                    // Switch to a different weapon if it exists and if it still has ammo left
-                    int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.Magazine + w.Reserves > 0);
-                    if (nextWeapon > -1)
-                    {
-                        StartCoroutine(SwitchWeapon(nextWeapon));
-                    }
-                    yield break;
-                }
-
-                StartCoroutine(ReloadWeapon());
-                yield break;
-            }
+            StartCoroutine(CheckAmmo());
 
             // Firing burst type weapon
             if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
@@ -197,6 +179,30 @@ namespace Infection.Combat
             }
 
             _currentState = WeaponState.Idle;
+
+            StartCoroutine(CheckAmmo());
+        }
+
+        private IEnumerator CheckAmmo()
+        {
+            // Out of ammo
+            if (CurrentWeapon.Magazine <= 0)
+            {
+                if (CurrentWeapon.Reserves <= 0)
+                {
+                    Debug.Log("Out of ammo!");
+                    StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 2f));
+                    // Switch to a different weapon if it exists and if it still has ammo left
+                    int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.Magazine + w.Reserves > 0);
+                    if (nextWeapon > -1)
+                    {
+                        StartCoroutine(SwitchWeapon(nextWeapon));
+                    }
+                    yield break;
+                }
+
+                StartCoroutine(ReloadWeapon());
+            }
         }
 
         /// <summary>
