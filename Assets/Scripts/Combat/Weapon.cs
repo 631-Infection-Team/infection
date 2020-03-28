@@ -345,8 +345,8 @@ namespace Infection.Combat
 
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
-                // Set muzzle transform
-                muzzle = weaponModel.transform.GetChild(0);
+                // Set muzzle transform. The child object must be called Muzzle
+                muzzle = weaponModel.transform.Find("Muzzle");
             }
         }
     }

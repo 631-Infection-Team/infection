@@ -27,6 +27,6 @@ MonoBehaviour:
   clipSize: 30
   maxReserves: 120
   crosshair: {fileID: 21300000, guid: 7a3f495e8306eb941833afcbf973421f, type: 3}
-  modelPrefab: {fileID: 2503670386188499272, guid: a840c24f49071934c984868d491dc80d,
+  modelPrefab: {fileID: 2455399664354486728, guid: 71530e6c6bfc3cd47a3d114831c2f54a,
     type: 3}
   animatorOverride: {fileID: 0}
