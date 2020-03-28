@@ -151,40 +151,38 @@ namespace Infection.Combat
                 yield break;
             }
 
-            StartCoroutine(CheckAmmo());
-
-            // Firing burst type weapon
-            if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
+            // Must have ammo in the magazine to fire
+            if (CurrentWeapon.Magazine > 0)
             {
-                int burst = 3;
-                for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
+                // Firing burst type weapon
+                if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
                 {
+                    // Only fire enough rounds provided sufficient magazine
+                    int burst = 3;
+                    for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
+                    {
+                        // Fire the weapon
+                        _currentState = WeaponState.Firing;
+                        Fire();
+                        // Wait a third of the fire rate between each shot in the burst
+                        yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
+                    }
+
+                    // Wait twice as long between bursts
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 2.0f);
+                }
+                else
+                {
+                    // Firing automatic or manual type weapon
                     // Fire the weapon
                     _currentState = WeaponState.Firing;
                     Fire();
-                    // Wait a third of the fire rate between each shot in the burst
-                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
-
-                // Wait twice as long between bursts
-                yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 2.0f);
-            }
-            else
-            {
-                // Firing automatic or manual type weapon
-                // Fire the weapon
-                _currentState = WeaponState.Firing;
-                Fire();
-                yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
             }
 
             _currentState = WeaponState.Idle;
 
-            StartCoroutine(CheckAmmo());
-        }
-
-        private IEnumerator CheckAmmo()
-        {
             // Out of ammo
             if (CurrentWeapon.Magazine <= 0)
             {
@@ -198,6 +196,7 @@ namespace Infection.Combat
                     {
                         StartCoroutine(SwitchWeapon(nextWeapon));
                     }
+
                     yield break;
                 }
 
@@ -346,8 +345,8 @@ namespace Infection.Combat
 
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
-                // Set muzzle transform
-                muzzle = weaponModel.transform.GetChild(0);
+                // Set muzzle transform. The child object must be called Muzzle
+                muzzle = weaponModel.transform.Find("Muzzle");
             }
         }
     }
