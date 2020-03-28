@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace Infection.Combat
 {
+    [RequireComponent(typeof(Animator))]
     public class Weapon : MonoBehaviour
     {
         public enum WeaponState
@@ -25,7 +26,7 @@ namespace Infection.Combat
         [SerializeField] private Transform muzzle = null;
 
         // Unity events. Add listeners from the inspector.
-        [Header("Events for weapon behavior changes"), Tooltip("You may these to trigger sound effects")]
+        [Header("Events for weapon behavior state changes")]
         [SerializeField] private UnityEvent onEquip = null;
         [SerializeField] private UnityEvent onFire = null;
         [SerializeField] private UnityEvent onReload = null;
@@ -35,15 +36,15 @@ namespace Infection.Combat
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
         /// </summary>
-        public WeaponState CurrentState => currentState;
+        public WeaponState CurrentState => _currentState;
 
         /// <summary>
         /// The weapon currently in use. Returns one weapon item from the player's held weapons.
         /// </summary>
         public WeaponItem CurrentWeapon
         {
-            get => heldWeapons[currentWeaponIndex];
-            private set => heldWeapons[currentWeaponIndex] = value;
+            get => heldWeapons[_currentWeaponIndex];
+            private set => heldWeapons[_currentWeaponIndex] = value;
         }
 
         /// <summary>
@@ -57,14 +58,16 @@ namespace Infection.Combat
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
-        private CameraController m_CameraController = null;
-        private int currentWeaponIndex = 0;
-        private WeaponState currentState = WeaponState.Idle;
-        private bool aimingDownSights = false;
+        private Animator _weaponHolderAnimator = null;
+        private CameraController _cameraController = null;
+        private int _currentWeaponIndex = 0;
+        private WeaponState _currentState = WeaponState.Idle;
+        private bool _aimingDownSights = false;
 
         private void Awake()
         {
-            m_CameraController = GetComponent<CameraController>();
+            _cameraController = GetComponent<CameraController>();
+            _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
         private void Start()
@@ -105,12 +108,12 @@ namespace Infection.Combat
             {
                 // Equip the new weapon and switch to it
                 heldWeapons[emptySlot] = newWeapon;
-                StartCoroutine(SwitchWeapon((currentWeaponIndex + 1) % heldWeapons.Length));
+                StartCoroutine(SwitchWeapon((_currentWeaponIndex + 1) % heldWeapons.Length));
             }
             else
             {
                 // No more space in inventory, replace current weapon with new one
-                WeaponItem old = ReplaceWeapon(currentWeaponIndex, newWeapon);
+                WeaponItem old = ReplaceWeapon(_currentWeaponIndex, newWeapon);
                 Debug.Log("Replaced " + old.WeaponDefinition.WeaponName + " with " + newWeapon.WeaponDefinition.WeaponName);
             }
 
@@ -143,7 +146,7 @@ namespace Infection.Combat
         public IEnumerator FireWeapon()
         {
             // Cannot fire weapon when state is not idle
-            if (currentState != WeaponState.Idle)
+            if (_currentState != WeaponState.Idle)
             {
                 yield break;
             }
@@ -175,7 +178,7 @@ namespace Infection.Combat
                 for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
                 {
                     // Fire the weapon
-                    currentState = WeaponState.Firing;
+                    _currentState = WeaponState.Firing;
                     Fire();
                     // Wait a third of the fire rate between each shot in the burst
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
@@ -188,12 +191,12 @@ namespace Infection.Combat
             {
                 // Firing automatic or manual type weapon
                 // Fire the weapon
-                currentState = WeaponState.Firing;
+                _currentState = WeaponState.Firing;
                 Fire();
                 yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
             }
 
-            currentState = WeaponState.Idle;
+            _currentState = WeaponState.Idle;
         }
 
         /// <summary>
@@ -203,7 +206,7 @@ namespace Infection.Combat
         public IEnumerator ReloadWeapon()
         {
             // Already reloading or not in idle state
-            if (currentState == WeaponState.Reloading || currentState != WeaponState.Idle)
+            if (_currentState == WeaponState.Reloading || _currentState != WeaponState.Idle)
             {
                 yield break;
             }
@@ -225,8 +228,14 @@ namespace Infection.Combat
             }
 
             // Reloading animation
-            currentState = WeaponState.Reloading;
-            // TODO: Play animation
+            _currentState = WeaponState.Reloading;
+
+            // Play animation
+            // ReloadSpeed is a parameter in the animator. It's the speed multiplier.
+            // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
+            _weaponHolderAnimator.SetTrigger("Reload");
+            _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
+
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
             // Fill up magazine with ammo from reserves
@@ -236,7 +245,7 @@ namespace Infection.Combat
             OnAmmoChange?.Invoke();
             onReload?.Invoke();
 
-            currentState = WeaponState.Idle;
+            _currentState = WeaponState.Idle;
         }
 
         /// <summary>
@@ -247,19 +256,23 @@ namespace Infection.Combat
         public IEnumerator SwitchWeapon(int index)
         {
             // Cannot switch weapon when not in idle state or current weapon already out
-            if (currentState != WeaponState.Idle || currentWeaponIndex == index)
+            if (_currentState != WeaponState.Idle || _currentWeaponIndex == index)
             {
                 yield break;
             }
 
             // Begin switching weapons
-            currentState = WeaponState.Switching;
+            _currentState = WeaponState.Switching;
             Debug.Log("Switching weapon");
-            // TODO: Play putting away weapon animation
+
+            // Holster animation
+            _weaponHolderAnimator.SetTrigger("Holster");
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
+
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
             // Change the weapon
-            currentWeaponIndex = index;
+            _currentWeaponIndex = index;
             UpdateWeaponModel();
 
             // Update listeners
@@ -267,10 +280,13 @@ namespace Infection.Combat
             OnWeaponChange?.Invoke();
             onSwitch?.Invoke();
 
-            // TODO: Play pulling out weapon animation
+            // Ready animation
+            _weaponHolderAnimator.SetTrigger("Ready");
+            _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
+
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
-            currentState = WeaponState.Idle;
+            _currentState = WeaponState.Idle;
         }
 
         /// <summary>
@@ -282,7 +298,7 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    if (m_CameraController && Physics.Raycast(m_CameraController.currentCamera.transform.position, m_CameraController.currentCamera.transform.forward, out var hit, raycastRange))
+                    if (_cameraController && Physics.Raycast(_cameraController.currentCamera.transform.position, _cameraController.currentCamera.transform.forward, out var hit, raycastRange))
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
@@ -300,6 +316,9 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
+
+            _weaponHolderAnimator.SetTrigger("Fire");
+            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
         }
 
         /// <summary>
