@@ -17,12 +17,16 @@ MonoBehaviour:
   triggerType: 0
   weaponType: 0
   damage: 7
-  fireRate: 0.07
+  fireRate: 0.08
+  recoilMultiplier: 0.1
+  aimZoomMultiplier: 1.1
   reloadTime: 1.8
   readyTime: 0.45
   holsterTime: 0.65
+  aimTime: 0.2
   clipSize: 30
   maxReserves: 120
   crosshair: {fileID: 21300000, guid: 7a3f495e8306eb941833afcbf973421f, type: 3}
   modelPrefab: {fileID: 5343203987375489176, guid: e5ff303dff2b47640a699c3f2fa76b8e,
     type: 3}
+  animatorOverride: {fileID: 0}
