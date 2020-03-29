@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -10,7 +9,7 @@ using UnityEditor;
 
 namespace Infection.Combat
 {
-    public class Weapon : NetworkBehaviour
+    public class Weapon : MonoBehaviour
     {
         public enum WeaponState
         {

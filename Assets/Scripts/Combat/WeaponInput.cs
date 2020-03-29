@@ -18,13 +18,8 @@ namespace Infection.Combat
         private Weapon _weapon = null;
         private bool _lockControl = false;
 
-        public override void OnStartLocalPlayer()
+        private void Awake()
         {
-            if (!isLocalPlayer)
-            {
-                return;
-            }
-
             _weapon = GetComponent<Weapon>();
         }
 
