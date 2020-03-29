@@ -264,6 +264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   heldWeapons:
   - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
     magazine: 30
@@ -894,6 +896,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8226169054192976122}
   - component: {fileID: 7090011093662433998}
+  - component: {fileID: 2446021998833093446}
+  - component: {fileID: 6231762160063158042}
   m_Layer: 10
   m_Name: WeaponHolder
   m_TagString: Untagged
@@ -934,6 +938,37 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2446021998833093446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7929200168516029009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+--- !u!114 &6231762160063158042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7929200168516029009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  animator: {fileID: 7090011093662433998}
 --- !u!1001 &2895431517433782258
 PrefabInstance:
   m_ObjectHideFlags: 0
