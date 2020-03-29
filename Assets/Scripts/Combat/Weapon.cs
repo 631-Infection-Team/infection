@@ -245,11 +245,8 @@ namespace Infection.Combat
             // Play animation
             // ReloadSpeed is a parameter in the animator. It's the speed multiplier.
             // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
-            if (isLocalPlayer)
-            {
-                _weaponHolderAnimator.SetTrigger("Reload");
-                _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
-            }
+            _weaponHolderAnimator.SetTrigger("Reload");
+            _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
@@ -281,11 +278,8 @@ namespace Infection.Combat
             Debug.Log("Switching weapon");
 
             // Holster animation
-            if (isLocalPlayer)
-            {
-                _weaponHolderAnimator.SetTrigger("Holster");
-                _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
-            }
+            _weaponHolderAnimator.SetTrigger("Holster");
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
@@ -299,11 +293,8 @@ namespace Infection.Combat
             onSwitch?.Invoke();
 
             // Ready animation
-            if (isLocalPlayer)
-            {
-                _weaponHolderAnimator.SetTrigger("Ready");
-                _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
-            }
+            _weaponHolderAnimator.SetTrigger("Ready");
+            _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
@@ -345,11 +336,8 @@ namespace Infection.Combat
             onFire?.Invoke();
 
             // Fire animation
-            if (isLocalPlayer)
-            {
-                _weaponHolderAnimator.SetTrigger("Fire");
-                _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
-            }
+            _weaponHolderAnimator.SetTrigger("Fire");
+            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
         }
 
         /// <summary>

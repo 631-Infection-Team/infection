@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 namespace Infection.Combat
 {
     [RequireComponent(typeof(Weapon))]
-    public class WeaponInput : MonoBehaviour
+    public class WeaponInput : NetworkBehaviour
     {
         /// <summary>
         /// Prevent the player from controlling the weapon. Used for when the game is paused.
@@ -17,13 +18,23 @@ namespace Infection.Combat
         private Weapon _weapon = null;
         private bool _lockControl = false;
 
-        private void Awake()
+        public override void OnStartLocalPlayer()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             _weapon = GetComponent<Weapon>();
         }
 
         private void Update()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             if (LockControl)
             {
                 return;
