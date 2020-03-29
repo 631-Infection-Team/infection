@@ -68,7 +68,7 @@ namespace Infection.Combat
         // Properties
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
-        private bool _aimingDownSights = false;
+        private float _aimingPercentage = 0f;
 
         private void Awake()
         {
@@ -298,6 +298,16 @@ namespace Infection.Combat
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
             _currentState = WeaponState.Idle;
+        }
+
+        public void IncreaseAim()
+        {
+            _aimingPercentage = Mathf.Min(1.0f, _aimingPercentage + Time.deltaTime * CurrentWeapon.WeaponDefinition.AimTime);
+        }
+
+        public void DecreaseAim()
+        {
+            _aimingPercentage = Mathf.Max(0f, _aimingPercentage - Time.deltaTime * CurrentWeapon.WeaponDefinition.AimTime);
         }
 
         /// <summary>

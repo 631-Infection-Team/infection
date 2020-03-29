@@ -67,6 +67,7 @@ namespace Infection.Combat
                 // Aiming down the sights
                 if (Input.GetButton("Aim"))
                 {
+                    _weapon.IncreaseAim();
                 }
             }
         }
