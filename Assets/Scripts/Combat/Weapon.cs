@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Mirror;
+using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,6 +28,7 @@ namespace Infection.Combat
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
         [SerializeField] private Transform muzzle = null;
+        [SerializeField] private Transform muzzleFlash = null;
 
         // Unity events. Add listeners from the inspector.
         [Header("Events for weapon behavior state changes")]
@@ -179,6 +181,10 @@ namespace Infection.Combat
                         // Fire the weapon
                         _currentState = WeaponState.Firing;
                         Fire();
+
+                        // Show muzzle flash for split second
+                        StartCoroutine(FlashMuzzle());
+
                         // Wait a third of the fire rate between each shot in the burst
                         yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
@@ -192,6 +198,10 @@ namespace Infection.Combat
                     // Fire the weapon
                     _currentState = WeaponState.Firing;
                     Fire();
+
+                    // Show muzzle flash for split second
+                    StartCoroutine(FlashMuzzle());
+
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
             }
@@ -369,6 +379,24 @@ namespace Infection.Combat
         }
 
         /// <summary>
+        /// Shows the muzzle flash for a split second and then hides it. The muzzle flash receives a random scale.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator FlashMuzzle()
+        {
+            // Set random scale for muzzle flash object
+            Vector3 randomScale = new Vector3(Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f));
+            muzzleFlash.localScale = randomScale;
+
+            // Show muzzle flash
+            muzzleFlash.gameObject.SetActive(true);
+
+            // Hide muzzle flash after split second
+            yield return new WaitForSeconds(0.01f);
+            muzzleFlash.gameObject.SetActive(false);
+        }
+
+        /// <summary>
         /// Removes old weapon model and spawns a new weapon model from the currently equipped weapon.
         /// This process destroys all child game objects from the weapon holder and instantiates a new object
         /// from the model prefab in the weapon definition.
@@ -377,6 +405,7 @@ namespace Infection.Combat
         {
             // Reset muzzle transform
             muzzle = null;
+            muzzleFlash = null;
 
             if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
             {
@@ -389,6 +418,7 @@ namespace Infection.Combat
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
+                muzzleFlash = muzzle.transform.GetChild(0);
 
                 if (!isLocalPlayer)
                 {
