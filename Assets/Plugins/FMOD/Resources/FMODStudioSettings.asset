@@ -15,13 +15,13 @@ MonoBehaviour:
   SwitchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: Assets/FMOD/main/main.fspro
-  sourceBankPath: Assets\FMOD\main\Build
+  sourceProjectPath: Assets\FMOD\Main\Main.fspro
+  sourceBankPath: Assets\FMOD\Main\Build
   SourceBankPathUnformatted: 
-  AutomaticEventLoading: 1
+  AutomaticEventLoading: 0
   BankLoadType: 0
   AutomaticSampleLoading: 0
-  EncryptionKey: 
+  EncryptionKey: 1
   ImportType: 0
   TargetAssetPath: 
   LoggingLevel: 2
@@ -44,6 +44,8 @@ MonoBehaviour:
     Value: 0
   - Platform: 20
     Value: 0
+  - Platform: 3
+    Value: 1
   OverlaySettings:
   - Platform: 1
     Value: 0
@@ -76,8 +78,7 @@ MonoBehaviour:
   - Platform: 20
     Value: 32
   Plugins: []
-  MasterBanks:
-  - Master
+  MasterBanks: []
   Banks: []
   BanksToLoad: []
   LiveUpdatePort: 9264
