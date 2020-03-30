@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 namespace Infection.Combat
 {
     [RequireComponent(typeof(Weapon))]
-    public class WeaponInput : MonoBehaviour
+    public class WeaponInput : NetworkBehaviour
     {
         /// <summary>
         /// Prevent the player from controlling the weapon. Used for when the game is paused.
@@ -24,6 +25,11 @@ namespace Infection.Combat
 
         private void Update()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             if (LockControl)
             {
                 return;
@@ -61,6 +67,11 @@ namespace Infection.Combat
                 // Aiming down the sights
                 if (Input.GetButton("Aim"))
                 {
+                    _weapon.IncreaseAim();
+                }
+                else
+                {
+                    _weapon.DecreaseAim();
                 }
             }
         }

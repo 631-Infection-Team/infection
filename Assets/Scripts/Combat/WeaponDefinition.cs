@@ -76,14 +76,18 @@ namespace Infection.Combat
         public float Damage => damage;
         public float FireRate => fireRate;
         public float RecoilMultiplier => recoilMultiplier;
+        public float AimZoomMultiplier => aimZoomMultiplier;
 
         public float ReloadTime => reloadTime;
         public float ReadyTime => readyTime;
         public float HolsterTime => holsterTime;
+        public float AimTime => aimTime;
+
         public int ClipSize => clipSize;
         public int MaxReserves => maxReserves;
         public Sprite Crosshair => crosshair;
         public GameObject ModelPrefab => modelPrefab;
+        public AnimatorOverrideController AnimatorOverride => animatorOverride;
 
         /// <summary>
         /// The time it takes to empty a full magazine without reloading or stopping.
