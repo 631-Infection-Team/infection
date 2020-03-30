@@ -2,14 +2,14 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Mirror;
 #if UNITY_EDITOR
 using UnityEditor;
-
 #endif
 
 namespace Infection.Combat
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : NetworkBehaviour
     {
         public enum WeaponState
         {
@@ -389,6 +389,11 @@ namespace Infection.Combat
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
+
+                if (!isLocalPlayer)
+                {
+                    weaponModel.SetActive(false);
+                }
             }
         }
     }
