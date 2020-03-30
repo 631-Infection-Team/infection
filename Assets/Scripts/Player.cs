@@ -15,7 +15,6 @@ namespace Infection
         public int deaths = 0;
 
         [SerializeField] private GameObject HUD = null;
-        [SerializeField] private GameObject m_Text;
         [SerializeField] private GameObject[] disableGameObjectsOnDeath = null;
         [SerializeField] private Behaviour[] disableComponentsOnDeath = null;
         private NetRoomManager NetRoomManager = null;
@@ -36,19 +35,18 @@ namespace Infection
             }
         }
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-
-            HUD.SetActive(false);
-            m_Text.GetComponent<TextMeshPro>().text = username;
-        }
-
         public override void OnStartLocalPlayer()
         {
             base.OnStartLocalPlayer();
 
             HUD.SetActive(true);
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            HUD.SetActive(false);
         }
 
         public void SetDefaults()

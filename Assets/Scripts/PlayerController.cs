@@ -5,8 +5,8 @@ namespace Infection
 {
     public class PlayerController : NetworkBehaviour
     {
-        public float WalkSpeed = 5f;
-        public float RunSpeed = 8f;
+        public float WalkSpeed = 8f;
+        public float RunSpeed = 12f;
         public bool LockControl = false;
         public bool Grounded = false;
         public Vector3 Velocity = Vector3.zero;
@@ -24,7 +24,7 @@ namespace Infection
         public override void OnStartLocalPlayer()
         {
             characterController = GetComponent<CharacterController>();
-            animator = playerModel.GetComponent<Animator>();
+            animator = GetComponent<Animator>();
 
             Grounded = true;
             horizontalSpeed = transform.localEulerAngles.y;
