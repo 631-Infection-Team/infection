@@ -19,7 +19,7 @@ MonoBehaviour:
   damage: 6.5
   fireRate: 0.09
   recoilMultiplier: 0.1
-  aimZoomMultiplier: 1.1
+  aimZoomMultiplier: 1.12
   reloadTime: 2
   readyTime: 0.45
   holsterTime: 0.65

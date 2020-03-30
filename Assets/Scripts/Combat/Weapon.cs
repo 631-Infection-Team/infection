@@ -9,7 +9,6 @@ using UnityEditor;
 
 namespace Infection.Combat
 {
-    [RequireComponent(typeof(Animator))]
     public class Weapon : MonoBehaviour
     {
         public enum WeaponState
@@ -23,6 +22,7 @@ namespace Infection.Combat
         [Header("Weapon")]
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
+        [SerializeField] private LayerMask raycastMask = 0;
 
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
@@ -68,7 +68,8 @@ namespace Infection.Combat
         // Properties
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
-        private bool _aimingDownSights = false;
+        private float _aimingPercentage = 0f;
+        private float _baseFieldOfView = 0f;
 
         private void Awake()
         {
@@ -84,8 +85,16 @@ namespace Infection.Combat
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
 
+            _baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+
             // Spawn the weapon model
             UpdateWeaponModel();
+        }
+
+        private void Update()
+        {
+            float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
+            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
         }
 
         /// <summary>
@@ -300,6 +309,26 @@ namespace Infection.Combat
             _currentState = WeaponState.Idle;
         }
 
+        public void IncreaseAim()
+        {
+            if (_aimingPercentage >= 1.0f)
+            {
+                return;
+            }
+
+            _aimingPercentage = Mathf.Min(1.0f, _aimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+        }
+
+        public void DecreaseAim()
+        {
+            if (_aimingPercentage <= 0f)
+            {
+                return;
+            }
+
+            _aimingPercentage = Mathf.Max(0f, _aimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+        }
+
         /// <summary>
         /// Fire the weapon. Waiting for weapon state is not handled here.
         /// This method is only used to raycast and consume ammo.
@@ -309,7 +338,13 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    if (_cameraController && Physics.Raycast(_cameraController.currentCamera.transform.position, _cameraController.currentCamera.transform.forward, out var hit, raycastRange))
+                    Transform cameraTransform = _cameraController.currentCamera.transform;
+                    // Create ray
+                    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                    // Raycast using LayerMask
+                    bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
+                    // Determine objects hit
+                    if (_cameraController && raycast)
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
@@ -328,6 +363,7 @@ namespace Infection.Combat
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
 
+            // Fire animation
             _weaponHolderAnimator.SetTrigger("Fire");
             _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
         }
