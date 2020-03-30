@@ -9,14 +9,9 @@ namespace Infection.Combat
         /// <summary>
         /// Prevent the player from controlling the weapon. Used for when the game is paused.
         /// </summary>
-        public bool LockControl
-        {
-            get => _lockControl;
-            set => _lockControl = value;
-        }
+        public bool LockControl = false;
 
         private Weapon _weapon = null;
-        private bool _lockControl = false;
 
         private void Awake()
         {
