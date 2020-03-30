@@ -69,6 +69,10 @@ namespace Infection.Combat
                 {
                     _weapon.IncreaseAim();
                 }
+                else
+                {
+                    _weapon.DecreaseAim();
+                }
             }
         }
     }

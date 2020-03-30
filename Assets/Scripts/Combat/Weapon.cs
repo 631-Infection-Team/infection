@@ -69,6 +69,7 @@ namespace Infection.Combat
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
         private float _aimingPercentage = 0f;
+        private float _baseFieldOfView = 0f;
 
         private void Awake()
         {
@@ -84,8 +85,16 @@ namespace Infection.Combat
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
 
+            _baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+
             // Spawn the weapon model
             UpdateWeaponModel();
+        }
+
+        private void Update()
+        {
+            float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
+            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
         }
 
         /// <summary>
@@ -302,12 +311,22 @@ namespace Infection.Combat
 
         public void IncreaseAim()
         {
-            _aimingPercentage = Mathf.Min(1.0f, _aimingPercentage + Time.deltaTime * CurrentWeapon.WeaponDefinition.AimTime);
+            if (_aimingPercentage >= 1.0f)
+            {
+                return;
+            }
+
+            _aimingPercentage = Mathf.Min(1.0f, _aimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
         }
 
         public void DecreaseAim()
         {
-            _aimingPercentage = Mathf.Max(0f, _aimingPercentage - Time.deltaTime * CurrentWeapon.WeaponDefinition.AimTime);
+            if (_aimingPercentage <= 0f)
+            {
+                return;
+            }
+
+            _aimingPercentage = Mathf.Max(0f, _aimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
         }
 
         /// <summary>
