@@ -396,9 +396,11 @@ namespace Infection.Combat
         /// <returns></returns>
         private IEnumerator FlashMuzzle()
         {
-            // Set random scale for muzzle flash object
+            // Set random scale and rotation for muzzle flash object
             Vector3 randomScale = new Vector3(Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f));
+            Vector3 randomRotation = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-8.0f, 8.0f), Random.Range(0f, 360f));
             muzzleFlash.localScale = randomScale;
+            muzzleFlash.localRotation = Quaternion.Euler(randomRotation);
 
             // Show muzzle flash
             muzzleFlash.gameObject.SetActive(true);

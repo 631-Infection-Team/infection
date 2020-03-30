@@ -20,11 +20,6 @@ namespace Infection
 
         public bool isPaused;
 
-        private void OnGUI()
-        {
-
-        }
-
         private void OnEnable()
         {
             // Clear status and alert messages at start
@@ -65,23 +60,6 @@ namespace Infection
             alertMessageDisplay.text = "";
         }
 
-        private void UpdateStatusMessage(Weapon.WeaponState state)
-        {
-            // Blank message for idle and firing
-            string statusMessage = "";
-            // Update status message display to reflect weapon state
-            switch (state)
-            {
-                case Weapon.WeaponState.Reloading:
-                    statusMessage = "Reloading";
-                    break;
-                case Weapon.WeaponState.Switching:
-                    statusMessage = "Switching";
-                    break;
-            }
-            statusMessageDisplay.text = statusMessage;
-        }
-
         private void UpdateWeaponAmmoDisplay()
         {
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
@@ -100,7 +78,19 @@ namespace Infection
 
         private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)
         {
-            UpdateStatusMessage(e.State);
+            // Blank message for idle and firing
+            string statusMessage = "";
+            // Update status message display to reflect weapon state
+            switch (e.State)
+            {
+                case Weapon.WeaponState.Reloading:
+                    statusMessage = "Reloading";
+                    break;
+                case Weapon.WeaponState.Switching:
+                    statusMessage = "Switching";
+                    break;
+            }
+            statusMessageDisplay.text = statusMessage;
         }
     }
 }
