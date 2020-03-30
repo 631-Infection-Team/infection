@@ -41,7 +41,18 @@ namespace Infection.Combat
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
         /// </summary>
-        public WeaponState CurrentState => _currentState;
+        public WeaponState CurrentState
+        {
+            get => _currentState;
+            set
+            {
+                _currentState = value;
+                OnStateChange?.Invoke(this, new StateChangedEventArgs
+                {
+                    State = _currentState
+                });
+            }
+        }
 
         /// <summary>
         /// The weapon currently in use. Returns one weapon item from the player's held weapons.
@@ -60,6 +71,7 @@ namespace Infection.Combat
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         public event Action OnAmmoChange = null;
         public event Action OnWeaponChange = null;
+        public event EventHandler<StateChangedEventArgs> OnStateChange;
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
@@ -163,7 +175,7 @@ namespace Infection.Combat
         public IEnumerator FireWeapon()
         {
             // Cannot fire weapon when state is not idle
-            if (_currentState != WeaponState.Idle)
+            if (CurrentState != WeaponState.Idle)
             {
                 yield break;
             }
@@ -179,7 +191,7 @@ namespace Infection.Combat
                     for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
                     {
                         // Fire the weapon
-                        _currentState = WeaponState.Firing;
+                        CurrentState = WeaponState.Firing;
                         Fire();
 
                         // Show muzzle flash for split second
@@ -196,7 +208,7 @@ namespace Infection.Combat
                 {
                     // Firing automatic or manual type weapon
                     // Fire the weapon
-                    _currentState = WeaponState.Firing;
+                    CurrentState = WeaponState.Firing;
                     Fire();
 
                     // Show muzzle flash for split second
@@ -206,7 +218,7 @@ namespace Infection.Combat
                 }
             }
 
-            _currentState = WeaponState.Idle;
+            CurrentState = WeaponState.Idle;
 
             // Out of ammo
             if (CurrentWeapon.Magazine <= 0)
@@ -236,7 +248,7 @@ namespace Infection.Combat
         public IEnumerator ReloadWeapon()
         {
             // Already reloading or not in idle state
-            if (_currentState == WeaponState.Reloading || _currentState != WeaponState.Idle)
+            if (CurrentState == WeaponState.Reloading || CurrentState != WeaponState.Idle)
             {
                 yield break;
             }
@@ -258,7 +270,7 @@ namespace Infection.Combat
             }
 
             // Reloading animation
-            _currentState = WeaponState.Reloading;
+            CurrentState = WeaponState.Reloading;
 
             // Play animation
             // ReloadSpeed is a parameter in the animator. It's the speed multiplier.
@@ -275,7 +287,7 @@ namespace Infection.Combat
             OnAmmoChange?.Invoke();
             onReload?.Invoke();
 
-            _currentState = WeaponState.Idle;
+            CurrentState = WeaponState.Idle;
         }
 
         /// <summary>
@@ -286,13 +298,13 @@ namespace Infection.Combat
         public IEnumerator SwitchWeapon(int index)
         {
             // Cannot switch weapon when not in idle state or current weapon already out
-            if (_currentState != WeaponState.Idle || _currentWeaponIndex == index)
+            if (CurrentState != WeaponState.Idle || _currentWeaponIndex == index)
             {
                 yield break;
             }
 
             // Begin switching weapons
-            _currentState = WeaponState.Switching;
+            CurrentState = WeaponState.Switching;
             Debug.Log("Switching weapon");
 
             // Holster animation
@@ -316,7 +328,7 @@ namespace Infection.Combat
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
-            _currentState = WeaponState.Idle;
+            CurrentState = WeaponState.Idle;
         }
 
         public void IncreaseAim()
@@ -425,6 +437,11 @@ namespace Infection.Combat
                     weaponModel.SetActive(false);
                 }
             }
+        }
+
+        public class StateChangedEventArgs : EventArgs
+        {
+            public WeaponState State { get; set; }
         }
     }
 }

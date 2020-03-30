@@ -20,7 +20,12 @@ namespace Infection
 
         public bool isPaused;
 
-        private void Start()
+        private void OnGUI()
+        {
+
+        }
+
+        private void OnEnable()
         {
             // Clear status and alert messages at start
             statusMessageDisplay.text = "";
@@ -30,29 +35,11 @@ namespace Infection
             UpdateWeaponAmmoDisplay();
             UpdateWeaponNameDisplay();
             UpdateCrosshair();
-        }
 
-        private void OnGUI()
-        {
-            string statusMessage = "";
-            // Update status message display to reflect weapon state
-            switch (playerWeapon.CurrentState)
-            {
-                case Weapon.WeaponState.Reloading:
-                    statusMessage = "Reloading";
-                    break;
-                case Weapon.WeaponState.Switching:
-                    statusMessage = "Switching";
-                    break;
-            }
-            statusMessageDisplay.text = statusMessage;
-        }
-
-        private void OnEnable()
-        {
             playerWeapon.OnAmmoChange += UpdateWeaponAmmoDisplay;
             playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange += UpdateCrosshair;
+            playerWeapon.OnStateChange += HandleStateChanged;
             playerWeapon.OnAlertEvent += UpdateAlertMessage;
         }
 
@@ -61,6 +48,7 @@ namespace Infection
             playerWeapon.OnAmmoChange -= UpdateWeaponAmmoDisplay;
             playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange -= UpdateCrosshair;
+            playerWeapon.OnStateChange -= HandleStateChanged;
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
@@ -77,6 +65,23 @@ namespace Infection
             alertMessageDisplay.text = "";
         }
 
+        private void UpdateStatusMessage(Weapon.WeaponState state)
+        {
+            // Blank message for idle and firing
+            string statusMessage = "";
+            // Update status message display to reflect weapon state
+            switch (state)
+            {
+                case Weapon.WeaponState.Reloading:
+                    statusMessage = "Reloading";
+                    break;
+                case Weapon.WeaponState.Switching:
+                    statusMessage = "Switching";
+                    break;
+            }
+            statusMessageDisplay.text = statusMessage;
+        }
+
         private void UpdateWeaponAmmoDisplay()
         {
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
@@ -91,6 +96,11 @@ namespace Infection
         private void UpdateCrosshair()
         {
             crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
+        }
+
+        private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)
+        {
+            UpdateStatusMessage(e.State);
         }
     }
 }
