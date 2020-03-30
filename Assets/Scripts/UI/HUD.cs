@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Infection
 {
-    public class HUD : NetworkBehaviour
+    public class HUD : MonoBehaviour
     {
         [SerializeField] private Image crosshair = null;
         [SerializeField] private GameObject pauseMenu = null;
@@ -33,7 +33,7 @@ namespace Infection
             UpdateCrosshair();
         }
 
-        private void Update()
+        private void OnGUI()
         {
             string statusMessage = "";
             // Update status message display to reflect weapon state
@@ -65,14 +65,12 @@ namespace Infection
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
-        [Client]
         public void TogglePause()
         {
             isPaused = !isPaused;
             pauseMenu.SetActive(isPaused);
         }
 
-        [Client]
         private IEnumerator UpdateAlertMessage(string message, float duration)
         {
             alertMessageDisplay.text = message;
@@ -80,20 +78,17 @@ namespace Infection
             alertMessageDisplay.text = "";
         }
 
-        [Client]
         private void UpdateWeaponAmmoDisplay()
         {
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
             reservesDisplay.text = $"{playerWeapon.CurrentWeapon.Reserves}";
         }
 
-        [Client]
         private void UpdateWeaponNameDisplay()
         {
             weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.WeaponDefinition.WeaponName}";
         }
 
-        [Client]
         private void UpdateCrosshair()
         {
             crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;

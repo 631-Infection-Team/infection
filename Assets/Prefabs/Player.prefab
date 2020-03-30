@@ -44,13 +44,13 @@ GameObject:
   - component: {fileID: 2585003615908355977}
   - component: {fileID: 2517449117176014475}
   - component: {fileID: 901826062689630088}
-  - component: {fileID: 6262328982077071166}
+  - component: {fileID: 114541340716960544}
+  - component: {fileID: 114745719847411298}
   - component: {fileID: 1147261098638332191}
+  - component: {fileID: 6262328982077071166}
   - component: {fileID: 3643402698118278937}
   - component: {fileID: 2975567359837406289}
   - component: {fileID: 1421573166695990451}
-  - component: {fileID: 114745719847411298}
-  - component: {fileID: 114541340716960544}
   - component: {fileID: 4236705716002909735}
   m_Layer: 11
   m_Name: Player
@@ -144,7 +144,7 @@ MonoBehaviour:
   syncInterval: 0.1
   clientAuthority: 0
   animator: {fileID: 4570730071571789665}
---- !u!114 &6262328982077071166
+--- !u!114 &114541340716960544
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,15 +153,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 752071829749403922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e53f9b337159ff48a29fdd8ae65b58f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  componentsToDisable: []
-  gameObjectsToDisable:
-  - {fileID: 3891116705043073348}
-  remoteLayerName: RemotePlayer
+  heldWeapons:
+  - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
+    magazine: 30
+    reserves: 120
+  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
+    magazine: 15
+    reserves: 45
+  raycastRange: 100
+  weaponHolder: {fileID: 8226169054192976122}
+  muzzle: {fileID: 0}
+  onEquip:
+    m_PersistentCalls:
+      m_Calls: []
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
+  onReload:
+    m_PersistentCalls:
+      m_Calls: []
+  onSwitch:
+    m_PersistentCalls:
+      m_Calls: []
+  onReplace:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &114745719847411298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6be0a1f94847a5a7c2ed8807f1a357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1147261098638332191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,8 +213,27 @@ MonoBehaviour:
   kills: 0
   deaths: 0
   HUD: {fileID: 2139682947923509041}
+  m_Text: {fileID: 2093466596126795792}
   disableGameObjectsOnDeath: []
   disableComponentsOnDeath: []
+--- !u!114 &6262328982077071166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752071829749403922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e53f9b337159ff48a29fdd8ae65b58f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  componentsToDisable: []
+  gameObjectsToDisable:
+  - {fileID: 3891116705043073348}
+  remoteLayerName: RemotePlayer
 --- !u!114 &3643402698118278937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,55 +290,6 @@ MonoBehaviour:
   currentCamera: {fileID: 8693192415258708414}
   weaponCamera: {fileID: 705847042633891411}
   LockControl: 0
---- !u!114 &114745719847411298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 752071829749403922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6be0a1f94847a5a7c2ed8807f1a357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114541340716960544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 752071829749403922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heldWeapons:
-  - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
-    magazine: 30
-    reserves: 120
-  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
-    magazine: 15
-    reserves: 45
-  raycastRange: 100
-  weaponHolder: {fileID: 8226169054192976122}
-  muzzle: {fileID: 0}
-  onEquip:
-    m_PersistentCalls:
-      m_Calls: []
-  onFire:
-    m_PersistentCalls:
-      m_Calls: []
-  onReload:
-    m_PersistentCalls:
-      m_Calls: []
-  onSwitch:
-    m_PersistentCalls:
-      m_Calls: []
-  onReplace:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4236705716002909735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,8 +437,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1
-  m_fontSizeBase: 1
+  m_fontSize: 2
+  m_fontSizeBase: 2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -452,8 +453,8 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_overflowMode: 1
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -474,7 +475,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: -0.7355833, z: 0, w: -0.74270964}
   m_textInfo:
     textComponent: {fileID: 2264140979449669268}
     characterCount: 6
@@ -938,6 +939,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3947289717242637716}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_AssetId
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 362460582763693345, guid: 6ca088554fae7b54fbfa60b9f0c54d11,
         type: 3}
       propertyPath: m_AnchorMax.x
