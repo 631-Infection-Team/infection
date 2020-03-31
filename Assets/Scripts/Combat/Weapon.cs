@@ -431,15 +431,8 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    Transform cameraTransform = _cameraController.currentCamera.transform;
-                    // Generate direction with slight random rotation using accuracy
-                    float accuracy = CurrentWeapon.WeaponDefinition.Accuracy;
-                    Vector3 direction = cameraTransform.forward +
-                                        cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
-                                        cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
-
-                    // Create ray using direction
-                    Ray ray = new Ray(cameraTransform.position, direction);
+                    // Create ray with accuracy influence
+                    Ray ray = GenerateRay(CurrentWeapon.WeaponDefinition.Accuracy);
 
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
@@ -448,7 +441,7 @@ namespace Infection.Combat
                     if (_cameraController && raycast)
                     {
                         // Generate bullet impact effects. Particle system automatically destroys the object when finished.
-                        GameObject impactVfx = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                        Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(hit.point, hit.normal)));
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
@@ -470,6 +463,25 @@ namespace Infection.Combat
             // Fire animation
             _weaponHolderAnimator.SetTrigger("Fire");
             _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
+        }
+
+        /// <summary>
+        /// Create a ray from camera transform using accuracy to influence direction.
+        /// </summary>
+        /// <param name="accuracy">Weapon accuracy</param>
+        /// <returns>Accuracy influenced ray</returns>
+        private Ray GenerateRay(float accuracy)
+        {
+            // Cache camera transform
+            Transform cameraTransform = _cameraController.currentCamera.transform;
+
+            // Generate direction with slight random rotation using accuracy
+            Vector3 direction = cameraTransform.forward +
+                                cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
+                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+
+            // Create ray using camera position and direction
+            return new Ray(cameraTransform.position, direction);
         }
 
         /// <summary>
