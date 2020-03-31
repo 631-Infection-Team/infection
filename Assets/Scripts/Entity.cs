@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 using Mirror;
 
-[RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(AudioSource))]
 public abstract partial class Entity : NetworkBehaviour
 {
     [Header("Components")]
     public Animator animator;
-    public AudioSource audioSource;
 
     [Header("State")]
     [SyncVar, SerializeField] public string state = "IDLE";

@@ -77,7 +77,7 @@ namespace Infection.Combat
 
         // Components
         private Animator _weaponHolderAnimator = null;
-        private CameraController _cameraController = null;
+        //private CameraController _cameraController = null;
 
         // Properties
         private int _currentWeaponIndex = 0;
@@ -87,7 +87,7 @@ namespace Infection.Combat
 
         private void Awake()
         {
-            _cameraController = GetComponent<CameraController>();
+            //_cameraController = GetComponent<CameraController>();
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
@@ -99,7 +99,7 @@ namespace Infection.Combat
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
 
-            _baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+            //_baseFieldOfView = _cameraController.currentCamera.fieldOfView;
 
             // Spawn the weapon model
             UpdateWeaponModel();
@@ -108,7 +108,7 @@ namespace Infection.Combat
         private void Update()
         {
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
-            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            //_cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
         }
 
         /// <summary>
@@ -360,13 +360,13 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    Transform cameraTransform = _cameraController.currentCamera.transform;
+                    //Transform cameraTransform = _cameraController.currentCamera.transform;
                     // Create ray
-                    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                    Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
                     // Determine objects hit
-                    if (_cameraController && raycast)
+                    if (raycast)
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);

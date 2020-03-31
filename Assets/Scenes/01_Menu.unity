@@ -3725,7 +3725,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 4
   authenticator: {fileID: 550456082}
-  playerPrefab: {fileID: 752071829749403922, guid: 3d5b9b6a6afbb0940bcbd76e87759a09,
+  playerPrefab: {fileID: 1352473803470926471, guid: e4c5cd544d91b25489f3af9d922425f8,
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
@@ -4625,7 +4625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 478104, guid: e31f8b526ff6b1743b7928b7c847a12e, type: 3}
       propertyPath: m_RootOrder
-      value: 104
+      value: 103
       objectReference: {fileID: 0}
     - target: {fileID: 478104, guid: e31f8b526ff6b1743b7928b7c847a12e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5341,7 +5341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 414050, guid: 15fc5062161176147a02300c7ac0ab3d, type: 3}
       propertyPath: m_RootOrder
-      value: 105
+      value: 104
       objectReference: {fileID: 0}
     - target: {fileID: 414050, guid: 15fc5062161176147a02300c7ac0ab3d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6899,7 +6899,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
       propertyPath: m_RootOrder
-      value: 106
+      value: 105
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7515,7 +7515,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 418776, guid: 75607693a8e198049a6556a7785361da, type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 418776, guid: 75607693a8e198049a6556a7785361da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

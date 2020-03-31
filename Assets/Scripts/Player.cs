@@ -3,13 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 public class Player : Entity
 {
-    [HideInInspector] public string account = "";
+    [Header("Components")]
     public static Player localPlayer;
     public Camera cam;
 
+    [Header("Movement")]
+    public float walkSpeed = 8f;
+    public float runSpeed = 12f;
+
+    private CharacterController characterController;
+    private float verticalLook;
+    private float horizontalLook;
     protected override void Awake()
     {
         base.Awake();
@@ -20,7 +28,9 @@ public class Player : Entity
     public override void OnStartLocalPlayer()
     {
         localPlayer = this;
-        cam = Camera.main;
+
+        verticalLook = 0.0f;
+        horizontalLook = gameObject.transform.localEulerAngles.y;
 
         Utils.InvokeMany(typeof(Player), this, "OnStartLocalPlayer_");
     }
@@ -41,6 +51,8 @@ public class Player : Entity
     {
         if (!isServer && !isClient) return;
 
+        characterController = gameObject.GetComponent<CharacterController>();
+
         base.Start();
 
         Utils.InvokeMany(typeof(Player), this, "Start_");
@@ -57,19 +69,18 @@ public class Player : Entity
         // => MOVING state is set to local IsMovement result directly. otherwise
         //    we would see animation latencies for rubberband movement if we
         //    have to wait for MOVING state to be received from the server
-        // => MOVING checks if !CASTING because there is a case in UpdateMOVING
-        //    -> SkillRequest where we still slide to the final position (which
-        //    is good), but we should show the casting animation then.
-        // => skill names are assumed to be boolean parameters in animator
-        //    so we don't need to worry about an animation number etc.
 
         if (isClient) // no need for animations on the server
         {
             // now pass parameters after any possible rebinds
             foreach (Animator anim in GetComponentsInChildren<Animator>())
             {
-                anim.SetBool("MOVING", IsMoving());
-                anim.SetBool("DEAD", state == "DEAD");
+                anim.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
+                anim.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2);
+
+                anim.SetFloat("Speed_f", 0.0f);
+                anim.SetBool("Death_b", state == "DEAD");
+                anim.SetBool("Grounded", true);
             }
         }
 
@@ -187,7 +198,8 @@ public class Player : Entity
         {
             if (isLocalPlayer)
             {
-                WASDHandling();
+                CameraHandler();
+                MovementHandler();
             }
         }
         else if (state == "DEAD") { }
@@ -215,22 +227,48 @@ public class Player : Entity
     }
 
     [Client]
-    void WASDHandling()
+    void MovementHandler()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float inputHorizontal = Input.GetAxis("Horizontal");
+        float inputVertical = Input.GetAxis("Vertical");
+        bool inputRun = Input.GetButton("Run");
 
-        // create input vector, normalize in case of diagonal movement
-        Vector3 input = new Vector3(horizontal, 0, vertical);
-        if (input.magnitude > 1) input = input.normalized;
+        Vector3 move = new Vector3(inputHorizontal, 0, inputVertical);
+        if (move.magnitude > 1) move = move.normalized;
 
-        Vector3 angles = cam.transform.rotation.eulerAngles;
-        Quaternion rotation = Quaternion.Euler(angles);
-        Vector3 direction = rotation * input;
+        float actualSpeed = inputRun ? runSpeed : walkSpeed;
+        float calcSpeed = actualSpeed;
+        move = move * calcSpeed * Time.deltaTime;
+        move = transform.TransformDirection(move);
+
+        characterController.Move(move);
 
         // draw direction for debugging
-        Debug.DrawLine(transform.position, transform.position + direction, Color.green, 0, false);
+        // Debug.DrawLine(transform.position, transform.position + direction, Color.green, 0, false);
+    }
 
-        gameObject.GetComponent<CharacterController>().Move(direction);
+    [Client]
+    void CameraHandler()
+    {
+        float lookY = Input.GetAxis("Mouse Y");
+        float lookX = Input.GetAxis("Mouse X");
+
+        verticalLook -= lookY;
+        if (verticalLook > 90f) verticalLook = 90f;
+        if (verticalLook < -90f) verticalLook = -90f;
+
+        Vector3 currentAngles = cam.transform.localEulerAngles;
+        currentAngles.x = verticalLook;
+        // currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
+
+        cam.transform.localEulerAngles = currentAngles;
+
+        horizontalLook += lookX;
+        if (horizontalLook > 360) horizontalLook -= 360.0f;
+        if (horizontalLook < 0) horizontalLook += 360.0f;
+
+        currentAngles = transform.localEulerAngles;
+        currentAngles.y = horizontalLook;
+        transform.localEulerAngles = currentAngles;
     }
 }
