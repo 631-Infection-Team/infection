@@ -69,6 +69,22 @@ namespace Infection.Combat
                     _weapon.DecreaseAim();
                 }
             }
+
+            if (_weapon.HasMoreWeapons)
+            {
+                // Scroll up
+                if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+                {
+                    // Switch to the next weapon
+                    _weapon.CycleWeapons();
+                }
+                // Scroll down
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+                {
+                    // Switch to the previous weapon
+                    _weapon.CycleWeapons(-1);
+                }
+            }
         }
     }
 }
