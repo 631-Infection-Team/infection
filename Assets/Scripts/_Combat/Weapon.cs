@@ -122,7 +122,7 @@ namespace Infection.Combat
         // Components
         private Animator _weaponHolderAnimator = null;
         private RuntimeAnimatorController _defaultWeaponAnimator = null;
-        //private CameraController _cameraController = null;
+        private Camera _camera = null;
 
         // Properties
         private int _currentWeaponIndex = 0;
@@ -133,7 +133,7 @@ namespace Infection.Combat
 
         private void Awake()
         {
-            //_cameraController = GetComponent<CameraController>();
+            _camera = GetComponent<Player>().cam;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
 
             // Cache the default animator in case animator overrides become null when switching weapons
@@ -149,7 +149,7 @@ namespace Infection.Combat
             }
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
-            //_baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+            _baseFieldOfView = _camera.fieldOfView;
 
             // Spawn the weapon model
             UpdateWeaponModel();
@@ -159,7 +159,7 @@ namespace Infection.Combat
         {
             // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
-            //_cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
 
             // Gradually reduce instability percentage while weapon is calming down
             if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
@@ -449,7 +449,7 @@ namespace Infection.Combat
         private void Fire()
         {
             // Cache variables for repeated access
-            Transform cameraTransform = _cameraController.currentCamera.transform;
+            Transform cameraTransform = _camera.transform;
             // Accuracy reduction when not aiming
             float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
             float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
@@ -460,7 +460,6 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    //Transform cameraTransform = _cameraController.currentCamera.transform;
                     // Create ray with accuracy influence
                     Ray ray = GenerateRay(influence);
 
@@ -522,7 +521,7 @@ namespace Infection.Combat
         private Ray GenerateRay(Vector3 influence)
         {
             // Cache camera transform for repeated access
-            Transform cameraTransform = _cameraController.currentCamera.transform;
+            Transform cameraTransform = _camera.transform;
             // Generate direction with slight random rotation using accuracy
             Vector3 direction = cameraTransform.forward + influence;
             // Create ray using camera position and direction
