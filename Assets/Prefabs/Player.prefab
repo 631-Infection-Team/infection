@@ -172,6 +172,7 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 8721
+  bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
   weaponHolder: {fileID: 8226169054192976122}
   muzzle: {fileID: 0}
   muzzleFlash: {fileID: 0}
