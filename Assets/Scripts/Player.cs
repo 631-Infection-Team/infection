@@ -314,8 +314,8 @@ public class Player : Entity
     {
         if (!canMove) return;
 
-        float lookY = Input.GetAxis("Mouse Y");
-        float lookX = Input.GetAxis("Mouse X");
+        float lookY = Input.GetAxis("Look Y");
+        float lookX = Input.GetAxis("Look X");
 
         verticalLook -= lookY;
         if (verticalLook > 90f) verticalLook = 90f;

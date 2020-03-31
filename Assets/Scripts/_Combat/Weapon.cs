@@ -24,7 +24,12 @@ namespace Infection.Combat
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
         [SerializeField] private LayerMask raycastMask = 0;
+        [SerializeField, Tooltip("Percentage reduction when not aiming")]
+        private float accuracyReduction = 0.1f;
+
+        [Header("Graphics")]
         [SerializeField] private GameObject bulletImpactVfx = null;
+        [SerializeField] private GameObject bulletTrailVfx = null;
 
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
@@ -117,7 +122,7 @@ namespace Infection.Combat
         // Components
         private Animator _weaponHolderAnimator = null;
         private RuntimeAnimatorController _defaultWeaponAnimator = null;
-        //private CameraController _cameraController = null;
+        private Camera _camera = null;
 
         // Properties
         private int _currentWeaponIndex = 0;
@@ -128,7 +133,7 @@ namespace Infection.Combat
 
         private void Awake()
         {
-            //_cameraController = GetComponent<CameraController>();
+            _camera = GetComponent<Player>().cam;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
 
             // Cache the default animator in case animator overrides become null when switching weapons
@@ -144,7 +149,7 @@ namespace Infection.Combat
             }
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
-            //_baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+            _baseFieldOfView = _camera.fieldOfView;
 
             // Spawn the weapon model
             UpdateWeaponModel();
@@ -154,7 +159,7 @@ namespace Infection.Combat
         {
             // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
-            //_cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
 
             // Gradually reduce instability percentage while weapon is calming down
             if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
@@ -251,9 +256,6 @@ namespace Infection.Combat
                         CurrentState = WeaponState.Firing;
                         Fire();
 
-                        // Show muzzle flash for split second
-                        StartCoroutine(FlashMuzzle());
-
                         // Wait a third of the fire rate between each shot in the burst
                         yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
@@ -267,9 +269,6 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
-
-                    // Show muzzle flash for split second
-                    StartCoroutine(FlashMuzzle());
 
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
@@ -449,12 +448,20 @@ namespace Infection.Combat
         /// </summary>
         private void Fire()
         {
+            // Cache variables for repeated access
+            Transform cameraTransform = _camera.transform;
+            // Accuracy reduction when not aiming
+            float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
+            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
+            // Generate influence using weapon accuracy
+            Vector3 influence = cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
+                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    //Transform cameraTransform = _cameraController.currentCamera.transform;
                     // Create ray with accuracy influence
-                    Ray ray = GenerateRay(CurrentWeapon.WeaponDefinition.Accuracy);
+                    Ray ray = GenerateRay(influence);
 
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
@@ -466,14 +473,30 @@ namespace Infection.Combat
                         Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
-                        Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
+                        // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
+
+                    // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
+                    GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
+                    trail.GetComponent<LineRenderer>().SetPosition(0, muzzle.position);
+                    if (raycast)
+                    {
+                        trail.GetComponent<LineRenderer>().SetPosition(1, hit.point);
+                    }
+                    else
+                    {
+                        trail.GetComponent<LineRenderer>().SetPosition(1, ray.direction * 10000f);
+                    }
+                    Destroy(trail, Time.deltaTime);
                     break;
 
                 case WeaponType.Projectile:
                     // TODO: Implement projectile weapon firing
                     break;
             }
+
+            // Show muzzle flash for split second
+            StartCoroutine(FlashMuzzle(influence));
 
             // Apply recoil
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
@@ -491,20 +514,16 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// Create a ray from camera transform using accuracy to influence direction.
+        /// Create a ray from camera transform using an influence vector created from accuracy to rotate ray.
         /// </summary>
-        /// <param name="accuracy">Weapon accuracy</param>
+        /// <param name="influence"></param>
         /// <returns>Accuracy influenced ray</returns>
-        private Ray GenerateRay(float accuracy)
+        private Ray GenerateRay(Vector3 influence)
         {
-            // Cache camera transform
-            Transform cameraTransform = _cameraController.currentCamera.transform;
-
+            // Cache camera transform for repeated access
+            Transform cameraTransform = _camera.transform;
             // Generate direction with slight random rotation using accuracy
-            Vector3 direction = cameraTransform.forward +
-                                cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
-                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
-
+            Vector3 direction = cameraTransform.forward + influence;
             // Create ray using camera position and direction
             return new Ray(cameraTransform.position, direction);
         }
@@ -512,12 +531,13 @@ namespace Infection.Combat
         /// <summary>
         /// Shows the muzzle flash for a split second and then hides it. The muzzle flash receives a random scale.
         /// </summary>
-        /// <returns></returns>
-        private IEnumerator FlashMuzzle()
+        /// <param name="influence">The amount of rotation applied based on weapon accuracy</param>
+        /// <returns>Muzzle flash effect</returns>
+        private IEnumerator FlashMuzzle(Vector3 influence)
         {
             // Set random scale and rotation for muzzle flash object
             Vector3 randomScale = new Vector3(Random.Range(0.3f, 1f),Random.Range(0.3f, 1f),Random.Range(0.3f, 1f));
-            Vector3 randomRotation = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-8.0f, 8.0f), Random.Range(0f, 360f));
+            Vector3 randomRotation = new Vector3(0f, 0f, Random.Range(0f, 360f)) + influence;
             muzzleFlash.localScale = randomScale;
             muzzleFlash.localRotation = Quaternion.Euler(randomRotation);
 
@@ -525,7 +545,7 @@ namespace Infection.Combat
             muzzleFlash.gameObject.SetActive(true);
 
             // Hide muzzle flash after split second
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(Time.deltaTime);
             muzzleFlash.gameObject.SetActive(false);
         }
 
