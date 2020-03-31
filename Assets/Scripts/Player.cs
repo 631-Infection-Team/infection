@@ -14,10 +14,14 @@ public class Player : Entity
     [Header("Movement")]
     public float walkSpeed = 8f;
     public float runSpeed = 12f;
+    public float JumpSpeed = 5f;
+    public bool canMove = true;
+    public bool Grounded = false;
 
     private CharacterController characterController;
     private float verticalLook;
     private float horizontalLook;
+    private float verticalSpeed;
     protected override void Awake()
     {
         base.Awake();
@@ -200,6 +204,7 @@ public class Player : Entity
             {
                 CameraHandler();
                 MovementHandler();
+                GravityHandler();
             }
         }
         else if (state == "DEAD") { }
@@ -226,9 +231,22 @@ public class Player : Entity
         return base.CanAttack(entity) && entity is Player;
     }
 
+    void GravityHandler()
+    {
+        verticalSpeed += Physics.gravity.y * Time.deltaTime;
+        verticalSpeed = Mathf.Clamp(verticalSpeed, Physics.gravity.y * 2, JumpSpeed);
+
+        Vector3 verticalMove = new Vector3(0, verticalSpeed * Time.deltaTime, 0);
+        CollisionFlags flag = characterController.Move(verticalMove);
+
+        if ((flag & CollisionFlags.Below) != 0) verticalSpeed = 0;
+    }
+
     [Client]
     void MovementHandler()
     {
+        if (!canMove) return;
+
         float inputHorizontal = Input.GetAxis("Horizontal");
         float inputVertical = Input.GetAxis("Vertical");
         bool inputRun = Input.GetButton("Run");
@@ -250,6 +268,8 @@ public class Player : Entity
     [Client]
     void CameraHandler()
     {
+        if (!canMove) return;
+
         float lookY = Input.GetAxis("Mouse Y");
         float lookX = Input.GetAxis("Mouse X");
 
