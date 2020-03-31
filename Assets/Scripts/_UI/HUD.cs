@@ -64,6 +64,8 @@ namespace Infection
         {
             isPaused = !isPaused;
             pauseMenu.SetActive(isPaused);
+
+            Player.localPlayer.canMove = !isPaused;
         }
 
         private IEnumerator UpdateAlertMessage(string message, float duration)
