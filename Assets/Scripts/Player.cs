@@ -1,153 +1,236 @@
 ﻿using Mirror;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Infection
+[RequireComponent(typeof(Animator))]
+public class Player : Entity
 {
-    public class Player : NetworkBehaviour
+    [HideInInspector] public string account = "";
+    public static Player localPlayer;
+    public Camera cam;
+
+    protected override void Awake()
     {
-        [SyncVar] public int index = 0;
-        [SyncVar] public int health = 100;
-        [SyncVar] public string username = "John Doe";
+        base.Awake();
 
-        public int kills = 0;
-        public int deaths = 0;
+        Utils.InvokeMany(typeof(Player), this, "Awake_");
+    }
 
-        [SerializeField] private GameObject HUD = null;
-        [SerializeField] private GameObject[] disableGameObjectsOnDeath = null;
-        [SerializeField] private Behaviour[] disableComponentsOnDeath = null;
-        private NetRoomManager NetRoomManager = null;
-        private readonly int maxHealth = 100;
-        private bool isDead = false;
+    public override void OnStartLocalPlayer()
+    {
+        localPlayer = this;
+        cam = Camera.main;
 
-        private void Start()
+        Utils.InvokeMany(typeof(Player), this, "OnStartLocalPlayer_");
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        Utils.InvokeMany(typeof(Player), this, "OnStartServer_");
+    }
+
+    protected override void Start()
+    {
+        if (!isServer && !isClient) return;
+
+        base.Start();
+
+        Utils.InvokeMany(typeof(Player), this, "Start_");
+    }
+
+    void LateUpdate()
+    {
+        // pass parameters to animation state machine
+        // => passing the states directly is the most reliable way to avoid all
+        //    kinds of glitches like movement sliding, attack twitching, etc.
+        // => make sure to import all looping animations like idle/run/attack
+        //    with 'loop time' enabled, otherwise the client might only play it
+        //    once
+        // => MOVING state is set to local IsMovement result directly. otherwise
+        //    we would see animation latencies for rubberband movement if we
+        //    have to wait for MOVING state to be received from the server
+        // => MOVING checks if !CASTING because there is a case in UpdateMOVING
+        //    -> SkillRequest where we still slide to the final position (which
+        //    is good), but we should show the casting animation then.
+        // => skill names are assumed to be boolean parameters in animator
+        //    so we don't need to worry about an animation number etc.
+
+        if (isClient) // no need for animations on the server
         {
-            GameObject NetworkRoomManager = GameObject.Find("Network Room Manager");
-
-            if (NetworkRoomManager)
+            // now pass parameters after any possible rebinds
+            foreach (Animator anim in GetComponentsInChildren<Animator>())
             {
-                NetRoomManager = NetworkRoomManager.GetComponent<NetRoomManager>();
-            }
-            else
-            {
-                Debug.LogError("Could not find Network Room Manager.");
+                anim.SetBool("MOVING", IsMoving());
+                anim.SetBool("DEAD", state == "DEAD");
             }
         }
 
-        public override void OnStartLocalPlayer()
-        {
-            base.OnStartLocalPlayer();
+        Utils.InvokeMany(typeof(Player), this, "LateUpdate_");
+    }
 
-            HUD.SetActive(true);
+    void OnDestroy()
+    {
+        if (!isServer && !isClient) return;
+
+        if (isLocalPlayer)
+        {
+            localPlayer = null;
         }
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
+        Utils.InvokeMany(typeof(Player), this, "OnDestroy_");
+    }
 
-            HUD.SetActive(false);
+    // finite state machine events
+    bool EventDied()
+    {
+        return health <= 0;
+    }
+
+    bool EventMoveStart()
+    {
+        return state != "MOVING" && IsMoving(); // only fire when started moving
+    }
+
+    bool EventMoveEnd()
+    {
+        return state == "MOVING" && !IsMoving(); // only fire when stopped moving
+    }
+
+    [Command]
+    public void CmdRespawn() { respawnRequested = true; }
+    bool respawnRequested;
+    bool EventRespawn()
+    {
+        bool result = respawnRequested;
+        respawnRequested = false; // reset
+        return result;
+    }
+
+    // finite state machine - server
+    [Server]
+    string UpdateServer_IDLE()
+    {
+        if (EventDied())
+        {
+            OnDeath();
+            return "DEAD";
+        }
+        if (EventMoveStart())
+        {
+            return "MOVING";
+        }
+        if (EventMoveEnd()) { }
+        if (EventRespawn()) { }
+
+        return "IDLE";
+    }
+
+    [Server]
+    string UpdateServer_MOVING()
+    {
+        if (EventDied())
+        {
+            OnDeath();
+            return "DEAD";
+        }
+        if (EventMoveEnd())
+        {
+            return "IDLE";
+        }
+        if (EventMoveStart()) { }
+        if (EventRespawn()) { }
+
+        return "MOVING";
+    }
+
+    [Server]
+    string UpdateServer_DEAD()
+    {
+        if (EventRespawn())
+        {
+            gameObject.transform.position = new Vector3(0, 0, 0);
+
+            Revive();
+            return "IDLE";
         }
 
-        public void SetDefaults()
-        {
-            isDead = false;
-            health = maxHealth;
+        if (EventMoveStart()) { }
+        if (EventMoveEnd()) { }
+        if (EventDied()) { }
 
-            foreach (GameObject obj in disableGameObjectsOnDeath)
-            {
-                obj.SetActive(true);
-            }
+        return "DEAD";
+    }
 
-            foreach (Behaviour component in disableComponentsOnDeath)
-            {
-                component.enabled = true;
-            }
+    [Server]
+    protected override string UpdateServer()
+    {
+        if (state == "IDLE") return UpdateServer_IDLE();
+        if (state == "MOVING") return UpdateServer_MOVING();
+        if (state == "DEAD") return UpdateServer_DEAD();
+        Debug.LogError("invalid state:" + state);
+        return "IDLE";
+    }
 
-            // Create respawn effect
-            // Play sound
-            // Play animation
-        }
-
-        public void SetupPlayer()
+    // finite state machine - client
+    [Client]
+    protected override void UpdateClient()
+    {
+        if (state == "IDLE" || state == "MOVING")
         {
             if (isLocalPlayer)
             {
-                gameObject.GetComponent<CameraController>().currentCamera.enabled = true;
-                HUD.SetActive(true);
-            }
-
-            RpcBroadcastPlayerSetup();
-        }
-
-        [ClientRpc]
-        private void RpcBroadcastPlayerSetup()
-        {
-            RpcSetupPlayerOnAllClients();
-        }
-
-        [ClientRpc]
-        private void RpcSetupPlayerOnAllClients()
-        {
-            foreach (GameObject obj in disableGameObjectsOnDeath) {
-                obj.SetActive(true);
-            }
-
-            foreach (Behaviour component in disableComponentsOnDeath)
-            {
-                component.enabled = true;
-            }
-
-            SetDefaults();
-        }
-
-        [ClientRpc]
-        public void RpcTakeDamage(int dmg, string sourceID)
-        {
-            health = Mathf.Clamp(health - dmg, 0, 100);
-
-            if (health <= 0)
-            {
-                RpcDeath(sourceID);
+                WASDHandling();
             }
         }
+        else if (state == "DEAD") { }
+        else Debug.LogError("invalid state:" + state);
 
-        [ClientRpc]
-        public void RpcDeath(string sourceID)
-        {
-            isDead = true;
-            deaths += 1;
+        Utils.InvokeMany(typeof(Player), this, "UpdateClient_");
+    }
 
-            Player sourcePlayer = MatchManager.GetPlayer(sourceID);
+    protected override void UpdateOverlays()
+    {
+        base.UpdateOverlays();
+    }
 
-            if (sourcePlayer)
-            {
-                sourcePlayer.kills += 1;
-                MatchManager.instance.onPlayerKilledCallback.Invoke(username, sourcePlayer.username);
-            }
+    [Server]
+    protected override void OnDeath()
+    {
+        base.OnDeath();
 
-            foreach (GameObject obj in disableGameObjectsOnDeath)
-            {
-                obj.SetActive(false);
-            }
+        Utils.InvokeMany(typeof(Player), this, "OnDeath_");
+    }
 
-            foreach (Behaviour component in disableComponentsOnDeath)
-            {
-                component.enabled = false;
-            }
+    public override bool CanAttack(Entity entity)
+    {
+        return base.CanAttack(entity) && entity is Player;
+    }
 
-            StartCoroutine(Respawn());
-        }
+    [Client]
+    void WASDHandling()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-        private IEnumerator Respawn()
-        {
-            yield return new WaitForSeconds(MatchManager.instance.respawnTime);
+        // create input vector, normalize in case of diagonal movement
+        Vector3 input = new Vector3(horizontal, 0, vertical);
+        if (input.magnitude > 1) input = input.normalized;
 
-            Transform spawnPoint = NetRoomManager.GetStartPosition();
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
+        Vector3 angles = cam.transform.rotation.eulerAngles;
+        Quaternion rotation = Quaternion.Euler(angles);
+        Vector3 direction = rotation * input;
 
-            yield return new WaitForSeconds(0.5f);
-        }
+        // draw direction for debugging
+        Debug.DrawLine(transform.position, transform.position + direction, Color.green, 0, false);
+
+        gameObject.GetComponent<CharacterController>().Move(direction);
     }
 }
