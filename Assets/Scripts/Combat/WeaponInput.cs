@@ -86,8 +86,8 @@ namespace Infection.Combat
 
             if (_weapon.HasMoreWeapons)
             {
-                // Scroll up
-                if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetButtonDown("Switch"))
+                // Scroll up XOR Gamepad Button 3
+                if (Input.GetAxis("Mouse ScrollWheel") > 0f ^ Input.GetButtonDown("Switch"))
                 {
                     // Switch to the next weapon
                     _weapon.CycleWeapons();

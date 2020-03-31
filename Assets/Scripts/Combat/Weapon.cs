@@ -24,6 +24,8 @@ namespace Infection.Combat
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
         [SerializeField] private LayerMask raycastMask = 0;
+        [SerializeField, Tooltip("Percentage reduction when not aiming")]
+        private float accuracyReduction = 0.1f;
         [SerializeField] private GameObject bulletImpactVfx = null;
 
         [Header("Transforms for weapon model")]
@@ -443,9 +445,11 @@ namespace Infection.Combat
         /// </summary>
         private void Fire()
         {
-            // Store variables for repeated access
+            // Cache variables for repeated access
             Transform cameraTransform = _cameraController.currentCamera.transform;
-            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy;
+            // Accuracy reduction when not aiming
+            float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
+            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
             // Generate influence using weapon accuracy
             Vector3 influence = cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
                                 cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
@@ -500,12 +504,10 @@ namespace Infection.Combat
         /// <returns>Accuracy influenced ray</returns>
         private Ray GenerateRay(Vector3 influence)
         {
-            // Cache camera transform
+            // Cache camera transform for repeated access
             Transform cameraTransform = _cameraController.currentCamera.transform;
-
             // Generate direction with slight random rotation using accuracy
             Vector3 direction = cameraTransform.forward + influence;
-
             // Create ray using camera position and direction
             return new Ray(cameraTransform.position, direction);
         }
