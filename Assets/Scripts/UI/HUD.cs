@@ -35,6 +35,7 @@ namespace Infection
             playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange += UpdateCrosshair;
             playerWeapon.OnStateChange += HandleStateChanged;
+            playerWeapon.OnAimingChange += UpdateCrosshairOpacity;
             playerWeapon.OnAlertEvent += UpdateAlertMessage;
         }
 
@@ -44,6 +45,7 @@ namespace Infection
             playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange -= UpdateCrosshair;
             playerWeapon.OnStateChange -= HandleStateChanged;
+            playerWeapon.OnAimingChange -= UpdateCrosshairOpacity;
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
@@ -74,6 +76,13 @@ namespace Infection
         private void UpdateCrosshair()
         {
             crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
+        }
+
+        private void UpdateCrosshairOpacity(object sender, Weapon.AimingChangedEventArgs e)
+        {
+            var color = crosshair.color;
+            color = new Color(color.r, color.g, color.b, 1f - e.Percentage);
+            crosshair.color = color;
         }
 
         private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)
