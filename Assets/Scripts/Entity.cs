@@ -3,15 +3,15 @@ using Mirror;
 
 public abstract partial class Entity : NetworkBehaviour
 {
-    [Header("Components")]
-    public Animator animator;
-
     [Header("State")]
     [SyncVar, SerializeField] public string state = "IDLE";
 
     [Header("Health")]
     [SerializeField] protected int healthMax = 100;
     [SyncVar] public int health = 100;
+
+    [Header("Components")]
+    public Animator animator;
 
     protected virtual void Awake()
     {
@@ -44,7 +44,8 @@ public abstract partial class Entity : NetworkBehaviour
 
     public virtual bool IsWorthUpdating()
     {
-        return netIdentity.observers == null || netIdentity.observers.Count > 0;
+        return true;
+        // return netIdentity.observers == null || netIdentity.observers.Count > 0;
     }
 
     // entity logic will be implemented with a finite state machine
@@ -89,11 +90,6 @@ public abstract partial class Entity : NetworkBehaviour
 
     // can be overwritten for overlays
     protected virtual void UpdateOverlays(){}
-
-    public bool IsMoving()
-    {
-        return gameObject.GetComponent<CharacterController>().velocity != Vector3.zero;
-    }
 
     [Server]
     public void Revive()

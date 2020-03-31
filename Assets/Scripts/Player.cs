@@ -10,18 +10,21 @@ public class Player : Entity
     [Header("Components")]
     public static Player localPlayer;
     public Camera cam;
+    public GameObject model;
 
     [Header("Movement")]
     public float walkSpeed = 8f;
     public float runSpeed = 12f;
     public float JumpSpeed = 5f;
     public bool canMove = true;
-    public bool Grounded = false;
+    public bool isGrounded = false;
+    [SyncVar] public float verticalLook;
+    [SyncVar] public float horizontalLook;
 
     private CharacterController characterController;
-    private float verticalLook;
-    private float horizontalLook;
+    private float speedAtJump;
     private float verticalSpeed;
+    private float lastGrounded;
     protected override void Awake()
     {
         base.Awake();
@@ -33,6 +36,10 @@ public class Player : Entity
     {
         localPlayer = this;
 
+        cam.gameObject.SetActive(true);
+        model.gameObject.SetActive(false);
+
+        isGrounded = true;
         verticalLook = 0.0f;
         horizontalLook = gameObject.transform.localEulerAngles.y;
 
@@ -101,6 +108,11 @@ public class Player : Entity
         }
 
         Utils.InvokeMany(typeof(Player), this, "OnDestroy_");
+    }
+
+    public bool IsMoving()
+    {
+        return gameObject.GetComponent<CharacterController>().velocity != Vector3.zero;
     }
 
     // finite state machine events
@@ -198,13 +210,14 @@ public class Player : Entity
     [Client]
     protected override void UpdateClient()
     {
-        if (state == "IDLE" || state == "MOVING")
+        if (state != "DEAD")
         {
             if (isLocalPlayer)
             {
                 CameraHandler();
                 MovementHandler();
                 GravityHandler();
+                CursorHandler();
             }
         }
         else if (state == "DEAD") { }
@@ -245,17 +258,48 @@ public class Player : Entity
     [Client]
     void MovementHandler()
     {
-        if (!canMove) return;
-
         float inputHorizontal = Input.GetAxis("Horizontal");
         float inputVertical = Input.GetAxis("Vertical");
+        bool inputJump = Input.GetButtonDown("Jump");
         bool inputRun = Input.GetButton("Run");
+        bool lostFooting = false;
+        Vector3 move = Vector3.zero;
 
-        Vector3 move = new Vector3(inputHorizontal, 0, inputVertical);
-        if (move.magnitude > 1) move = move.normalized;
+        if (!characterController.isGrounded)
+        {
+            if (isGrounded)
+            {
+                lastGrounded += Time.deltaTime;
+
+                if (lastGrounded >= 0.5f)
+                {
+                    lostFooting = true;
+                    isGrounded = false;
+                }
+            }
+        }
+        else
+        {
+            lastGrounded = 0f;
+            isGrounded = true;
+        }
+
+        if (!canMove) return;
+
+        if (isGrounded && inputJump)
+        {
+            verticalSpeed = JumpSpeed;
+            isGrounded = false;
+            lostFooting = true;
+        }
 
         float actualSpeed = inputRun ? runSpeed : walkSpeed;
-        float calcSpeed = actualSpeed;
+        if (lostFooting) speedAtJump = actualSpeed;
+
+        move = new Vector3(inputHorizontal, 0, inputVertical);
+        if (move.magnitude > 1) move = move.normalized;
+
+        float calcSpeed = isGrounded ? actualSpeed : speedAtJump;
         move = move * calcSpeed * Time.deltaTime;
         move = transform.TransformDirection(move);
 
@@ -290,5 +334,14 @@ public class Player : Entity
         currentAngles = transform.localEulerAngles;
         currentAngles.y = horizontalLook;
         transform.localEulerAngles = currentAngles;
+    }
+
+    [Client]
+    void CursorHandler()
+    {
+        if (!canMove) return;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }
