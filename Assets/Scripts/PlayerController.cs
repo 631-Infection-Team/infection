@@ -36,7 +36,7 @@ namespace Infection
             {
                 float vertical = Input.GetAxis("Vertical");
                 float horizontal = Input.GetAxis("Horizontal");
-                float lookHorizontal = Input.GetAxis("Mouse X");
+                float lookHorizontal = Input.GetAxis("Look X");
                 bool jump = Input.GetButtonDown("Jump");
                 bool run = Input.GetButton("Run");
                 bool lostFooting = false;
