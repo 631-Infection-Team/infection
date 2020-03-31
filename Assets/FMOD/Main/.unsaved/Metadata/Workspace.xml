@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="Workspace" id="{0c8bc2f7-4a96-4b87-b5fb-6ee44b23c177}">
+		<property name="builtBanksOutputDirectory">
+			<value>Build</value>
+		</property>
+		<property name="builtBanksEncryptionKey">
+			<value>1</value>
+		</property>
+		<relationship name="masterEventFolder">
+			<destination>{86598b0c-33b1-4aa4-960c-703244ee0b4b}</destination>
+		</relationship>
+		<relationship name="masterTagFolder">
+			<destination>{d93d5f7f-4316-42f6-99c9-5f93043f3944}</destination>
+		</relationship>
+		<relationship name="masterEffectPresetFolder">
+			<destination>{df411a2f-ce5e-467d-870e-4cd24ede8ef7}</destination>
+		</relationship>
+		<relationship name="masterParameterPresetFolder">
+			<destination>{a2c049ab-a5e9-4466-b07b-01b8909c34b9}</destination>
+		</relationship>
+		<relationship name="masterBankFolder">
+			<destination>{90108b97-c9ab-4228-9874-7f62df0e8f3c}</destination>
+		</relationship>
+		<relationship name="masterAssetFolder">
+			<destination>{3f662d50-092b-4aed-bfcb-d31ca5cb9ec6}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{3bf3bc45-db5f-40df-b1b4-76e15e1bdd37}</destination>
+		</relationship>
+		<relationship name="platforms">
+			<destination>{59d255fb-55ca-43dc-88a6-23fefdc8c298}</destination>
+			<destination>{4f886d6f-b2c7-45bc-97bd-5f5de657d81e}</destination>
+		</relationship>
+	</object>
+</objects>
