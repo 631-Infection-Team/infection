@@ -11,7 +11,11 @@ namespace Infection.Combat
         /// </summary>
         public bool LockControl = false;
 
+        // Components
         private Weapon _weapon = null;
+
+        // Properties
+        private bool _fireDown = false;
 
         private void Awake()
         {
@@ -30,6 +34,12 @@ namespace Infection.Combat
                 return;
             }
 
+            // Reset fire when trigger is released
+            if (Input.GetAxis("Fire") <= 0f)
+            {
+                _fireDown = false;
+            }
+
             if (_weapon.CurrentWeapon.WeaponDefinition)
             {
                 switch (_weapon.CurrentWeapon.WeaponDefinition.TriggerType)
@@ -38,7 +48,7 @@ namespace Infection.Combat
                         // Automatic fire is the same as burst
                     case TriggerType.Burst:
                         // Currently you can hold down Fire to fire burst mode weapons
-                        if (Input.GetButton("Fire"))
+                        if (Input.GetAxis("Fire") > 0f)
                         {
                             StartCoroutine(_weapon.FireWeapon());
                         }
@@ -46,9 +56,13 @@ namespace Infection.Combat
 
                     case TriggerType.Manual:
                         // Manual fire
-                        if (Input.GetButtonDown("Fire"))
+                        if (Input.GetAxis("Fire") > 0f)
                         {
-                            StartCoroutine(_weapon.FireWeapon());
+                            if (!_fireDown)
+                            {
+                                _fireDown = true;
+                                StartCoroutine(_weapon.FireWeapon());
+                            }
                         }
                         break;
                 }
@@ -60,7 +74,7 @@ namespace Infection.Combat
                 }
 
                 // Aiming down the sights
-                if (Input.GetButton("Aim"))
+                if (Input.GetAxis("Aim") > 0f)
                 {
                     _weapon.IncreaseAim();
                 }
@@ -73,7 +87,7 @@ namespace Infection.Combat
             if (_weapon.HasMoreWeapons)
             {
                 // Scroll up
-                if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+                if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetButtonDown("Switch"))
                 {
                     // Switch to the next weapon
                     _weapon.CycleWeapons();

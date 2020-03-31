@@ -75,9 +75,22 @@ namespace Infection.Combat
             set
             {
                 _aimingPercentage = value;
-                OnAimingChange?.Invoke(this, new AimingChangedEventArgs
+                OnAimingChange?.Invoke(this, new PercentageEventArgs
                 {
                     Percentage = _aimingPercentage
+                });
+            }
+        }
+
+        public float InstabilityPercentage
+        {
+            get => _instabilityPercentage;
+            set
+            {
+                _instabilityPercentage = value;
+                OnRecoil?.Invoke(this, new PercentageEventArgs
+                {
+                    Percentage = _instabilityPercentage
                 });
             }
         }
@@ -96,7 +109,8 @@ namespace Infection.Combat
         public event Action OnAmmoChange = null;
         public event Action OnWeaponChange = null;
         public event EventHandler<StateChangedEventArgs> OnStateChange;
-        public event EventHandler<AimingChangedEventArgs> OnAimingChange;
+        public event EventHandler<PercentageEventArgs> OnAimingChange;
+        public event EventHandler<PercentageEventArgs> OnRecoil;
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
@@ -109,6 +123,7 @@ namespace Infection.Combat
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
         private float _aimingPercentage = 0f;
+        private float _instabilityPercentage;
         private float _baseFieldOfView = 0f;
 
         private void Awake()
@@ -140,6 +155,12 @@ namespace Infection.Combat
             // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
             _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, AimingPercentage);
+
+            // Gradually reduce instability percentage while weapon is calming down
+            if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
+            {
+                InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
+            }
         }
 
         /// <summary>
@@ -441,7 +462,7 @@ namespace Infection.Combat
                     if (_cameraController && raycast)
                     {
                         // Generate bullet impact effects. Particle system automatically destroys the object when finished.
-                        Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(hit.point, hit.normal)));
+                        Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
@@ -452,6 +473,9 @@ namespace Infection.Combat
                     // TODO: Implement projectile weapon firing
                     break;
             }
+
+            // Apply recoil
+            InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
@@ -550,7 +574,7 @@ namespace Infection.Combat
             public WeaponState State { get; set; }
         }
 
-        public class AimingChangedEventArgs : EventArgs
+        public class PercentageEventArgs : EventArgs
         {
             public float Percentage { get; set; }
         }
