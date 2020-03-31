@@ -251,9 +251,6 @@ namespace Infection.Combat
                         CurrentState = WeaponState.Firing;
                         Fire();
 
-                        // Show muzzle flash for split second
-                        StartCoroutine(FlashMuzzle());
-
                         // Wait a third of the fire rate between each shot in the burst
                         yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
@@ -267,9 +264,6 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
-
-                    // Show muzzle flash for split second
-                    StartCoroutine(FlashMuzzle());
 
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
@@ -449,11 +443,18 @@ namespace Infection.Combat
         /// </summary>
         private void Fire()
         {
+            // Store variables for repeated access
+            Transform cameraTransform = _cameraController.currentCamera.transform;
+            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy;
+            // Generate influence using weapon accuracy
+            Vector3 influence = cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
+                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
                     // Create ray with accuracy influence
-                    Ray ray = GenerateRay(CurrentWeapon.WeaponDefinition.Accuracy);
+                    Ray ray = GenerateRay(influence);
 
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
@@ -474,6 +475,9 @@ namespace Infection.Combat
                     break;
             }
 
+            // Show muzzle flash for split second
+            StartCoroutine(FlashMuzzle(influence));
+
             // Apply recoil
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
 
@@ -490,19 +494,17 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// Create a ray from camera transform using accuracy to influence direction.
+        /// Create a ray from camera transform using an influence vector created from accuracy to rotate ray.
         /// </summary>
-        /// <param name="accuracy">Weapon accuracy</param>
+        /// <param name="influence"></param>
         /// <returns>Accuracy influenced ray</returns>
-        private Ray GenerateRay(float accuracy)
+        private Ray GenerateRay(Vector3 influence)
         {
             // Cache camera transform
             Transform cameraTransform = _cameraController.currentCamera.transform;
 
             // Generate direction with slight random rotation using accuracy
-            Vector3 direction = cameraTransform.forward +
-                                cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
-                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+            Vector3 direction = cameraTransform.forward + influence;
 
             // Create ray using camera position and direction
             return new Ray(cameraTransform.position, direction);
@@ -511,12 +513,13 @@ namespace Infection.Combat
         /// <summary>
         /// Shows the muzzle flash for a split second and then hides it. The muzzle flash receives a random scale.
         /// </summary>
-        /// <returns></returns>
-        private IEnumerator FlashMuzzle()
+        /// <param name="influence">The amount of rotation applied based on weapon accuracy</param>
+        /// <returns>Muzzle flash effect</returns>
+        private IEnumerator FlashMuzzle(Vector3 influence)
         {
             // Set random scale and rotation for muzzle flash object
             Vector3 randomScale = new Vector3(Random.Range(0.3f, 1f),Random.Range(0.3f, 1f),Random.Range(0.3f, 1f));
-            Vector3 randomRotation = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-8.0f, 8.0f), Random.Range(0f, 360f));
+            Vector3 randomRotation = new Vector3(0f, 0f, Random.Range(0f, 360f)) + influence;
             muzzleFlash.localScale = randomScale;
             muzzleFlash.localRotation = Quaternion.Euler(randomRotation);
 
@@ -524,7 +527,7 @@ namespace Infection.Combat
             muzzleFlash.gameObject.SetActive(true);
 
             // Hide muzzle flash after split second
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(Time.deltaTime);
             muzzleFlash.gameObject.SetActive(false);
         }
 
