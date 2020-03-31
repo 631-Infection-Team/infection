@@ -53,10 +53,7 @@ namespace Infection
 
         public override bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
         {
-            Player player = gamePlayer.GetComponent<Player>();
-            player.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
-
-            return true;
+            return base.OnRoomServerSceneLoadedForPlayer(roomPlayer, gamePlayer);
         }
 
         public override void OnRoomServerPlayersReady()

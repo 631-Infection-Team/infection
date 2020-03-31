@@ -117,7 +117,7 @@ namespace Infection.Combat
         // Components
         private Animator _weaponHolderAnimator = null;
         private RuntimeAnimatorController _defaultWeaponAnimator = null;
-        private CameraController _cameraController = null;
+        //private CameraController _cameraController = null;
 
         // Properties
         private int _currentWeaponIndex = 0;
@@ -128,7 +128,7 @@ namespace Infection.Combat
 
         private void Awake()
         {
-            _cameraController = GetComponent<CameraController>();
+            //_cameraController = GetComponent<CameraController>();
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
 
             // Cache the default animator in case animator overrides become null when switching weapons
@@ -144,7 +144,7 @@ namespace Infection.Combat
             }
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
-            _baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+            //_baseFieldOfView = _cameraController.currentCamera.fieldOfView;
 
             // Spawn the weapon model
             UpdateWeaponModel();
@@ -154,7 +154,7 @@ namespace Infection.Combat
         {
             // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
-            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, AimingPercentage);
+            //_cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
 
             // Gradually reduce instability percentage while weapon is calming down
             if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
@@ -452,6 +452,7 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
+                    //Transform cameraTransform = _cameraController.currentCamera.transform;
                     // Create ray with accuracy influence
                     Ray ray = GenerateRay(CurrentWeapon.WeaponDefinition.Accuracy);
 
@@ -459,7 +460,7 @@ namespace Infection.Combat
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
 
                     // Determine objects hit
-                    if (_cameraController && raycast)
+                    if (raycast)
                     {
                         // Generate bullet impact effects. Particle system automatically destroys the object when finished.
                         Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
