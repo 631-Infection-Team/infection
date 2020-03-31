@@ -432,10 +432,18 @@ namespace Infection.Combat
             {
                 case WeaponType.Raycast:
                     Transform cameraTransform = _cameraController.currentCamera.transform;
-                    // Create ray
-                    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                    // Generate direction with slight random rotation using accuracy
+                    float accuracy = CurrentWeapon.WeaponDefinition.Accuracy;
+                    Vector3 direction = cameraTransform.forward +
+                                        cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
+                                        cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+
+                    // Create ray using direction
+                    Ray ray = new Ray(cameraTransform.position, direction);
+
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
+
                     // Determine objects hit
                     if (_cameraController && raycast)
                     {
