@@ -65,28 +65,52 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// The player cannot hold additional weapons as their held weapons array is full.
+        /// The percentage that represents the state of how fully complete the aiming down the sights action is.
+        /// A value of 0 means not aiming down the sights at all. A value of 1 means fully aiming down the sights.
+        /// Any value in between means currently transitioning from either fully aiming or not aiming.
         /// </summary>
-        public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
-
         public float AimingPercentage
         {
             get => _aimingPercentage;
             set
             {
                 _aimingPercentage = value;
-                OnAimingChange?.Invoke(this, new AimingChangedEventArgs
+                OnAimingChange?.Invoke(this, new PercentageEventArgs
                 {
                     Percentage = _aimingPercentage
                 });
             }
         }
 
+        public float InstabilityPercentage
+        {
+            get => _instabilityPercentage;
+            set
+            {
+                _instabilityPercentage = value;
+                OnRecoil?.Invoke(this, new PercentageEventArgs
+                {
+                    Percentage = _instabilityPercentage
+                });
+            }
+        }
+
+        /// <summary>
+        /// The player cannot hold additional weapons as their held weapons array is full.
+        /// </summary>
+        public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
+
+        /// <summary>
+        /// The player has other weapons that is not the currently equipped weapon.
+        /// </summary>
+        public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && CurrentWeapon != null);
+
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         public event Action OnAmmoChange = null;
         public event Action OnWeaponChange = null;
         public event EventHandler<StateChangedEventArgs> OnStateChange;
-        public event EventHandler<AimingChangedEventArgs> OnAimingChange;
+        public event EventHandler<PercentageEventArgs> OnAimingChange;
+        public event EventHandler<PercentageEventArgs> OnRecoil;
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
@@ -99,12 +123,15 @@ namespace Infection.Combat
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
         private float _aimingPercentage = 0f;
+        private float _instabilityPercentage;
         private float _baseFieldOfView = 0f;
 
         private void Awake()
         {
             _cameraController = GetComponent<CameraController>();
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
+
+            // Cache the default animator in case animator overrides become null when switching weapons
             _defaultWeaponAnimator = _weaponHolderAnimator.runtimeAnimatorController;
         }
 
@@ -116,6 +143,7 @@ namespace Infection.Combat
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
 
+            // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _cameraController.currentCamera.fieldOfView;
 
             // Spawn the weapon model
@@ -127,6 +155,12 @@ namespace Infection.Combat
             // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
             _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, AimingPercentage);
+
+            // Gradually reduce instability percentage while weapon is calming down
+            if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
+            {
+                InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
+            }
         }
 
         /// <summary>
@@ -137,6 +171,11 @@ namespace Infection.Combat
         {
             // Player has no weapons
             // TODO: Find solution for edge case where player has other weapons but current weapon is null
+            if (HasMoreWeapons && CurrentWeapon == null)
+            {
+
+            }
+
             if (CurrentWeapon == null)
             {
                 CurrentWeapon = newWeapon;
@@ -155,7 +194,7 @@ namespace Infection.Combat
             {
                 // Equip the new weapon and switch to it
                 heldWeapons[emptySlot] = newWeapon;
-                StartCoroutine(SwitchWeapon((_currentWeaponIndex + 1) % heldWeapons.Length));
+                CycleWeapons();
             }
             else
             {
@@ -349,6 +388,19 @@ namespace Infection.Combat
             CurrentState = WeaponState.Idle;
         }
 
+        /// <summary>
+        /// Switch to the next weapon by incrementing index. If index is out of bounds, wrap to other end of array.
+        /// This operation works both ways.
+        /// </summary>
+        public void CycleWeapons(int direction = 1)
+        {
+            int index = (((_currentWeaponIndex + direction) % heldWeapons.Length) + heldWeapons.Length) % heldWeapons.Length;
+            StartCoroutine(SwitchWeapon(index));
+        }
+
+        /// <summary>
+        /// Increase the aiming percentage based on current weapon's aim time.
+        /// </summary>
         public void IncreaseAim()
         {
             // Unzoom while reloading or switching
@@ -363,12 +415,18 @@ namespace Infection.Combat
                 return;
             }
 
+            // Upper bound is 1
             float value = Mathf.Min(1.0f, AimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
             AimingPercentage = value;
+
+            // Update animator to show aiming transition
             _weaponHolderAnimator.SetBool("Aim", true);
             _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
         }
 
+        /// <summary>
+        /// Decrease the aiming percentage based on current weapon's aim time.
+        /// </summary>
         public void DecreaseAim()
         {
             if (AimingPercentage <= 0f)
@@ -376,8 +434,11 @@ namespace Infection.Combat
                 return;
             }
 
+            // Lower bound is 0
             float value = Mathf.Max(0f, AimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
             AimingPercentage = value;
+
+            // Update animator to show aiming transition
             _weaponHolderAnimator.SetBool("Aim", false);
             _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
         }
@@ -391,16 +452,17 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    Transform cameraTransform = _cameraController.currentCamera.transform;
-                    // Create ray
-                    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                    // Create ray with accuracy influence
+                    Ray ray = GenerateRay(CurrentWeapon.WeaponDefinition.Accuracy);
+
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
+
                     // Determine objects hit
                     if (_cameraController && raycast)
                     {
                         // Generate bullet impact effects. Particle system automatically destroys the object when finished.
-                        GameObject impactVfx = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(-hit.point));
+                        Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
@@ -412,6 +474,9 @@ namespace Infection.Combat
                     break;
             }
 
+            // Apply recoil
+            InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
+
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
 
@@ -422,6 +487,25 @@ namespace Infection.Combat
             // Fire animation
             _weaponHolderAnimator.SetTrigger("Fire");
             _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
+        }
+
+        /// <summary>
+        /// Create a ray from camera transform using accuracy to influence direction.
+        /// </summary>
+        /// <param name="accuracy">Weapon accuracy</param>
+        /// <returns>Accuracy influenced ray</returns>
+        private Ray GenerateRay(float accuracy)
+        {
+            // Cache camera transform
+            Transform cameraTransform = _cameraController.currentCamera.transform;
+
+            // Generate direction with slight random rotation using accuracy
+            Vector3 direction = cameraTransform.forward +
+                                cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
+                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+
+            // Create ray using camera position and direction
+            return new Ray(cameraTransform.position, direction);
         }
 
         /// <summary>
@@ -490,7 +574,7 @@ namespace Infection.Combat
             public WeaponState State { get; set; }
         }
 
-        public class AimingChangedEventArgs : EventArgs
+        public class PercentageEventArgs : EventArgs
         {
             public float Percentage { get; set; }
         }

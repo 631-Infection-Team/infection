@@ -20,6 +20,15 @@ namespace Infection
 
         public bool isPaused;
 
+        private float _originalCrosshairOpacity = 0f;
+        private Vector3 _originalCrosshairSize;
+
+        private void Start()
+        {
+            _originalCrosshairOpacity = crosshair.color.a;
+            _originalCrosshairSize = crosshair.transform.localScale;
+        }
+
         private void OnEnable()
         {
             // Clear status and alert messages at start
@@ -36,6 +45,7 @@ namespace Infection
             playerWeapon.OnWeaponChange += UpdateCrosshair;
             playerWeapon.OnStateChange += HandleStateChanged;
             playerWeapon.OnAimingChange += UpdateCrosshairOpacity;
+            playerWeapon.OnRecoil += ExpandCrosshair;
             playerWeapon.OnAlertEvent += UpdateAlertMessage;
         }
 
@@ -46,6 +56,7 @@ namespace Infection
             playerWeapon.OnWeaponChange -= UpdateCrosshair;
             playerWeapon.OnStateChange -= HandleStateChanged;
             playerWeapon.OnAimingChange -= UpdateCrosshairOpacity;
+            playerWeapon.OnRecoil -= ExpandCrosshair;
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
@@ -78,11 +89,16 @@ namespace Infection
             crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
         }
 
-        private void UpdateCrosshairOpacity(object sender, Weapon.AimingChangedEventArgs e)
+        private void UpdateCrosshairOpacity(object sender, Weapon.PercentageEventArgs e)
         {
             var color = crosshair.color;
-            color = new Color(color.r, color.g, color.b, 1f - e.Percentage);
+            color = new Color(color.r, color.g, color.b, Mathf.Lerp(_originalCrosshairOpacity, 0f, e.Percentage));
             crosshair.color = color;
+        }
+
+        private void ExpandCrosshair(object sender, Weapon.PercentageEventArgs e)
+        {
+            crosshair.transform.localScale = Vector3.Lerp(_originalCrosshairSize, _originalCrosshairSize * 2, e.Percentage);
         }
 
         private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)

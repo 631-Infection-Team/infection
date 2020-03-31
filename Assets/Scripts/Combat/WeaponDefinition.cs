@@ -38,6 +38,8 @@ namespace Infection.Combat
         private float damage = 8.0f;
         [SerializeField, Tooltip("Time between shots in seconds, lower is faster"), Range(0.001f, 10.0f)]
         private float fireRate = 0.1f;
+        [SerializeField, Tooltip("Percentage of how accurate each shot fired will hit its mark"), Range(0f, 1f)]
+        private float accuracy = 0.995f;
         [SerializeField, Tooltip("Amount of recoil from each shot, higher is more intense"), Range(0.001f, 10.0f)]
         private float recoilMultiplier = 0.1f;
 
@@ -75,6 +77,7 @@ namespace Infection.Combat
         public WeaponType WeaponType => weaponType;
         public float Damage => damage;
         public float FireRate => fireRate;
+        public float Accuracy => accuracy;
         public float RecoilMultiplier => recoilMultiplier;
         public float AimZoomMultiplier => aimZoomMultiplier;
 
