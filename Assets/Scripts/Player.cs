@@ -1,5 +1,6 @@
 ﻿using Mirror;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Infection
@@ -32,6 +33,20 @@ namespace Infection
             {
                 Debug.LogError("Could not find Network Room Manager.");
             }
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            base.OnStartLocalPlayer();
+
+            HUD.SetActive(true);
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            HUD.SetActive(false);
         }
 
         public void SetDefaults()

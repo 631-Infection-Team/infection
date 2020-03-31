@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Infection.Combat;
 using Mirror;
 using TMPro;
@@ -8,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Infection
 {
-    public class HUD : NetworkBehaviour
+    public class HUD : MonoBehaviour
     {
         [SerializeField] private Image crosshair = null;
         [SerializeField] private GameObject pauseMenu = null;
@@ -21,7 +20,12 @@ namespace Infection
 
         public bool isPaused;
 
-        private void Start()
+        private void OnGUI()
+        {
+
+        }
+
+        private void OnEnable()
         {
             // Clear status and alert messages at start
             statusMessageDisplay.text = "";
@@ -31,13 +35,42 @@ namespace Infection
             UpdateWeaponAmmoDisplay();
             UpdateWeaponNameDisplay();
             UpdateCrosshair();
+
+            playerWeapon.OnAmmoChange += UpdateWeaponAmmoDisplay;
+            playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
+            playerWeapon.OnWeaponChange += UpdateCrosshair;
+            playerWeapon.OnStateChange += HandleStateChanged;
+            playerWeapon.OnAlertEvent += UpdateAlertMessage;
         }
 
-        private void Update()
+        private void OnDisable()
         {
+            playerWeapon.OnAmmoChange -= UpdateWeaponAmmoDisplay;
+            playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
+            playerWeapon.OnWeaponChange -= UpdateCrosshair;
+            playerWeapon.OnStateChange -= HandleStateChanged;
+            playerWeapon.OnAlertEvent -= UpdateAlertMessage;
+        }
+
+        public void TogglePause()
+        {
+            isPaused = !isPaused;
+            pauseMenu.SetActive(isPaused);
+        }
+
+        private IEnumerator UpdateAlertMessage(string message, float duration)
+        {
+            alertMessageDisplay.text = message;
+            yield return new WaitForSeconds(duration);
+            alertMessageDisplay.text = "";
+        }
+
+        private void UpdateStatusMessage(Weapon.WeaponState state)
+        {
+            // Blank message for idle and firing
             string statusMessage = "";
             // Update status message display to reflect weapon state
-            switch (playerWeapon.CurrentState)
+            switch (state)
             {
                 case Weapon.WeaponState.Reloading:
                     statusMessage = "Reloading";
@@ -49,54 +82,25 @@ namespace Infection
             statusMessageDisplay.text = statusMessage;
         }
 
-        private void OnEnable()
-        {
-            playerWeapon.OnAmmoChange += UpdateWeaponAmmoDisplay;
-            playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
-            playerWeapon.OnWeaponChange += UpdateCrosshair;
-            playerWeapon.OnAlertEvent += UpdateAlertMessage;
-        }
-
-        private void OnDisable()
-        {
-            playerWeapon.OnAmmoChange -= UpdateWeaponAmmoDisplay;
-            playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
-            playerWeapon.OnWeaponChange -= UpdateCrosshair;
-            playerWeapon.OnAlertEvent -= UpdateAlertMessage;
-        }
-
-        [Client]
-        public void TogglePause()
-        {
-            isPaused = !isPaused;
-            pauseMenu.SetActive(isPaused);
-        }
-
-        [Client]
-        private IEnumerator UpdateAlertMessage(string message, float duration)
-        {
-            alertMessageDisplay.text = message;
-            yield return new WaitForSeconds(duration);
-            alertMessageDisplay.text = "";
-        }
-
-        [Client]
         private void UpdateWeaponAmmoDisplay()
         {
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
             reservesDisplay.text = $"{playerWeapon.CurrentWeapon.Reserves}";
         }
 
-        [Client]
         private void UpdateWeaponNameDisplay()
         {
             weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.WeaponDefinition.WeaponName}";
         }
 
-        [Client]
         private void UpdateCrosshair()
         {
             crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
+        }
+
+        private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)
+        {
+            UpdateStatusMessage(e.State);
         }
     }
 }

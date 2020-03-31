@@ -927,8 +927,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c88dc68b6729a54c98469a6da1c865c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   crosshair: {fileID: 3863822202247467385}
   pauseMenu: {fileID: 8376310534343971783}
   statusMessageDisplay: {fileID: 2888676023010288973}

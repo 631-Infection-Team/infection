@@ -2,15 +2,15 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Mirror;
+using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
-
 #endif
 
 namespace Infection.Combat
 {
-    [RequireComponent(typeof(Animator))]
-    public class Weapon : MonoBehaviour
+    public class Weapon : NetworkBehaviour
     {
         public enum WeaponState
         {
@@ -23,10 +23,12 @@ namespace Infection.Combat
         [Header("Weapon")]
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
+        [SerializeField] private LayerMask raycastMask = 0;
 
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
         [SerializeField] private Transform muzzle = null;
+        [SerializeField] private Transform muzzleFlash = null;
 
         // Unity events. Add listeners from the inspector.
         [Header("Events for weapon behavior state changes")]
@@ -39,7 +41,18 @@ namespace Infection.Combat
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
         /// </summary>
-        public WeaponState CurrentState => _currentState;
+        public WeaponState CurrentState
+        {
+            get => _currentState;
+            set
+            {
+                _currentState = value;
+                OnStateChange?.Invoke(this, new StateChangedEventArgs
+                {
+                    State = _currentState
+                });
+            }
+        }
 
         /// <summary>
         /// The weapon currently in use. Returns one weapon item from the player's held weapons.
@@ -58,6 +71,7 @@ namespace Infection.Combat
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         public event Action OnAmmoChange = null;
         public event Action OnWeaponChange = null;
+        public event EventHandler<StateChangedEventArgs> OnStateChange;
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
@@ -68,7 +82,8 @@ namespace Infection.Combat
         // Properties
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
-        private bool _aimingDownSights = false;
+        private float _aimingPercentage = 0f;
+        private float _baseFieldOfView = 0f;
 
         private void Awake()
         {
@@ -84,8 +99,16 @@ namespace Infection.Combat
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
 
+            _baseFieldOfView = _cameraController.currentCamera.fieldOfView;
+
             // Spawn the weapon model
             UpdateWeaponModel();
+        }
+
+        private void Update()
+        {
+            float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
+            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
         }
 
         /// <summary>
@@ -152,7 +175,7 @@ namespace Infection.Combat
         public IEnumerator FireWeapon()
         {
             // Cannot fire weapon when state is not idle
-            if (_currentState != WeaponState.Idle)
+            if (CurrentState != WeaponState.Idle)
             {
                 yield break;
             }
@@ -168,8 +191,12 @@ namespace Infection.Combat
                     for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
                     {
                         // Fire the weapon
-                        _currentState = WeaponState.Firing;
+                        CurrentState = WeaponState.Firing;
                         Fire();
+
+                        // Show muzzle flash for split second
+                        StartCoroutine(FlashMuzzle());
+
                         // Wait a third of the fire rate between each shot in the burst
                         yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
@@ -181,13 +208,17 @@ namespace Infection.Combat
                 {
                     // Firing automatic or manual type weapon
                     // Fire the weapon
-                    _currentState = WeaponState.Firing;
+                    CurrentState = WeaponState.Firing;
                     Fire();
+
+                    // Show muzzle flash for split second
+                    StartCoroutine(FlashMuzzle());
+
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
             }
 
-            _currentState = WeaponState.Idle;
+            CurrentState = WeaponState.Idle;
 
             // Out of ammo
             if (CurrentWeapon.Magazine <= 0)
@@ -217,7 +248,7 @@ namespace Infection.Combat
         public IEnumerator ReloadWeapon()
         {
             // Already reloading or not in idle state
-            if (_currentState == WeaponState.Reloading || _currentState != WeaponState.Idle)
+            if (CurrentState == WeaponState.Reloading || CurrentState != WeaponState.Idle)
             {
                 yield break;
             }
@@ -239,7 +270,7 @@ namespace Infection.Combat
             }
 
             // Reloading animation
-            _currentState = WeaponState.Reloading;
+            CurrentState = WeaponState.Reloading;
 
             // Play animation
             // ReloadSpeed is a parameter in the animator. It's the speed multiplier.
@@ -256,7 +287,7 @@ namespace Infection.Combat
             OnAmmoChange?.Invoke();
             onReload?.Invoke();
 
-            _currentState = WeaponState.Idle;
+            CurrentState = WeaponState.Idle;
         }
 
         /// <summary>
@@ -267,13 +298,13 @@ namespace Infection.Combat
         public IEnumerator SwitchWeapon(int index)
         {
             // Cannot switch weapon when not in idle state or current weapon already out
-            if (_currentState != WeaponState.Idle || _currentWeaponIndex == index)
+            if (CurrentState != WeaponState.Idle || _currentWeaponIndex == index)
             {
                 yield break;
             }
 
             // Begin switching weapons
-            _currentState = WeaponState.Switching;
+            CurrentState = WeaponState.Switching;
             Debug.Log("Switching weapon");
 
             // Holster animation
@@ -297,7 +328,27 @@ namespace Infection.Combat
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
             Debug.Log("Weapon switch done");
-            _currentState = WeaponState.Idle;
+            CurrentState = WeaponState.Idle;
+        }
+
+        public void IncreaseAim()
+        {
+            if (_aimingPercentage >= 1.0f)
+            {
+                return;
+            }
+
+            _aimingPercentage = Mathf.Min(1.0f, _aimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+        }
+
+        public void DecreaseAim()
+        {
+            if (_aimingPercentage <= 0f)
+            {
+                return;
+            }
+
+            _aimingPercentage = Mathf.Max(0f, _aimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
         }
 
         /// <summary>
@@ -309,7 +360,13 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    if (_cameraController && Physics.Raycast(_cameraController.currentCamera.transform.position, _cameraController.currentCamera.transform.forward, out var hit, raycastRange))
+                    Transform cameraTransform = _cameraController.currentCamera.transform;
+                    // Create ray
+                    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                    // Raycast using LayerMask
+                    bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
+                    // Determine objects hit
+                    if (_cameraController && raycast)
                     {
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
@@ -328,8 +385,27 @@ namespace Infection.Combat
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
 
+            // Fire animation
             _weaponHolderAnimator.SetTrigger("Fire");
             _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
+        }
+
+        /// <summary>
+        /// Shows the muzzle flash for a split second and then hides it. The muzzle flash receives a random scale.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator FlashMuzzle()
+        {
+            // Set random scale for muzzle flash object
+            Vector3 randomScale = new Vector3(Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f));
+            muzzleFlash.localScale = randomScale;
+
+            // Show muzzle flash
+            muzzleFlash.gameObject.SetActive(true);
+
+            // Hide muzzle flash after split second
+            yield return new WaitForSeconds(0.01f);
+            muzzleFlash.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -341,6 +417,7 @@ namespace Infection.Combat
         {
             // Reset muzzle transform
             muzzle = null;
+            muzzleFlash = null;
 
             if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
             {
@@ -353,7 +430,18 @@ namespace Infection.Combat
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
+                muzzleFlash = muzzle.transform.GetChild(0);
+
+                if (!isLocalPlayer)
+                {
+                    weaponModel.SetActive(false);
+                }
             }
+        }
+
+        public class StateChangedEventArgs : EventArgs
+        {
+            public WeaponState State { get; set; }
         }
     }
 }
