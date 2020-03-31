@@ -400,7 +400,7 @@ namespace Infection.Combat
                     if (_cameraController && raycast)
                     {
                         // Generate bullet impact effects. Particle system automatically destroys the object when finished.
-                        GameObject impactVfx = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(-hit.point));
+                        GameObject impactVfx = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
