@@ -20,11 +20,6 @@ namespace Infection
 
         public bool isPaused;
 
-        private void OnGUI()
-        {
-
-        }
-
         private void OnEnable()
         {
             // Clear status and alert messages at start
@@ -40,6 +35,7 @@ namespace Infection
             playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange += UpdateCrosshair;
             playerWeapon.OnStateChange += HandleStateChanged;
+            playerWeapon.OnAimingChange += UpdateCrosshairOpacity;
             playerWeapon.OnAlertEvent += UpdateAlertMessage;
         }
 
@@ -49,6 +45,7 @@ namespace Infection
             playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
             playerWeapon.OnWeaponChange -= UpdateCrosshair;
             playerWeapon.OnStateChange -= HandleStateChanged;
+            playerWeapon.OnAimingChange -= UpdateCrosshairOpacity;
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
@@ -63,23 +60,6 @@ namespace Infection
             alertMessageDisplay.text = message;
             yield return new WaitForSeconds(duration);
             alertMessageDisplay.text = "";
-        }
-
-        private void UpdateStatusMessage(Weapon.WeaponState state)
-        {
-            // Blank message for idle and firing
-            string statusMessage = "";
-            // Update status message display to reflect weapon state
-            switch (state)
-            {
-                case Weapon.WeaponState.Reloading:
-                    statusMessage = "Reloading";
-                    break;
-                case Weapon.WeaponState.Switching:
-                    statusMessage = "Switching";
-                    break;
-            }
-            statusMessageDisplay.text = statusMessage;
         }
 
         private void UpdateWeaponAmmoDisplay()
@@ -98,9 +78,28 @@ namespace Infection
             crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
         }
 
+        private void UpdateCrosshairOpacity(object sender, Weapon.AimingChangedEventArgs e)
+        {
+            var color = crosshair.color;
+            color = new Color(color.r, color.g, color.b, 1f - e.Percentage);
+            crosshair.color = color;
+        }
+
         private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)
         {
-            UpdateStatusMessage(e.State);
+            // Blank message for idle and firing
+            string statusMessage = "";
+            // Update status message display to reflect weapon state
+            switch (e.State)
+            {
+                case Weapon.WeaponState.Reloading:
+                    statusMessage = "Reloading";
+                    break;
+                case Weapon.WeaponState.Switching:
+                    statusMessage = "Switching";
+                    break;
+            }
+            statusMessageDisplay.text = statusMessage;
         }
     }
 }

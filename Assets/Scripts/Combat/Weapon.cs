@@ -68,15 +68,30 @@ namespace Infection.Combat
         /// </summary>
         public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
 
+        public float AimingPercentage
+        {
+            get => _aimingPercentage;
+            set
+            {
+                _aimingPercentage = value;
+                OnAimingChange?.Invoke(this, new AimingChangedEventArgs
+                {
+                    Percentage = _aimingPercentage
+                });
+            }
+        }
+
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         public event Action OnAmmoChange = null;
         public event Action OnWeaponChange = null;
         public event EventHandler<StateChangedEventArgs> OnStateChange;
+        public event EventHandler<AimingChangedEventArgs> OnAimingChange;
         public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
         // Components
         private Animator _weaponHolderAnimator = null;
+        private RuntimeAnimatorController _defaultWeaponAnimator = null;
         private CameraController _cameraController = null;
 
         // Properties
@@ -89,6 +104,7 @@ namespace Infection.Combat
         {
             _cameraController = GetComponent<CameraController>();
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
+            _defaultWeaponAnimator = _weaponHolderAnimator.runtimeAnimatorController;
         }
 
         private void Start()
@@ -107,8 +123,9 @@ namespace Infection.Combat
 
         private void Update()
         {
+            // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
-            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            _cameraController.currentCamera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, AimingPercentage);
         }
 
         /// <summary>
@@ -333,22 +350,35 @@ namespace Infection.Combat
 
         public void IncreaseAim()
         {
-            if (_aimingPercentage >= 1.0f)
+            // Unzoom while reloading or switching
+            if (CurrentState == WeaponState.Reloading || CurrentState == WeaponState.Switching)
+            {
+                DecreaseAim();
+                return;
+            }
+
+            if (AimingPercentage >= 1.0f)
             {
                 return;
             }
 
-            _aimingPercentage = Mathf.Min(1.0f, _aimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+            float value = Mathf.Min(1.0f, AimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+            AimingPercentage = value;
+            _weaponHolderAnimator.SetBool("Aim", true);
+            _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
         }
 
         public void DecreaseAim()
         {
-            if (_aimingPercentage <= 0f)
+            if (AimingPercentage <= 0f)
             {
                 return;
             }
 
-            _aimingPercentage = Mathf.Max(0f, _aimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+            float value = Mathf.Max(0f, AimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
+            AimingPercentage = value;
+            _weaponHolderAnimator.SetBool("Aim", false);
+            _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
         }
 
         /// <summary>
@@ -396,9 +426,11 @@ namespace Infection.Combat
         /// <returns></returns>
         private IEnumerator FlashMuzzle()
         {
-            // Set random scale for muzzle flash object
-            Vector3 randomScale = new Vector3(Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f),Random.Range(0.5f, 0.8f));
+            // Set random scale and rotation for muzzle flash object
+            Vector3 randomScale = new Vector3(Random.Range(0.6f, 1f),Random.Range(0.6f, 1f),Random.Range(0.6f, 1f));
+            Vector3 randomRotation = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-8.0f, 8.0f), Random.Range(0f, 360f));
             muzzleFlash.localScale = randomScale;
+            muzzleFlash.localRotation = Quaternion.Euler(randomRotation);
 
             // Show muzzle flash
             muzzleFlash.gameObject.SetActive(true);
@@ -432,6 +464,16 @@ namespace Infection.Combat
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
+                // Update animator override
+                if (CurrentWeapon.WeaponDefinition.AnimatorOverride)
+                {
+                    _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
+                }
+                else
+                {
+                    _weaponHolderAnimator.runtimeAnimatorController = _defaultWeaponAnimator;
+                }
+
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
@@ -442,6 +484,11 @@ namespace Infection.Combat
         public class StateChangedEventArgs : EventArgs
         {
             public WeaponState State { get; set; }
+        }
+
+        public class AimingChangedEventArgs : EventArgs
+        {
+            public float Percentage { get; set; }
         }
     }
 }
