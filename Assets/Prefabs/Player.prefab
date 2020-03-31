@@ -174,6 +174,8 @@ MonoBehaviour:
     m_Bits: 8721
   accuracyReduction: 0.1
   bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
+  bulletTrailVfx: {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7,
+    type: 3}
   weaponHolder: {fileID: 8226169054192976122}
   muzzle: {fileID: 0}
   muzzleFlash: {fileID: 0}
