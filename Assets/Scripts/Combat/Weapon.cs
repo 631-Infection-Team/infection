@@ -24,6 +24,7 @@ namespace Infection.Combat
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
         [SerializeField] private LayerMask raycastMask = 0;
+        [SerializeField] private GameObject bulletImpactVfx = null;
 
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
@@ -398,6 +399,9 @@ namespace Infection.Combat
                     // Determine objects hit
                     if (_cameraController && raycast)
                     {
+                        // Generate bullet impact effects. Particle system automatically destroys the object when finished.
+                        GameObject impactVfx = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(-hit.point));
+
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
@@ -427,7 +431,7 @@ namespace Infection.Combat
         private IEnumerator FlashMuzzle()
         {
             // Set random scale and rotation for muzzle flash object
-            Vector3 randomScale = new Vector3(Random.Range(0.6f, 1f),Random.Range(0.6f, 1f),Random.Range(0.6f, 1f));
+            Vector3 randomScale = new Vector3(Random.Range(0.3f, 1f),Random.Range(0.3f, 1f),Random.Range(0.3f, 1f));
             Vector3 randomRotation = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-8.0f, 8.0f), Random.Range(0f, 360f));
             muzzleFlash.localScale = randomScale;
             muzzleFlash.localRotation = Quaternion.Euler(randomRotation);
