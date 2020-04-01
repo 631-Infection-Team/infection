@@ -52,8 +52,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
   m_EditorClassIdentifier: 
   Path: 
   guid: c41fbbfe36ac1a46b659e49723ce8a1f
@@ -312,13 +312,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/Master.strings.bank
   m_EditorClassIdentifier: 
-  Path: Assets/FMOD/main/Build/Desktop/Master.strings.bank
+  Path: event:/UI_Hover
   SubDir: 
-  lastModified: 637211879077194128
+  lastModified: 0
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
+--- !u!114 &114549667051378968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/FMOD/Main/Build/Desktop/Master.strings.bank
+  SubDir: 
+  lastModified: 637212599533800886
   LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 782
+  Exists: 1
+--- !u!114 &114688950069157918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/FMOD/Main/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637212599533800886
+  LoadResult: 0
+  FileSizes: []
   Exists: 0
 --- !u!114 &114656094885370576
 MonoBehaviour:
