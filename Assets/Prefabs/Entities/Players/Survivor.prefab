@@ -153,11 +153,11 @@ MonoBehaviour:
   syncInterval: 0.1
   heldWeapons:
   - weaponDefinition: {fileID: 11400000, guid: 1e0e60e9a355d7645bdec729288c5cc1, type: 2}
-    magazine: 30
-    reserves: 120
+    magazine: 0
+    reserves: 0
   - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
-    magazine: 15
-    reserves: 45
+    magazine: 0
+    reserves: 0
   raycastRange: 100
   raycastMask:
     serializedVersion: 2

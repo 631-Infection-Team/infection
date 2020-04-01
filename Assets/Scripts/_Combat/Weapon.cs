@@ -149,6 +149,13 @@ namespace Infection.Combat
                 Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
             }
 
+            // Fill up all held weapons to max ammo
+            foreach (WeaponItem weaponItem in heldWeapons)
+            {
+                weaponItem.FillUpAmmo();
+            }
+            OnAmmoChange?.Invoke();
+
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _camera.fieldOfView;
 
@@ -294,7 +301,7 @@ namespace Infection.Combat
             // Out of ammo
             if (CurrentWeapon.Magazine <= 0)
             {
-                if (CurrentWeapon.Reserves <= 0)
+                if (CurrentWeapon.Reserves == 0)
                 {
                     Debug.Log("Out of ammo!");
                     StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 2f));
@@ -328,7 +335,7 @@ namespace Infection.Combat
             yield return new WaitUntil(() => CurrentState == WeaponState.Idle);
 
             // No more ammo
-            if (CurrentWeapon.Reserves <= 0)
+            if (CurrentWeapon.Reserves == 0)
             {
                 Debug.Log("No more ammo in reserves!");
                 StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 1f));
@@ -382,7 +389,6 @@ namespace Infection.Combat
 
             // Begin switching weapons
             CurrentState = WeaponState.Switching;
-            Debug.Log("Switching weapon");
 
             // Holster animation
             _weaponHolderAnimator.SetTrigger("Holster");
@@ -404,7 +410,6 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
-            Debug.Log("Weapon switch done");
             CurrentState = WeaponState.Idle;
         }
 
