@@ -9,8 +9,9 @@ public class Player : Entity
 {
     [Header("Components")]
     public static Player localPlayer;
-    public Camera cam;
-    public GameObject model;
+    public Camera cam = null;
+    public GameObject model = null;
+    public GameObject HUD = null;
 
     [Header("Movement")]
     public float walkSpeed = 8f;
@@ -36,6 +37,7 @@ public class Player : Entity
     {
         localPlayer = this;
 
+        HUD.gameObject.SetActive(true);
         cam.gameObject.SetActive(true);
         model.gameObject.SetActive(false);
 
@@ -180,6 +182,8 @@ public class Player : Entity
         if (EventRespawn())
         {
             gameObject.transform.position = new Vector3(0, 0, 0);
+            health = healthMax;
+            HUD.SetActive(true);
 
             Revive();
             return "IDLE";
@@ -216,7 +220,9 @@ public class Player : Entity
                 CursorHandler();
             }
         }
-        else if (state == "DEAD") { }
+        else if (state == "DEAD") {
+            HUD.SetActive(false);
+        }
         else Debug.LogError("invalid state:" + state);
 
         Utils.InvokeMany(typeof(Player), this, "UpdateClient_");
@@ -259,7 +265,6 @@ public class Player : Entity
         bool inputJump = Input.GetButtonDown("Jump");
         bool inputRun = Input.GetButton("Run");
         bool lostFooting = false;
-        Vector3 move = Vector3.zero;
 
         if (!characterController.isGrounded)
         {
@@ -292,7 +297,7 @@ public class Player : Entity
         float actualSpeed = inputRun ? runSpeed : walkSpeed;
         if (lostFooting) speedAtJump = actualSpeed;
 
-        move = new Vector3(inputHorizontal, 0, inputVertical);
+        Vector3 move = new Vector3(inputHorizontal, 0, inputVertical);
         if (move.magnitude > 1) move = move.normalized;
 
         float calcSpeed = isGrounded ? actualSpeed : speedAtJump;
@@ -339,5 +344,29 @@ public class Player : Entity
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        Zone zone = col.GetComponent<Zone>();
+
+        if (col.isTrigger && zone)
+        {
+            if (zone.zoneType == Zone.ZoneTypes.Kill)
+            {
+                Debug.Log("Hit a kill trigger.");
+
+                DealDamageAt(this, health);
+                //CmdRespawn();
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.isTrigger && col.GetComponent<Zone>())
+        {
+            // Debug.Log("Test");
+        }
     }
 }

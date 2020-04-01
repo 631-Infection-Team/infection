@@ -7,7 +7,7 @@ namespace Infection.UI
 {
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] private Transform[] disableOnChange;
+        [SerializeField] private Transform[] disableOnChange = new Transform[12];
 
         public void SetActivePanel(Transform panel)
         {

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 114818992249090372}
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   EditorEvents:
   - {fileID: 114446526702170778}
   - {fileID: 114551168940907160}
@@ -23,10 +23,10 @@ MonoBehaviour:
   - {fileID: 114384606040930902}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   StringsBanks:
   - {fileID: 114818992249090372}
-  stringsBankWriteTime: 637212936774233714
+  stringsBankWriteTime: 637212939448883333
   cacheVersion: 3
 --- !u!114 &114034745062653404
 MonoBehaviour:
@@ -43,7 +43,7 @@ MonoBehaviour:
   Path: event:/weapon_USP45
   guid: 87ee1d8bb91d7d4cb1748bc8e60e82f2
   Banks:
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -51,6 +51,24 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 275
+--- !u!114 &114295111073054652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/FMOD/Main/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637212939448853285
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &114384606040930902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +84,7 @@ MonoBehaviour:
   Path: event:/weapon_reload
   guid: e420552641170d4aa71dde9bd3cba3d3
   Banks:
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -89,7 +107,7 @@ MonoBehaviour:
   Path: event:/UI_Hover
   guid: 00830fc0fc00c848a50f08f465a8c2ef
   Banks:
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -112,7 +130,7 @@ MonoBehaviour:
   Path: event:/weapon_AK
   guid: 3ee2a8fe7cbbb3469bb9d3b610efa841
   Banks:
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -137,7 +155,7 @@ MonoBehaviour:
   lastModified: 637212936774223745
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &114818992249090372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/FMOD/Main/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637212936774233714
+  lastModified: 637212939448883333
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -173,7 +191,7 @@ MonoBehaviour:
   Path: event:/UI_Click
   guid: 9668872f0421bc46bad1c63dbb7d93fb
   Banks:
-  - {fileID: 114780221691631140}
+  - {fileID: 114295111073054652}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
