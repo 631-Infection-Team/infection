@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/FMOD/Main/Metadata/Event/{fea8e23e-bb7c-46b3-9bb9-d3b610efa841}.xml.meta
 guid: a0f82d7afd9cd27448774099ef95d989
 TextScriptImporter:
+=======
+guid: 3f6d69474a059604ab9255136f2c07f5
+folderAsset: yes
+DefaultImporter:
+>>>>>>> master:Assets/Plugins/FMOD/addons.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
