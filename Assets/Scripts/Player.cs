@@ -83,16 +83,12 @@ public class Player : Entity
 
         if (isClient) // no need for animations on the server
         {
-            // now pass parameters after any possible rebinds
-            foreach (Animator anim in GetComponentsInChildren<Animator>())
-            {
-                anim.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
-                anim.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2);
+            animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
+            animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2);
 
-                anim.SetFloat("Speed_f", 0.0f);
-                anim.SetBool("Death_b", state == "DEAD");
-                anim.SetBool("Grounded", true);
-            }
+            animator.SetFloat("Speed_f", 0.0f);
+            animator.SetBool("Death_b", state == "DEAD");
+            animator.SetBool("Grounded", true);
         }
 
         Utils.InvokeMany(typeof(Player), this, "LateUpdate_");

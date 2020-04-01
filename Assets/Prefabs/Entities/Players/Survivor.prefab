@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 7036823307140396279}
   - component: {fileID: 8047812271059525486}
   - component: {fileID: 356058347965949425}
-  - component: {fileID: 6528563600363410346}
-  - component: {fileID: 9152517625179233408}
   - component: {fileID: 1357534185374716560}
+  - component: {fileID: 9152517625179233408}
+  - component: {fileID: 6528563600363410346}
   m_Layer: 0
   m_Name: Survivor
   m_TagString: Untagged
@@ -137,6 +137,68 @@ MonoBehaviour:
   isGrounded: 0
   verticalLook: 0
   horizontalLook: 0
+--- !u!114 &1357534185374716560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352473803470926471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  heldWeapons:
+  - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
+    magazine: 30
+    reserves: 120
+  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
+    magazine: 15
+    reserves: 45
+  raycastRange: 100
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 8705
+  accuracyReduction: 0.1
+  bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
+  bulletTrailVfx: {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7,
+    type: 3}
+  weaponHolder: {fileID: 1054781121031203706}
+  muzzle: {fileID: 0}
+  muzzleFlash: {fileID: 0}
+  onEquip:
+    m_PersistentCalls:
+      m_Calls: []
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
+  onReload:
+    m_PersistentCalls:
+      m_Calls: []
+  onSwitch:
+    m_PersistentCalls:
+      m_Calls: []
+  onReplace:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &9152517625179233408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352473803470926471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6be0a1f94847a5a7c2ed8807f1a357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  LockControl: 0
 --- !u!114 &6528563600363410346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,68 +254,6 @@ MonoBehaviour:
   useLocalTransformOnly: 0
   ownerChangeIndicator: 1
   receivedStatesCounter: 0
---- !u!114 &9152517625179233408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352473803470926471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6be0a1f94847a5a7c2ed8807f1a357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  LockControl: 0
---- !u!114 &1357534185374716560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352473803470926471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  heldWeapons:
-  - weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
-    magazine: 30
-    reserves: 120
-  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
-    magazine: 15
-    reserves: 45
-  raycastRange: 100
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 8705
-  accuracyReduction: 0.1
-  bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
-  bulletTrailVfx: {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7,
-    type: 3}
-  weaponHolder: {fileID: 1054781121031203706}
-  muzzle: {fileID: 0}
-  muzzleFlash: {fileID: 0}
-  onEquip:
-    m_PersistentCalls:
-      m_Calls: []
-  onFire:
-    m_PersistentCalls:
-      m_Calls: []
-  onReload:
-    m_PersistentCalls:
-      m_Calls: []
-  onSwitch:
-    m_PersistentCalls:
-      m_Calls: []
-  onReplace:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &3869319012261444630
 GameObject:
   m_ObjectHideFlags: 0
