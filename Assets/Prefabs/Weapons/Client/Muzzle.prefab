@@ -41,7 +41,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 1, g: 0.93956715, b: 0.5330188, a: 1}
+  m_Color: {r: 1, g: 0.90546227, b: 0.25, a: 1}
   m_Intensity: 5
   m_Range: 3
   m_SpotAngle: 30
@@ -143,6 +143,10 @@ PrefabInstance:
     - target: {fileID: 450098, guid: 6e1113468f14f5d47908179a77a9654c, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2385796, guid: 6e1113468f14f5d47908179a77a9654c, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e1113468f14f5d47908179a77a9654c, type: 3}
