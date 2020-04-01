@@ -18,6 +18,7 @@ MonoBehaviour:
   weaponType: 0
   damage: 6.5
   fireRate: 0.09
+  accuracy: 0.985
   recoilMultiplier: 0.1
   aimZoomMultiplier: 1.2
   reloadTime: 2
