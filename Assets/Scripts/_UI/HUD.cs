@@ -19,6 +19,13 @@ namespace Infection
         [SerializeField] private Weapon playerWeapon = null;
 
         public bool isPaused;
+        public state curState = state.isSurvivor;
+        public enum state
+        {
+            isSurvivor,
+            isInfected,
+            isSpectator
+        }
 
         private float _originalCrosshairOpacity = 0f;
         private Vector3 _originalCrosshairSize;

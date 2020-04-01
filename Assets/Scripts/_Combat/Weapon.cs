@@ -500,6 +500,13 @@ namespace Infection.Combat
                         // Generate bullet impact effects. Particle system automatically destroys the object when finished.
                         Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
 
+                        Player targetPlayer = hit.transform.gameObject.GetComponent<Player>();
+
+                        if (targetPlayer)
+                        {
+                            Player.localPlayer.DealDamageAt(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
+                        }
+
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
@@ -560,7 +567,7 @@ namespace Infection.Combat
         private IEnumerator FlashMuzzle(Vector3 influence)
         {
             // Set random scale and rotation for muzzle flash object
-            Vector3 randomScale = new Vector3(Random.Range(0.3f, 1f),Random.Range(0.3f, 1f),Random.Range(0.3f, 1f));
+            Vector3 randomScale = new Vector3(Random.Range(0.3f, 1f), Random.Range(0.3f, 1f), Random.Range(0.3f, 1f));
             Vector3 randomRotation = new Vector3(0f, 0f, Random.Range(0f, 360f)) + influence;
             muzzleFlash.localScale = randomScale;
             muzzleFlash.localRotation = Quaternion.Euler(randomRotation);
@@ -587,7 +594,8 @@ namespace Infection.Combat
             if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
             {
                 // Destroy all children
-                foreach (Transform child in weaponHolder) {
+                foreach (Transform child in weaponHolder)
+                {
                     Destroy(child.gameObject);
                 }
 

@@ -98,12 +98,14 @@ public abstract partial class Entity : NetworkBehaviour
     }
 
     [Server]
-    public virtual void DealDamageAt(Entity entity, int amount)
+    public virtual void DealDamageAt(Entity entity, float amount)
     {
-        entity.health -= amount;
-        entity.RpcOnDamageReceived(amount);
+        entity.health -= Mathf.RoundToInt(amount);
+        entity.RpcOnDamageReceived(Mathf.RoundToInt(amount));
 
         Utils.InvokeMany(typeof(Entity), this, "DealDamageAt_", entity, amount);
+
+        Debug.Log(gameObject.name + " dealt damage to " + entity.name);
     }
 
     [ClientRpc]
