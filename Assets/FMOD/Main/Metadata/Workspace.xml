@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.00.00">
-	<object class="Workspace" id="{0c8bc2f7-4a96-4b87-b5fb-6ee44b23c177}">
-		<property name="builtBanksOutputDirectory">
-			<value>Build/Desktop</value>
-		</property>
+	<object class="Workspace" id="{f1cd92c0-0f1e-4862-a0d0-d34099d1bf6c}">
 		<relationship name="masterEventFolder">
-			<destination>{86598b0c-33b1-4aa4-960c-703244ee0b4b}</destination>
+			<destination>{ae8b8192-7294-4a91-a8b6-a201cfe1ac07}</destination>
 		</relationship>
 		<relationship name="masterTagFolder">
-			<destination>{d93d5f7f-4316-42f6-99c9-5f93043f3944}</destination>
+			<destination>{57ac4be9-49ad-49e5-9ab0-da5e93a88d45}</destination>
 		</relationship>
 		<relationship name="masterEffectPresetFolder">
-			<destination>{df411a2f-ce5e-467d-870e-4cd24ede8ef7}</destination>
+			<destination>{8b39057c-830d-457f-9169-055ccbd0dccb}</destination>
 		</relationship>
 		<relationship name="masterParameterPresetFolder">
-			<destination>{a2c049ab-a5e9-4466-b07b-01b8909c34b9}</destination>
+			<destination>{886217f7-5cc0-4ce3-b559-da366da04fad}</destination>
 		</relationship>
 		<relationship name="masterBankFolder">
-			<destination>{90108b97-c9ab-4228-9874-7f62df0e8f3c}</destination>
+			<destination>{550e2e6b-f57e-40ed-8b6d-ca789ab58b24}</destination>
 		</relationship>
 		<relationship name="masterAssetFolder">
-			<destination>{3f662d50-092b-4aed-bfcb-d31ca5cb9ec6}</destination>
+			<destination>{842b03ec-f7d3-4875-a164-8e4fc1906ef5}</destination>
 		</relationship>
 		<relationship name="mixer">
-			<destination>{3bf3bc45-db5f-40df-b1b4-76e15e1bdd37}</destination>
+			<destination>{9e896a25-3fe2-4726-9a3e-512235a1c80c}</destination>
 		</relationship>
 		<relationship name="platforms">
-			<destination>{59d255fb-55ca-43dc-88a6-23fefdc8c298}</destination>
-			<destination>{4f886d6f-b2c7-45bc-97bd-5f5de657d81e}</destination>
+			<destination>{108bbcb7-1997-496f-8fa9-92278c7da17d}</destination>
 		</relationship>
 	</object>
 </objects>
