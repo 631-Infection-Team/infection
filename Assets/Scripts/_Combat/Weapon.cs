@@ -121,7 +121,6 @@ namespace Infection.Combat
 
         // Components
         private Animator _weaponHolderAnimator = null;
-        private RuntimeAnimatorController _defaultWeaponAnimator = null;
         private Camera _camera = null;
 
         // Properties
@@ -136,9 +135,6 @@ namespace Infection.Combat
         {
             _camera = GetComponent<Player>().cam;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
-
-            // Cache the default animator in case animator overrides become null when switching weapons
-            _defaultWeaponAnimator = _weaponHolderAnimator.runtimeAnimatorController;
         }
 
         private void Start()
@@ -392,9 +388,10 @@ namespace Infection.Combat
 
             // Holster animation
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
-            _weaponHolderAnimator.SetTrigger("Holster");
-
+            _weaponHolderAnimator.SetBool("Holster", true);
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
+            _weaponHolderAnimator.SetBool("Holster", false);
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
 
             // Change the weapon
             _currentWeaponIndex = index;
@@ -407,15 +404,10 @@ namespace Infection.Combat
 
             // Ready animation
             _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
-            _weaponHolderAnimator.SetTrigger("Ready");
-
+            _weaponHolderAnimator.SetBool("Ready", true);
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
-
-            // Reset animator parameters
+            _weaponHolderAnimator.SetBool("Ready", false);
             _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
-            _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
-            _weaponHolderAnimator.ResetTrigger("Ready");
-            _weaponHolderAnimator.ResetTrigger("Holster");
 
             CurrentState = WeaponState.Idle;
         }
@@ -610,14 +602,15 @@ namespace Infection.Combat
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
-                // Update animator override
-                if (CurrentWeapon.WeaponDefinition.AnimatorOverride)
+                // Update animator override or reset to default animator controller
+                var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
+                if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
                 {
                     _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
                 }
-                else
+                else if (overrideController != null)
                 {
-                    _weaponHolderAnimator.runtimeAnimatorController = _defaultWeaponAnimator;
+                    _weaponHolderAnimator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
                 }
 
                 if (!isLocalPlayer)
