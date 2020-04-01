@@ -62,7 +62,7 @@ namespace Infection.Combat
         [Header("Ammunition")]
         [SerializeField, Tooltip("Maximum number of rounds in the magazine")]
         private int clipSize = 30;
-        [SerializeField, Tooltip("Maximum number of rounds kept in reserves")]
+        [SerializeField, Tooltip("Maximum number of rounds kept in reserves, -1 = infinite")]
         private int maxReserves = 120;
 
         [Header("Rendering")]

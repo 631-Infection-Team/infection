@@ -36,10 +36,23 @@ namespace Infection.Combat
 
         public void ReloadMagazine()
         {
+            // Weapon definition defined as infinite reserves
+            if (WeaponDefinition.MaxReserves < 0)
+            {
+                magazine = WeaponDefinition.ClipSize;
+                return;
+            }
+
             // Cannot reload more ammo than how much is in reserves
             int ammoToAdd = Math.Min(WeaponDefinition.ClipSize - Magazine, Reserves);
             magazine += ammoToAdd;
             reserves -= ammoToAdd;
+        }
+
+        public void FillUpAmmo()
+        {
+            magazine = WeaponDefinition.ClipSize;
+            reserves = WeaponDefinition.MaxReserves;
         }
     }
 }

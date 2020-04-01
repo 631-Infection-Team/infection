@@ -78,6 +78,13 @@ namespace Infection
         private void UpdateWeaponAmmoDisplay()
         {
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
+
+            if (playerWeapon.CurrentWeapon.Reserves < 0)
+            {
+                // Show infinite ammo
+                reservesDisplay.text = "∞";
+                return;
+            }
             reservesDisplay.text = $"{playerWeapon.CurrentWeapon.Reserves}";
         }
 
