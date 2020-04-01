@@ -25,7 +25,7 @@ namespace Infection.Combat
         [SerializeField] private float raycastRange = 100f;
         [SerializeField] private LayerMask raycastMask = 0;
         [SerializeField, Tooltip("Percentage reduction when not aiming")]
-        private float accuracyReduction = 0.1f;
+        private float accuracyReduction = 0.05f;
 
         [Header("Graphics")]
         [SerializeField] private GameObject bulletImpactVfx = null;
@@ -130,6 +130,7 @@ namespace Infection.Combat
         private float _aimingPercentage = 0f;
         private float _instabilityPercentage;
         private float _baseFieldOfView = 0f;
+        private bool _reloadInterrupt = false;
 
         private void Awake()
         {
@@ -236,8 +237,8 @@ namespace Infection.Combat
         /// <returns>Firing state</returns>
         public IEnumerator FireWeapon()
         {
-            // Cannot fire weapon when state is not idle
-            if (CurrentState != WeaponState.Idle)
+            // Cannot fire weapon when state is not idle or when reload action interrupts fire
+            if (CurrentState != WeaponState.Idle || _reloadInterrupt)
             {
                 yield break;
             }
@@ -248,6 +249,7 @@ namespace Infection.Combat
                 // Firing burst type weapon
                 if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
                 {
+                    bool animationStarted = false;
                     // Only fire enough rounds provided sufficient magazine
                     int burst = 3;
                     for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
@@ -256,12 +258,21 @@ namespace Infection.Combat
                         CurrentState = WeaponState.Firing;
                         Fire();
 
+                        // Play fire animation once per burst
+                        if (!animationStarted)
+                        {
+                            _weaponHolderAnimator.SetTrigger("Fire");
+                            animationStarted = true;
+                            // Animation plays 3 times faster for burst weapons
+                            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate / 3f);
+                        }
+
                         // Wait a third of the fire rate between each shot in the burst
                         yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
 
-                    // Wait twice as long between bursts
-                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 2.0f);
+                    // Wait three times as long between bursts
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 3.0f);
                 }
                 else
                 {
@@ -269,6 +280,10 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
+
+                    // Fire animation
+                    _weaponHolderAnimator.SetTrigger("Fire");
+                    _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
 
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
@@ -304,16 +319,20 @@ namespace Infection.Combat
         public IEnumerator ReloadWeapon()
         {
             // Already reloading or not in idle state
-            if (CurrentState == WeaponState.Reloading || CurrentState != WeaponState.Idle)
+            if (CurrentState == WeaponState.Reloading)
             {
                 yield break;
             }
+
+            _reloadInterrupt = true;
+            yield return new WaitUntil(() => CurrentState == WeaponState.Idle);
 
             // No more ammo
             if (CurrentWeapon.Reserves <= 0)
             {
                 Debug.Log("No more ammo in reserves!");
                 StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 1f));
+                _reloadInterrupt = false;
                 yield break;
             }
 
@@ -322,11 +341,13 @@ namespace Infection.Combat
             {
                 Debug.Log("Magazine fully loaded, no need to reload.");
                 StartCoroutine(OnAlertEvent?.Invoke("Magazine full", 1f));
+                _reloadInterrupt = false;
                 yield break;
             }
 
-            // Reloading animation
+            // Start reloading
             CurrentState = WeaponState.Reloading;
+            _reloadInterrupt = false;
 
             // Play animation
             // ReloadSpeed is a parameter in the animator. It's the speed multiplier.
@@ -507,10 +528,6 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
-
-            // Fire animation
-            _weaponHolderAnimator.SetTrigger("Fire");
-            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
         }
 
         /// <summary>
