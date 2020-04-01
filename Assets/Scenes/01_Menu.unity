@@ -3890,7 +3890,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 4
   authenticator: {fileID: 550456082}
-  playerPrefab: {fileID: 752071829749403922, guid: 3d5b9b6a6afbb0940bcbd76e87759a09,
+  playerPrefab: {fileID: 1352473803470926471, guid: e4c5cd544d91b25489f3af9d922425f8,
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
@@ -18563,7 +18563,6 @@ GameObject:
   - component: {fileID: 2049818937}
   - component: {fileID: 2049818942}
   - component: {fileID: 2049818940}
-  - component: {fileID: 2049818942}
   - component: {fileID: 2049818941}
   m_Layer: 5
   m_Name: Play
@@ -18715,8 +18714,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 133.18695, y: 68.84769}
   m_EdgeRadius: 0
-<<<<<<< HEAD
-=======
 --- !u!114 &2049818941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18740,7 +18737,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
->>>>>>> master
 --- !u!114 &2049818942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18753,15 +18749,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
-  CollisionTag: Player
-  Event: event:/UI_Hover
-  PlayEvent: 11
-=======
   CollisionTag: 
   Event: event:/UI_Hover
   PlayEvent: 13
->>>>>>> master
   StopEvent: 0
   AllowFadeout: 1
   TriggerOnce: 0
@@ -21600,8 +21590,6 @@ Transform:
   m_Father: {fileID: 7675669888459266202}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
-=======
 --- !u!1001 &8026905479041879920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21677,4 +21665,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8026905479041879920}
   m_PrefabAsset: {fileID: 0}
->>>>>>> master

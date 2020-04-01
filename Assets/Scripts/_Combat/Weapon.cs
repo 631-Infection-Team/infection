@@ -410,6 +410,8 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
+            _weaponHolderAnimator.ResetTrigger("Ready");
+            _weaponHolderAnimator.ResetTrigger("Holster");
             CurrentState = WeaponState.Idle;
         }
 
