@@ -391,8 +391,8 @@ namespace Infection.Combat
             CurrentState = WeaponState.Switching;
 
             // Holster animation
-            _weaponHolderAnimator.SetTrigger("Holster");
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
+            _weaponHolderAnimator.SetTrigger("Holster");
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
@@ -406,12 +406,17 @@ namespace Infection.Combat
             onSwitch?.Invoke();
 
             // Ready animation
-            _weaponHolderAnimator.SetTrigger("Ready");
             _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
+            _weaponHolderAnimator.SetTrigger("Ready");
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
+
+            // Reset animator parameters
+            _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
             _weaponHolderAnimator.ResetTrigger("Ready");
             _weaponHolderAnimator.ResetTrigger("Holster");
+
             CurrentState = WeaponState.Idle;
         }
 
