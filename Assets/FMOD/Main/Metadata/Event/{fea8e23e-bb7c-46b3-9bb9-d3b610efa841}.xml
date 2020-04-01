@@ -60,7 +60,7 @@
 	<object class="MarkerTrack" id="{e6d6ed3c-b418-4a72-bc87-d0ead22a47b1}" />
 	<object class="GroupTrack" id="{a955071a-9151-4364-a5c3-2fedc9eae449}">
 		<relationship name="modules">
-			<destination>{1e7dae36-f64d-4033-9177-553470bfab3c}</destination>
+			<destination>{503b51bb-0c69-4328-b669-d1724f21cf46}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{919cdfd4-0df2-4e1a-8c0d-f0f625280d1c}</destination>
@@ -68,7 +68,7 @@
 	</object>
 	<object class="Timeline" id="{f9f10c99-ad71-45fa-83bb-e24262e48bdd}">
 		<relationship name="modules">
-			<destination>{1e7dae36-f64d-4033-9177-553470bfab3c}</destination>
+			<destination>{503b51bb-0c69-4328-b669-d1724f21cf46}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{7fb16ae2-fdf4-4bc8-a374-037249f69160}">
@@ -88,12 +88,12 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{96bee2c6-3a3b-4256-9d01-9454b3fff611}" />
-	<object class="SingleSound" id="{1e7dae36-f64d-4033-9177-553470bfab3c}">
+	<object class="SingleSound" id="{503b51bb-0c69-4328-b669-d1724f21cf46}">
 		<property name="length">
-			<value>0.26000000000000001</value>
+			<value>0.62603174603174605</value>
 		</property>
 		<relationship name="modulators">
-			<destination>{38be581f-7d6d-467c-a4cc-67f365ad9435}</destination>
+			<destination>{6cd849e4-367c-4dd2-8e05-22c638a49601}</destination>
 		</relationship>
 		<relationship name="audioFile">
 			<destination>{72a80fcf-704b-4a2f-8f0f-1bfce62fae30}</destination>
@@ -124,12 +124,12 @@
 	</object>
 	<object class="MixerBusPanner" id="{e41eca0d-8d4a-4f00-843f-1670bee03598}" />
 	<object class="MixerBusFader" id="{cbc56d7d-25ef-4e3e-bcab-83dea3e56441}" />
-	<object class="RandomizerModulator" id="{38be581f-7d6d-467c-a4cc-67f365ad9435}">
+	<object class="RandomizerModulator" id="{6cd849e4-367c-4dd2-8e05-22c638a49601}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>pitch</value>
 		</property>
 		<property name="amount">
-			<value>8.5</value>
+			<value>11</value>
 		</property>
 	</object>
 	<object class="RandomizerModulator" id="{d6cc62e8-fa7b-4494-a9f2-37ef421bec13}">
