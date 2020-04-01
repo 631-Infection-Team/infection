@@ -16,6 +16,7 @@ MonoBehaviour:
   weaponClass: {fileID: 11400000, guid: 20b3eb510d696c3459a2273ef8b912a4, type: 2}
   triggerType: 0
   weaponType: 0
+  silencer: 0
   damage: 8.2
   fireRate: 0.1
   accuracy: 0.98

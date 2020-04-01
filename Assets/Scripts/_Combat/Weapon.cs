@@ -249,6 +249,7 @@ namespace Infection.Combat
                 // Firing burst type weapon
                 if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
                 {
+                    bool animationStarted = false;
                     // Only fire enough rounds provided sufficient magazine
                     int burst = 3;
                     for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
@@ -257,12 +258,21 @@ namespace Infection.Combat
                         CurrentState = WeaponState.Firing;
                         Fire();
 
+                        // Play fire animation once per burst
+                        if (!animationStarted)
+                        {
+                            _weaponHolderAnimator.SetTrigger("Fire");
+                            animationStarted = true;
+                            // Animation plays 3 times faster for burst weapons
+                            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate / 3f);
+                        }
+
                         // Wait a third of the fire rate between each shot in the burst
                         yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
 
-                    // Wait twice as long between bursts
-                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 2.0f);
+                    // Wait three times as long between bursts
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 3.0f);
                 }
                 else
                 {
@@ -270,6 +280,10 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
+
+                    // Fire animation
+                    _weaponHolderAnimator.SetTrigger("Fire");
+                    _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
 
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
@@ -514,10 +528,6 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
-
-            // Fire animation
-            _weaponHolderAnimator.SetTrigger("Fire");
-            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
         }
 
         /// <summary>

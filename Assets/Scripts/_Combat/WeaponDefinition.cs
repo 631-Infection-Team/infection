@@ -32,6 +32,8 @@ namespace Infection.Combat
         private TriggerType triggerType = TriggerType.Auto;
         [SerializeField]
         private WeaponType weaponType = WeaponType.Raycast;
+        [SerializeField, Tooltip("If the weapon has a silencer, muzzle flash will not display")]
+        private bool silencer = false;
 
         [Header("Firing")]
         [SerializeField]
@@ -75,6 +77,7 @@ namespace Infection.Combat
         public WeaponClass WeaponClass => weaponClass;
         public TriggerType TriggerType => triggerType;
         public WeaponType WeaponType => weaponType;
+        public bool Silencer => silencer;
         public float Damage => damage;
         public float FireRate => fireRate;
         public float Accuracy => accuracy;
