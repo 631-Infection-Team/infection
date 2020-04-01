@@ -1,12 +1,7 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/FMOD/Main/Metadata/AudioFile/{72a80fcf-704b-4a2f-8f0f-1bfce62fae30}.xml.meta
-guid: 5200e036d07d46049ac0baa7771ee1bf
-TextScriptImporter:
-=======
-guid: a477b6cf95aab8c4581be33e1191c4c7
+guid: 95ca0a0f3d0c15140b19be33684c1cc6
 folderAsset: yes
 DefaultImporter:
->>>>>>> master:Assets/Art/Animations/UI.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
