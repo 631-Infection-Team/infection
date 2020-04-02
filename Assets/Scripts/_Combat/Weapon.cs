@@ -423,48 +423,17 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// Increase the aiming percentage based on current weapon's aim time.
+        /// Set the aim percentage based on axis input using lerp for smooth transition. This supports analog axis input.
         /// </summary>
-        public void IncreaseAim()
+        /// <param name="axis"></param>
+        public void SetAim(float axis)
         {
-            // Unzoom while reloading or switching
-            if (CurrentState == WeaponState.Reloading || CurrentState == WeaponState.Switching)
-            {
-                DecreaseAim();
-                return;
-            }
-
-            if (AimingPercentage >= 1.0f)
-            {
-                return;
-            }
-
-            // Upper bound is 1
-            float value = Mathf.Min(1.0f, AimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
-            AimingPercentage = value;
+            // Unzoom while reloading or switching, otherwise zoom normally
+            float aim = CurrentState == WeaponState.Reloading || CurrentState == WeaponState.Switching ? 0f : axis;
+            AimingPercentage = Mathf.Lerp(AimingPercentage, aim, 1f / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
 
             // Update animator to show aiming transition
-            _weaponHolderAnimator.SetBool("Aim", true);
-            _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
-        }
-
-        /// <summary>
-        /// Decrease the aiming percentage based on current weapon's aim time.
-        /// </summary>
-        public void DecreaseAim()
-        {
-            if (AimingPercentage <= 0f)
-            {
-                return;
-            }
-
-            // Lower bound is 0
-            float value = Mathf.Max(0f, AimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
-            AimingPercentage = value;
-
-            // Update animator to show aiming transition
-            _weaponHolderAnimator.SetBool("Aim", false);
-            _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
+            _weaponHolderAnimator.SetFloat("AimPercentage", AimingPercentage);
         }
 
         /// <summary>
