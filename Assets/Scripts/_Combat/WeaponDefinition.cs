@@ -38,31 +38,31 @@ namespace Infection.Combat
         [Header("Firing")]
         [SerializeField]
         private float damage = 8.0f;
-        [SerializeField, Tooltip("Time between shots in seconds, lower is faster"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Time between shots in seconds, lower is faster"), Range(0.001f, 4.0f)]
         private float fireRate = 0.1f;
         [SerializeField, Tooltip("Percentage of how accurate each shot fired will hit its mark"), Range(0f, 1f)]
         private float accuracy = 0.995f;
-        [SerializeField, Tooltip("Amount of recoil from each shot, higher is more intense"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Amount of recoil from each shot, higher is more intense"), Range(0.001f, 2.0f)]
         private float recoilMultiplier = 0.1f;
 
         [Header("Special Action")]
-        [SerializeField, Tooltip("Amount of magnification in field of view when aiming"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Amount of magnification in field of view when aiming"), Range(0.001f, 8.0f)]
         private float aimZoomMultiplier = 1.10f;
 
         [Header("Timers")]
-        [SerializeField, Tooltip("Time to reload current weapon, lower is faster"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Time to reload current weapon, lower is faster"), Range(0.001f, 5.0f)]
         private float reloadTime = 2.0f;
-        [SerializeField, Tooltip("Time to pull out weapon, lower is faster"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Time to pull out weapon, lower is faster"), Range(0.001f, 2.0f)]
         private float readyTime = 0.5f;
-        [SerializeField, Tooltip("Time to put away weapon, lower is faster"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Time to put away weapon, lower is faster"), Range(0.001f, 2.0f)]
         private float holsterTime = 0.7f;
-        [SerializeField, Tooltip("Time to aim down the sights, lower is faster"), Range(0.001f, 10.0f)]
+        [SerializeField, Tooltip("Time to aim down the sights, lower is faster"), Range(0.001f, 0.25f)]
         private float aimTime = 0.2f;
 
         [Header("Ammunition")]
-        [SerializeField, Tooltip("Maximum number of rounds in the magazine")]
+        [SerializeField, Tooltip("Maximum number of rounds in the magazine"), Min(0)]
         private int clipSize = 30;
-        [SerializeField, Tooltip("Maximum number of rounds kept in reserves, -1 = infinite")]
+        [SerializeField, Tooltip("Maximum number of rounds kept in reserves, -1 = infinite"), Min(-1)]
         private int maxReserves = 120;
 
         [Header("Rendering")]

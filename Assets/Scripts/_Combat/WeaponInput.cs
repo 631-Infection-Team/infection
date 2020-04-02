@@ -73,15 +73,8 @@ namespace Infection.Combat
                     StartCoroutine(_weapon.ReloadWeapon());
                 }
 
-                // Aiming down the sights
-                if (Input.GetAxis("Aim") > 0f)
-                {
-                    _weapon.IncreaseAim();
-                }
-                else
-                {
-                    _weapon.DecreaseAim();
-                }
+                // Aiming down the sights, in-between is possible with gamepad trigger
+                _weapon.SetAim(Input.GetAxis("Aim"));
             }
 
             if (_weapon.HasMoreWeapons)

@@ -9,7 +9,7 @@ AnimatorController:
   m_Name: WeaponHolder
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: AimTime
+  - m_Name: AimPercentage
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -35,12 +35,6 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: ReadySpeed
     m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: Aim
-    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -106,7 +100,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: ReloadSpeed
     m_Mirror: 0
-  m_BlendParameter: AimTime
+  m_BlendParameter: AimPercentage
   m_BlendParameterY: ReloadSpeed
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -137,7 +131,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: ReloadSpeed
     m_Mirror: 0
-  m_BlendParameter: AimTime
+  m_BlendParameter: AimPercentage
   m_BlendParameterY: ReloadSpeed
   m_MinThreshold: 0
   m_MaxThreshold: 1

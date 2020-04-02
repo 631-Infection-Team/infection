@@ -24,8 +24,8 @@ namespace Infection.Combat
         [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
         [SerializeField] private float raycastRange = 100f;
         [SerializeField] private LayerMask raycastMask = 0;
-        [SerializeField, Tooltip("Percentage reduction when not aiming")]
-        private float accuracyReduction = 0.05f;
+        [SerializeField, Tooltip("Percentage reduction when not aiming, based on 45 degree cone spread from camera")]
+        private float accuracyReduction = 0.2f;
 
         [Header("Graphics")]
         [SerializeField] private GameObject bulletImpactVfx = null;
@@ -423,48 +423,20 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// Increase the aiming percentage based on current weapon's aim time.
+        /// Set the aim percentage based on axis input using lerp for smooth transition. This supports analog axis input.
         /// </summary>
-        public void IncreaseAim()
+        /// <param name="axis"></param>
+        public void SetAim(float axis)
         {
-            // Unzoom while reloading or switching
-            if (CurrentState == WeaponState.Reloading || CurrentState == WeaponState.Switching)
+            // Unzoom while reloading or switching, otherwise zoom normally
+            float aim = CurrentState == WeaponState.Reloading || CurrentState == WeaponState.Switching ? 0f : axis;
+            AimingPercentage = Mathf.Clamp01(Mathf.MoveTowards(AimingPercentage, aim, 1f / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime));
+
+            if (_weaponHolderAnimator.isActiveAndEnabled)
             {
-                DecreaseAim();
-                return;
+                // Update animator to show aiming transition
+                _weaponHolderAnimator.SetFloat("AimPercentage", AimingPercentage);
             }
-
-            if (AimingPercentage >= 1.0f)
-            {
-                return;
-            }
-
-            // Upper bound is 1
-            float value = Mathf.Min(1.0f, AimingPercentage + 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
-            AimingPercentage = value;
-
-            // Update animator to show aiming transition
-            _weaponHolderAnimator.SetBool("Aim", true);
-            _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
-        }
-
-        /// <summary>
-        /// Decrease the aiming percentage based on current weapon's aim time.
-        /// </summary>
-        public void DecreaseAim()
-        {
-            if (AimingPercentage <= 0f)
-            {
-                return;
-            }
-
-            // Lower bound is 0
-            float value = Mathf.Max(0f, AimingPercentage - 1 / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime);
-            AimingPercentage = value;
-
-            // Update animator to show aiming transition
-            _weaponHolderAnimator.SetBool("Aim", false);
-            _weaponHolderAnimator.SetFloat("AimTime", AimingPercentage);
         }
 
         /// <summary>
@@ -475,14 +447,7 @@ namespace Infection.Combat
         {
             if (Player.localPlayer.health <= 0) return;
 
-            // Cache variables for repeated access
-            Transform cameraTransform = _camera.transform;
-            // Accuracy reduction when not aiming
-            float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
-            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
-            // Generate influence using weapon accuracy
-            Vector3 influence = cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
-                                cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy);
+            Vector3 influence = CalculateAccuracyInfluence();
 
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
@@ -543,6 +508,23 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
+        }
+
+        /// <summary>
+        /// Generate Vector3 influence using weapon accuracy which will sway the bullet trajectory.
+        /// </summary>
+        /// <returns></returns>
+        private Vector3 CalculateAccuracyInfluence()
+        {
+            // Cache variables for repeated access
+            Transform cameraTransform = _camera.transform;
+            // Accuracy reduction when not aiming
+            float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
+            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
+
+            // Divide by 4 to reduce the max angle from 180 degrees to 45 degrees
+            return (cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
+                   cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy)) / 4f;
         }
 
         /// <summary>

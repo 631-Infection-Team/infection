@@ -19,7 +19,7 @@ MonoBehaviour:
   silencer: 0
   damage: 6
   fireRate: 0.09
-  accuracy: 0.98825
+  accuracy: 0.94
   recoilMultiplier: 0.1
   aimZoomMultiplier: 1.15
   reloadTime: 1.5
