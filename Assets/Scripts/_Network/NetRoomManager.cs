@@ -22,6 +22,18 @@ namespace Infection
 {
     public class NetRoomManager : NetworkRoomManager
     {
+        public static NetRoomManager netRoomManager;
+
+        public override void Start()
+        {
+            base.Start();
+
+            if (!netRoomManager)
+            {
+                netRoomManager = this;
+            }
+        }
+
         #region Server Callbacks
 
         public override void OnRoomStartServer() { }

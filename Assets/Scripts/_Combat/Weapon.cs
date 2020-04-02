@@ -465,7 +465,7 @@ namespace Infection.Combat
 
                         if (targetPlayer)
                         {
-                            Player.localPlayer.DealDamageAt(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
+                            Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
                             Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                         }
                         else

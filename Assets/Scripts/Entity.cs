@@ -1,124 +1,115 @@
 ﻿using UnityEngine;
 using Mirror;
 
-public abstract partial class Entity : NetworkBehaviour
+namespace Infection
 {
-    [Header("State")]
-    [SyncVar, SerializeField] public string state = "IDLE";
-
-    [Header("Health")]
-    [SerializeField] protected int healthMax = 100;
-    [SyncVar] public int health = 100;
-
-    [Header("Components")]
-    public Animator animator;
-
-    protected virtual void Awake()
+    public abstract partial class Entity : NetworkBehaviour
     {
-        Utils.InvokeMany(typeof(Entity), this, "Awake_");
-    }
+        [Header("State")]
+        [SyncVar, SerializeField] public string state = "IDLE";
 
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
+        [Header("Health")]
+        [SerializeField] protected int healthMax = 100;
+        [SyncVar] public int health = 100;
 
-        if (health <= 0)
+        [Header("Components")]
+        public Animator animator;
+
+        protected virtual void Awake()
         {
-            state = "DEAD";
+            Utils.InvokeMany(typeof(Entity), this, "Awake_");
         }
 
-        Utils.InvokeMany(typeof(Entity), this, "OnStartServer_");
-    }
-
-    protected virtual void Start()
-    {
-        // disable animator on server. this is a huge performance boost and
-        // definitely worth one line of code (1000 monsters: 22 fps => 32 fps)
-        // (!isClient because we don't want to do it in host mode either)
-        // (OnStartServer doesn't know isClient yet, Start is the only option)
-        if (!isClient)
+        public override void OnStartServer()
         {
-            animator.enabled = false;
-        }
-    }
+            base.OnStartServer();
 
-    public virtual bool IsWorthUpdating()
-    {
-        return true;
-        // return netIdentity.observers == null || netIdentity.observers.Count > 0;
-    }
-
-    // entity logic will be implemented with a finite state machine
-    // -> we should react to every state and to every event for correctness
-    // -> we keep it functional for simplicity
-    // note: can still use LateUpdate for Updates that should happen in any case
-    void Update()
-    {
-        if (IsWorthUpdating())
-        {
-            if (isClient)
+            if (health <= 0)
             {
-                UpdateClient();
+                state = "DEAD";
             }
 
-            if (isServer)
-            {
-                state = UpdateServer();
-            }
-
-            Utils.InvokeMany(typeof(Entity), this, "Update_");
+            Utils.InvokeMany(typeof(Entity), this, "OnStartServer_");
         }
 
-        // update overlays in any case, except on server-only mode
-        // (also update for character selection previews etc. then)
-        if (!isServerOnly)
+        protected virtual void Start()
         {
-            UpdateOverlays();
+            if (!isClient)
+            {
+                animator.enabled = false;
+            }
         }
-    }
 
-    public virtual bool CanAttack(Entity entity)
-    {
-        return health > 0 && entity.health > 0;
-    }
-
-    // update for server. should return the new state.
-    protected abstract string UpdateServer();
-
-    // update for client.
-    protected abstract void UpdateClient();
-
-    // can be overwritten for overlays
-    protected virtual void UpdateOverlays(){}
-
-    [Server]
-    public void Revive()
-    {
-        health = Mathf.RoundToInt(healthMax);
-    }
-
-    [Server]
-    public virtual void DealDamageAt(Entity entity, float amount)
-    {
-        if (this.CanAttack(entity)) {
-            entity.health -= Mathf.RoundToInt(amount);
-            entity.RpcOnDamageReceived(Mathf.RoundToInt(amount));
-
-            Utils.InvokeMany(typeof(Entity), this, "DealDamageAt_", entity, amount);
-
-            Debug.Log(gameObject.name + " dealt damage to " + entity.name);
+        public virtual bool IsWorthUpdating()
+        {
+            return netIdentity.observers == null || netIdentity.observers.Count > 0;
         }
-    }
 
-    [ClientRpc]
-    void RpcOnDamageReceived(int amount)
-    {
-        Utils.InvokeMany(typeof(Entity), this, "OnDamageReceived_", amount);
-    }
+        void Update()
+        {
+            if (IsWorthUpdating())
+            {
+                if (isClient)
+                {
+                    UpdateClient();
+                }
 
-    [Server]
-    protected virtual void OnDeath()
-    {
-        Utils.InvokeMany(typeof(Entity), this, "OnDeath_");
+                if (isServer)
+                {
+                    state = UpdateServer();
+                }
+
+                Utils.InvokeMany(typeof(Entity), this, "Update_");
+            }
+        }
+
+        public virtual bool CanAttack(Entity entity)
+        {
+            return health > 0 && entity.health > 0;
+        }
+
+        protected abstract string UpdateServer();
+
+        protected abstract void UpdateClient();
+
+        [Server]
+        public void Respawn()
+        {
+            gameObject.transform.position = NetRoomManager.netRoomManager.GetStartPosition().position;
+            health = healthMax;
+        }
+
+        [Server]
+        public virtual void DealDamageTo(Entity entity, float amount)
+        {
+            if (CanAttack(entity))
+            {
+                entity.health -= Mathf.RoundToInt(amount);
+                entity.RpcOnDamageReceived(Mathf.RoundToInt(amount));
+
+                Utils.InvokeMany(typeof(Entity), this, "DealDamageAt_", entity, amount);
+
+                Debug.Log(gameObject.name + " dealt damage to " + entity.name);
+            }
+        }
+
+        [ClientRpc]
+        void RpcOnDamageReceived(int amount)
+        {
+            Utils.InvokeMany(typeof(Entity), this, "OnDamageReceived_", amount);
+        }
+
+        [Server]
+        protected virtual void OnDeath()
+        {
+            Debug.Log(gameObject.name + " died.", gameObject);
+            Utils.InvokeMany(typeof(Entity), this, "OnDeath_");
+        }
+
+        [Server]
+        protected virtual void OnRespawn()
+        {
+            Utils.InvokeMany(typeof(Entity), this, "OnRespawn_");
+        }
     }
 }
