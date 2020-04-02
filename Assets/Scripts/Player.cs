@@ -13,6 +13,9 @@ public class Player : Entity
     public GameObject model = null;
     public GameObject HUD = null;
 
+    [Header("Visual Effects")]
+    public GameObject bloodImpactVfx = null;
+
     [Header("Movement")]
     public float walkSpeed = 8f;
     public float runSpeed = 12f;
@@ -21,6 +24,16 @@ public class Player : Entity
     public bool isGrounded = false;
     [SyncVar] public float verticalLook;
     [SyncVar] public float horizontalLook;
+
+    [Header("Team")]
+    [SyncVar] public Team team = Team.Survivor;
+
+    public enum Team
+    {
+        Spectator,
+        Survivor,
+        Infected
+    }
 
     private CharacterController characterController;
     private float speedAtJump;
@@ -220,7 +233,8 @@ public class Player : Entity
                 CursorHandler();
             }
         }
-        else if (state == "DEAD") {
+        else if (state == "DEAD")
+        {
             HUD.SetActive(false);
         }
         else Debug.LogError("invalid state:" + state);
@@ -243,6 +257,20 @@ public class Player : Entity
 
     public override bool CanAttack(Entity entity)
     {
+        // Can only attack other players who aren't on the same team as you.
+        // Disabled until we can test this easier.
+        /**
+        if (entity is Player)
+        {
+            Player victim = (Player)entity;
+            return base.CanAttack(entity) && team != victim.team;
+        }
+        else
+        {
+            return base.CanAttack(entity) && entity;
+        }
+        **/
+
         return base.CanAttack(entity) && entity is Player;
     }
 
