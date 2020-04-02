@@ -473,6 +473,8 @@ namespace Infection.Combat
         /// </summary>
         private void Fire()
         {
+            if (Player.localPlayer.health <= 0) return;
+
             // Cache variables for repeated access
             Transform cameraTransform = _camera.transform;
             // Accuracy reduction when not aiming
@@ -494,14 +496,16 @@ namespace Infection.Combat
                     // Determine objects hit
                     if (raycast)
                     {
-                        // Generate bullet impact effects. Particle system automatically destroys the object when finished.
-                        Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-
                         Player targetPlayer = hit.transform.gameObject.GetComponent<Player>();
 
                         if (targetPlayer)
                         {
                             Player.localPlayer.DealDamageAt(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
+                            Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                        }
+                        else
+                        {
+                            Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                         }
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);

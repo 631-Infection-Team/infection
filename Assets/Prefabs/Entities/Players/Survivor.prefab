@@ -131,6 +131,8 @@ MonoBehaviour:
   cam: {fileID: 3059295182831669808}
   model: {fileID: 8001535948723752905}
   HUD: {fileID: 2890566059470607980}
+  bloodImpactVfx: {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc,
+    type: 3}
   walkSpeed: 8
   runSpeed: 12
   JumpSpeed: 5
@@ -138,6 +140,7 @@ MonoBehaviour:
   isGrounded: 0
   verticalLook: 0
   horizontalLook: 0
+  team: 1
 --- !u!114 &1357534185374716560
 MonoBehaviour:
   m_ObjectHideFlags: 0
