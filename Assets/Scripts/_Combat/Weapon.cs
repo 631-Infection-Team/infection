@@ -137,7 +137,7 @@ namespace Infection.Combat
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
             // This is only to remind you that if this weapon script is attached to a player, it also needs weapon input.
             if (GetComponent<WeaponInput>() == null)
@@ -155,7 +155,12 @@ namespace Infection.Combat
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _camera.fieldOfView;
 
-            // Spawn the weapon model
+            // Spawn the weapon model and play ready weapon animation
+            UpdateAnimatorOverride();
+            yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
+            CurrentState = WeaponState.Switching;
+            StartCoroutine(ReadyAnimation());
+            CurrentState = WeaponState.Idle;
             UpdateWeaponModel();
         }
 
@@ -189,6 +194,7 @@ namespace Infection.Combat
             {
                 CurrentWeapon = newWeapon;
                 UpdateWeaponModel();
+                UpdateAnimatorOverride();
 
                 // Update listeners
                 OnWeaponChange?.Invoke();
@@ -226,6 +232,7 @@ namespace Infection.Combat
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
             UpdateWeaponModel();
+            UpdateAnimatorOverride();
 
             // Update listeners
             OnWeaponChange?.Invoke();
@@ -386,28 +393,21 @@ namespace Infection.Combat
             // Begin switching weapons
             CurrentState = WeaponState.Switching;
 
-            // Holster animation
-            _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
-            _weaponHolderAnimator.SetBool("Holster", true);
-            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
-            _weaponHolderAnimator.SetBool("Holster", false);
-            _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
+            // Play holster animation
+            yield return StartCoroutine(HolsterAnimation());
 
             // Change the weapon
             _currentWeaponIndex = index;
             UpdateWeaponModel();
+            UpdateAnimatorOverride();
 
             // Update listeners
             OnAmmoChange?.Invoke();
             OnWeaponChange?.Invoke();
             onSwitch?.Invoke();
 
-            // Ready animation
-            _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
-            _weaponHolderAnimator.SetBool("Ready", true);
-            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
-            _weaponHolderAnimator.SetBool("Ready", false);
-            _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
+            // Play ready animation
+            yield return StartCoroutine(ReadyAnimation());
 
             CurrentState = WeaponState.Idle;
         }
@@ -602,22 +602,61 @@ namespace Infection.Combat
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
-                // Update animator override or reset to default animator controller
-                var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
-                if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
-                {
-                    _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
-                }
-                else if (overrideController != null)
-                {
-                    _weaponHolderAnimator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
-                }
-
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
                 }
             }
+        }
+
+        private void UpdateAnimatorOverride()
+        {
+            // Update animator override or reset to default animator controller
+            var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
+            if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
+            {
+                _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
+            }
+            else if (overrideController != null)
+            {
+                _weaponHolderAnimator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
+            }
+        }
+
+        /// <summary>
+        /// Play the weapon holster animation for the duration of the holster time defined in the weapon definition.
+        /// </summary>
+        /// <returns>Holster animation</returns>
+        private IEnumerator HolsterAnimation()
+        {
+            // Start playing animation for holster time
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
+            _weaponHolderAnimator.SetBool("Holster", true);
+
+            // Wait for animation to finish
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
+
+            // Reset animator parameters
+            _weaponHolderAnimator.SetBool("Holster", false);
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
+        }
+
+        /// <summary>
+        /// Play the weapon ready animation for the duration of the ready time defined in the weapon definition.
+        /// </summary>
+        /// <returns>Ready animation</returns>
+        private IEnumerator ReadyAnimation()
+        {
+            // Start playing animation for ready time
+            _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
+            _weaponHolderAnimator.SetBool("Ready", true);
+
+            // Wait for animation to finish
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
+
+            // Reset animator parameters
+            _weaponHolderAnimator.SetBool("Ready", false);
+            _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
         }
 
         public class StateChangedEventArgs : EventArgs
