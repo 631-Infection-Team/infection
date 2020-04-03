@@ -72,8 +72,8 @@ namespace Infection
 
         protected abstract void UpdateClient();
 
-        [Server]
-        public void Respawn()
+        [ClientRpc]
+        public void RpcOnRespawn()
         {
             gameObject.transform.position = NetRoomManager.netRoomManager.GetStartPosition().position;
             health = healthMax;

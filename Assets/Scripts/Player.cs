@@ -44,9 +44,11 @@ namespace Infection
         }
 
         private CharacterController characterController;
+        private Vector3 move;
         private float speedAtJump;
         private float verticalSpeed;
         private float lastGrounded;
+
         protected override void Awake()
         {
             base.Awake();
@@ -131,7 +133,7 @@ namespace Infection
 
         public bool IsMoving()
         {
-            return gameObject.GetComponent<CharacterController>().velocity != Vector3.zero;
+            return move != Vector3.zero;
         }
 
         // finite state machine events
@@ -151,16 +153,12 @@ namespace Infection
         }
 
         [Command]
-        public void CmdRespawn() { 
-            respawnRequested = true;
-        }
+        public void CmdRespawn() {
+            // Client respawn
+            state = "IDLE";
 
-        bool EventRespawn()
-        {
-            bool result = respawnRequested;
-            respawnRequested = false;
-
-            return result;
+            // Server respawn
+            RpcOnRespawn();
         }
 
         // finite state machine - server
@@ -177,7 +175,6 @@ namespace Infection
                 return "MOVING";
             }
             if (EventMoveEnd()) { }
-            if (EventRespawn()) { }
 
             return "IDLE";
         }
@@ -195,7 +192,6 @@ namespace Infection
                 return "IDLE";
             }
             if (EventMoveStart()) { }
-            if (EventRespawn()) { }
 
             return "MOVING";
         }
@@ -203,12 +199,6 @@ namespace Infection
         [Server]
         string UpdateServer_DEAD()
         {
-            if (EventRespawn())
-            {
-                Respawn();
-                return "IDLE";
-            }
-
             if (EventMoveStart()) { }
             if (EventMoveEnd()) { }
             if (EventDied()) { }
@@ -222,6 +212,7 @@ namespace Infection
             if (state == "IDLE") return UpdateServer_IDLE();
             if (state == "MOVING") return UpdateServer_MOVING();
             if (state == "DEAD") return UpdateServer_DEAD();
+
             Debug.LogError("invalid state:" + state);
             return "IDLE";
         }
@@ -230,28 +221,29 @@ namespace Infection
         [Client]
         protected override void UpdateClient()
         {
-            if (state != "DEAD")
-            {
-                if (isLocalPlayer)
-                {
-                    CameraHandler();
-                    MovementHandler();
-                }
-            }
-            else if (state == "DEAD")
-            {
-                if (isLocalPlayer)
-                {
-                    CmdRespawn();
-                }
-            }
-            else
-            {
-                Debug.LogError("invalid state:" + state);
-            }
-
             if (isLocalPlayer)
             {
+                if (state != "DEAD")
+                {
+                    if (isLocalPlayer)
+                    {
+                        CameraHandler();
+                        MovementHandler();
+
+                    }
+                }
+                else if (state == "DEAD")
+                {
+                    if (isLocalPlayer)
+                    {
+                        CmdRespawn();
+                    }
+                }
+                else
+                {
+                    Debug.LogError("invalid state:" + state);
+                }
+
                 GravityHandler();
                 CursorHandler();
             }
@@ -284,6 +276,7 @@ namespace Infection
             return base.CanAttack(entity) && entity is Player;
         }
 
+        [Client]
         void GravityHandler()
         {
             verticalSpeed += Physics.gravity.y * Time.deltaTime;

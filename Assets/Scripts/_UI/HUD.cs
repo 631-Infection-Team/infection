@@ -9,6 +9,8 @@ namespace Infection
 {
     public class HUD : MonoBehaviour
     {
+        public bool isPaused;
+
         [SerializeField] private Image crosshair = null;
         [SerializeField] private GameObject pauseMenu = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;
@@ -17,15 +19,6 @@ namespace Infection
         [SerializeField] private TextMeshProUGUI magazineDisplay = null;
         [SerializeField] private TextMeshProUGUI reservesDisplay = null;
         [SerializeField] private Weapon playerWeapon = null;
-
-        public bool isPaused;
-        public state curState = state.isSurvivor;
-        public enum state
-        {
-            isSurvivor,
-            isInfected,
-            isSpectator
-        }
 
         private float _originalCrosshairOpacity = 0f;
         private Vector3 _originalCrosshairSize;
