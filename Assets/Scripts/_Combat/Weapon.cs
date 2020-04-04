@@ -35,6 +35,8 @@ namespace Infection.Combat
         [SerializeField] private Transform weaponHolder = null;
         [SerializeField] private Transform muzzle = null;
         [SerializeField] private Transform muzzleFlash = null;
+        [SerializeField, Tooltip("Used for rendering on remote players")]
+        private Transform rightHand = null;
 
         // Unity events. Add listeners from the inspector.
         [Header("Events for weapon behavior state changes")]
@@ -601,11 +603,20 @@ namespace Infection.Combat
                     Destroy(child.gameObject);
                 }
 
+                foreach (Transform child in rightHand)
+                {
+                    Destroy(child.gameObject);
+                }
+
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
+
+                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
+                remoteModel.transform.position = Vector3.zero;
+                remoteModel.transform.rotation = Quaternion.Euler(0f, 90f, 90f);
 
                 if (!isLocalPlayer)
                 {

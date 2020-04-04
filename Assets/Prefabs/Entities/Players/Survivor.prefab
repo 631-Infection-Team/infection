@@ -191,6 +191,7 @@ MonoBehaviour:
   weaponHolder: {fileID: 1054781121031203706}
   muzzle: {fileID: 0}
   muzzleFlash: {fileID: 0}
+  rightHand: {fileID: 8001535948724104777}
   onEquip:
     m_PersistentCalls:
       m_Calls: []
