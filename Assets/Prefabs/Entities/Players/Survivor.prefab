@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2101484391222941458}
   - component: {fileID: 6851225620217868936}
   - component: {fileID: 7036823307140396279}
+  - component: {fileID: 1774361797439699383}
   - component: {fileID: 8047812271059525486}
   - component: {fileID: 356058347965949425}
   - component: {fileID: 1357534185374716560}
@@ -19,7 +20,7 @@ GameObject:
   - component: {fileID: 6528563600363410346}
   m_Layer: 0
   m_Name: Survivor
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,6 +93,22 @@ MonoBehaviour:
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 0
+--- !u!114 &1774361797439699383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352473803470926471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  animator: {fileID: 2101484391222941458}
 --- !u!143 &8047812271059525486
 CharacterController:
   m_ObjectHideFlags: 0
@@ -131,8 +148,6 @@ MonoBehaviour:
   cam: {fileID: 3059295182831669808}
   model: {fileID: 8001535948723752905}
   HUD: {fileID: 2890566059470607980}
-  bloodImpactVfx: {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc,
-    type: 3}
   walkSpeed: 8
   runSpeed: 12
   JumpSpeed: 5
@@ -141,6 +156,9 @@ MonoBehaviour:
   verticalLook: 0
   horizontalLook: 0
   team: 1
+  bloodImpactVfx: {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc,
+    type: 3}
+  respawnTime: 5
 --- !u!114 &1357534185374716560
 MonoBehaviour:
   m_ObjectHideFlags: 0
