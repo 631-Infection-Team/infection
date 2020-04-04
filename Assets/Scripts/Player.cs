@@ -1,6 +1,4 @@
 ﻿using Mirror;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Infection
@@ -11,15 +9,10 @@ namespace Infection
     {
         public static Player localPlayer;
 
-        bool respawnRequested;
-
         [Header("Components")]
         public Camera cam = null;
         public GameObject model = null;
         public GameObject HUD = null;
-
-        [Header("Visual Effects")]
-        public GameObject bloodImpactVfx = null;
 
         [Header("Movement")]
         public float walkSpeed = 8f;
@@ -27,11 +20,14 @@ namespace Infection
         public float JumpSpeed = 5f;
         public bool canMove = true;
         public bool isGrounded = false;
-        [SyncVar] public float verticalLook;
-        [SyncVar] public float horizontalLook;
+        public float verticalLook;
+        public float horizontalLook;
 
         [Header("Team")]
         [SyncVar] public Team team = Team.Survivor;
+
+        [Header("Visual Effects")]
+        public GameObject bloodImpactVfx = null;
 
         [Header("Balance")]
         public int respawnTime = 5;
@@ -154,10 +150,6 @@ namespace Infection
 
         [Command]
         public void CmdRespawn() {
-            // Client respawn
-            state = "IDLE";
-
-            // Server respawn
             RpcOnRespawn();
         }
 
@@ -217,6 +209,12 @@ namespace Infection
             return "IDLE";
         }
 
+        [Server]
+        protected override void OnDeath()
+        {
+            base.OnDeath();
+        }
+
         // finite state machine - client
         [Client]
         protected override void UpdateClient()
@@ -249,12 +247,6 @@ namespace Infection
             }
 
             Utils.InvokeMany(typeof(Player), this, "UpdateClient_");
-        }
-
-        [Server]
-        protected override void OnDeath()
-        {
-            base.OnDeath();
         }
 
         public override bool CanAttack(Entity entity)
@@ -389,14 +381,6 @@ namespace Infection
 
                     DealDamageTo(this, health);
                 }
-            }
-        }
-
-        void OnTriggerExit(Collider col)
-        {
-            if (col.isTrigger && col.GetComponent<Zone>())
-            {
-                // Debug.Log("Test");
             }
         }
     }
