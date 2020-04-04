@@ -280,7 +280,7 @@ namespace Infection.Combat
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
                         Fire();
-                        _playerAnimator.SetBool("Fire_b", true);
+                        _playerAnimator.SetBool("Shoot_b", true);
 
                         // Play fire animation once per burst
                         if (!animationStarted)
@@ -297,7 +297,7 @@ namespace Infection.Combat
 
                     // Wait three times as long between bursts
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 3.0f);
-                    _playerAnimator.SetBool("Fire_b", false);
+                    _playerAnimator.SetBool("Shoot_b", false);
                 }
                 else
                 {
@@ -305,14 +305,14 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
-                    _playerAnimator.SetBool("Fire_b", true);
+                    _playerAnimator.SetBool("Shoot_b", true);
 
                     // Fire animation
                     _weaponHolderAnimator.SetTrigger("Fire");
                     _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
 
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
-                    _playerAnimator.SetBool("Fire_b", false);
+                    _playerAnimator.SetBool("Shoot_b", false);
                 }
             }
 
