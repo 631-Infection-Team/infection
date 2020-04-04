@@ -328,7 +328,6 @@ namespace Infection
             move = transform.TransformDirection(move);
 
             characterController.Move(move);
-            animator.SetFloat("Speed_f", characterController.velocity.magnitude);
 
             // draw direction for debugging
             // Debug.DrawLine(transform.position, transform.position + direction, Color.green, 0, false);

@@ -282,7 +282,7 @@ namespace Infection.Combat
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
                         Fire();
-                        _playerAnimator.SetBool("Shoot_b", true);
+                        _playerAnimator.SetTrigger("Shoot_t");
 
                         // Play fire animation once per burst
                         if (!animationStarted)
@@ -299,7 +299,6 @@ namespace Infection.Combat
 
                     // Wait three times as long between bursts
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 3.0f);
-                    _playerAnimator.SetBool("Shoot_b", false);
                 }
                 else
                 {
@@ -307,14 +306,13 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
-                    _playerAnimator.SetBool("Shoot_b", true);
+                    _playerAnimator.SetTrigger("Shoot_t");
 
                     // Fire animation
                     _weaponHolderAnimator.SetTrigger("Fire");
                     _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
 
                     yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
-                    _playerAnimator.SetBool("Shoot_b", false);
                 }
             }
 
@@ -383,10 +381,9 @@ namespace Infection.Combat
             // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
             _weaponHolderAnimator.SetTrigger("Reload");
             _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
-            _playerAnimator.SetBool("Reload_b", true);
+            _playerAnimator.SetTrigger("Reload_t");
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
-            _playerAnimator.SetBool("Reload_b", false);
 
             // Fill up magazine with ammo from reserves
             CurrentWeapon.ReloadMagazine();
@@ -616,12 +613,16 @@ namespace Infection.Combat
 
                 GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
                 remoteModel.transform.localPosition = Vector3.zero;
-                remoteModel.transform.rotation = Quaternion.Euler(0f, 90f, 90f);
+                remoteModel.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
 
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
-                    remoteModel.SetActive(true);
+                }
+
+                if (isLocalPlayer)
+                {
+                    remoteModel.SetActive(false);
                 }
             }
         }
