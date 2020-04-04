@@ -615,12 +615,13 @@ namespace Infection.Combat
                 muzzleFlash = muzzle.transform.GetChild(0);
 
                 GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
-                remoteModel.transform.position = Vector3.zero;
+                remoteModel.transform.localPosition = Vector3.zero;
                 remoteModel.transform.rotation = Quaternion.Euler(0f, 90f, 90f);
 
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
+                    remoteModel.SetActive(true);
                 }
             }
         }
