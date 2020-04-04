@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf3ddcc50594ce7b9433590224d9825, type: 3}
   m_Name: Assault Rifle
   m_EditorClassIdentifier: 
-  weaponClassName: New Weapon Class
+  weaponClassName: Assault Rifle
+  animatorType: 2

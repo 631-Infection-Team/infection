@@ -35,6 +35,8 @@ namespace Infection.Combat
         [SerializeField] private Transform weaponHolder = null;
         [SerializeField] private Transform muzzle = null;
         [SerializeField] private Transform muzzleFlash = null;
+        [SerializeField, Tooltip("Used for rendering on remote players")]
+        private Transform rightHand = null;
 
         // Unity events. Add listeners from the inspector.
         [Header("Events for weapon behavior state changes")]
@@ -121,6 +123,7 @@ namespace Infection.Combat
 
         // Components
         private Animator _weaponHolderAnimator = null;
+        private Animator _playerAnimator = null;
         private Camera _camera = null;
 
         // Properties
@@ -134,6 +137,7 @@ namespace Infection.Combat
         private void Awake()
         {
             _camera = GetComponent<Player>().cam;
+            _playerAnimator = GetComponent<Player>().animator;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
@@ -160,6 +164,7 @@ namespace Infection.Combat
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
             CurrentState = WeaponState.Switching;
             StartCoroutine(ReadyAnimation());
+            OnWeaponChange?.Invoke();
             CurrentState = WeaponState.Idle;
             UpdateWeaponModel();
         }
@@ -175,6 +180,16 @@ namespace Infection.Combat
             {
                 InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
             }
+        }
+
+        private void OnEnable()
+        {
+            OnWeaponChange += UpdateAnimatorWeaponType;
+        }
+
+        private void OnDisable()
+        {
+            OnWeaponChange -= UpdateAnimatorWeaponType;
         }
 
         /// <summary>
@@ -267,6 +282,7 @@ namespace Infection.Combat
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
                         Fire();
+                        _playerAnimator.SetTrigger("Shoot_t");
 
                         // Play fire animation once per burst
                         if (!animationStarted)
@@ -290,6 +306,7 @@ namespace Infection.Combat
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
                     Fire();
+                    _playerAnimator.SetTrigger("Shoot_t");
 
                     // Fire animation
                     _weaponHolderAnimator.SetTrigger("Fire");
@@ -364,6 +381,7 @@ namespace Infection.Combat
             // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
             _weaponHolderAnimator.SetTrigger("Reload");
             _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
+            _playerAnimator.SetTrigger("Reload_t");
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
@@ -582,17 +600,39 @@ namespace Infection.Combat
                     Destroy(child.gameObject);
                 }
 
+                foreach (Transform child in rightHand)
+                {
+                    Destroy(child.gameObject);
+                }
+
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
+                // Spawn weapon model to show other players
+                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
+                remoteModel.transform.localPosition = Vector3.zero;
+                remoteModel.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
+
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
                 }
+
+                // Other players can see this weapon model but the local player cannot
+                if (isLocalPlayer)
+                {
+                    remoteModel.SetActive(false);
+                }
             }
+        }
+
+        private void UpdateAnimatorWeaponType()
+        {
+            _playerAnimator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
+            _playerAnimator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
         }
 
         private void UpdateAnimatorOverride()
