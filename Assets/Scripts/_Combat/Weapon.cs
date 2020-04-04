@@ -514,8 +514,11 @@ namespace Infection.Combat
                     break;
             }
 
-            // Show muzzle flash for split second
-            StartCoroutine(FlashMuzzle(influence));
+            if (!CurrentWeapon.WeaponDefinition.Silencer)
+            {
+                // Show muzzle flash for split second
+                StartCoroutine(FlashMuzzle(influence));
+            }
 
             // Apply recoil
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
