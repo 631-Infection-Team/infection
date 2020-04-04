@@ -121,6 +121,7 @@ namespace Infection.Combat
 
         // Components
         private Animator _weaponHolderAnimator = null;
+        private Animator _playerAnimator = null;
         private Camera _camera = null;
 
         // Properties
@@ -134,6 +135,7 @@ namespace Infection.Combat
         private void Awake()
         {
             _camera = GetComponent<Player>().cam;
+            _playerAnimator = GetComponent<Player>().animator;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
@@ -160,6 +162,7 @@ namespace Infection.Combat
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
             CurrentState = WeaponState.Switching;
             StartCoroutine(ReadyAnimation());
+            OnWeaponChange?.Invoke();
             CurrentState = WeaponState.Idle;
             UpdateWeaponModel();
         }
@@ -175,6 +178,16 @@ namespace Infection.Combat
             {
                 InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
             }
+        }
+
+        private void OnEnable()
+        {
+            OnWeaponChange += UpdateAnimatorWeaponType;
+        }
+
+        private void OnDisable()
+        {
+            OnWeaponChange -= UpdateAnimatorWeaponType;
         }
 
         /// <summary>
@@ -593,6 +606,11 @@ namespace Infection.Combat
                     weaponModel.SetActive(false);
                 }
             }
+        }
+
+        private void UpdateAnimatorWeaponType()
+        {
+            _playerAnimator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
         }
 
         private void UpdateAnimatorOverride()

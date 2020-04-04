@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Marksman Rifle
   m_EditorClassIdentifier: 
   weaponClassName: Marksman Rifle
+  animatorType: 3

@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Submachine Gun
   m_EditorClassIdentifier: 
   weaponClassName: Submachine Gun
+  animatorType: 2
