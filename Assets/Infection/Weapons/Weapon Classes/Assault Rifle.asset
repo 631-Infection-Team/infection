@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Assault Rifle
   m_EditorClassIdentifier: 
   weaponClassName: Assault Rifle
-  animatorType: 1
+  animatorType: 2
