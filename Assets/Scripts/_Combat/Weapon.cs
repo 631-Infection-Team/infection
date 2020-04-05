@@ -292,7 +292,7 @@ namespace Infection.Combat
                     {
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
-                        RpcOnFire();
+                        CmdFire();
                         _playerAnimator.SetTrigger("Shoot_t");
 
                         // Play fire animation once per burst
@@ -316,7 +316,7 @@ namespace Infection.Combat
                     // Firing automatic or manual type weapon
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
-                    RpcOnFire();
+                    CmdFire();
                     _playerAnimator.SetTrigger("Shoot_t");
 
                     // Fire animation
@@ -480,19 +480,13 @@ namespace Infection.Combat
             }
         }
 
-        [Command]
-        public void CmdFire()
-        {
-            RpcOnFire();
-        }
-
         /// <summary>
         /// Fire the weapon. Waiting for weapon state is not handled here.
         /// This method is only used to raycast and consume ammo.
         /// </summary>
 
-        [ClientRpc]
-        private void RpcOnFire()
+        [Command]
+        private void CmdFire()
         {
             if (Player.localPlayer.health <= 0) return;
 
@@ -532,6 +526,7 @@ namespace Infection.Combat
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
                     GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
                     trail.GetComponent<LineRenderer>().SetPosition(0, muzzle.position);
+                    NetworkServer.Spawn(trail);
 
                     if (raycast)
                     {
@@ -565,6 +560,15 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             onFire?.Invoke();
+        }
+
+        [ClientRpc]
+        public void RpcOnFire()
+        {
+            // Do client side stuff here
+
+            // Call this to start server side stuff
+            CmdFire();
         }
 
         /// <summary>
