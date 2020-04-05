@@ -510,13 +510,11 @@ namespace Infection.Combat
                         {
                             Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
 
-                            GameObject vfx = Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(vfx);
+                            Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                         }
                         else
                         {
-                            GameObject vfx = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(vfx);
+                            Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                         }
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
@@ -525,18 +523,20 @@ namespace Infection.Combat
 
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
                     GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
-                    trail.GetComponent<LineRenderer>().SetPosition(0, muzzle.position);
-                    NetworkServer.Spawn(trail);
+                    LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
+                    lineRenderer.SetPosition(0, muzzle.position);
+                    
 
                     if (raycast)
                     {
-                        trail.GetComponent<LineRenderer>().SetPosition(1, hit.point);
+                        lineRenderer.SetPosition(1, hit.point);
                     }
                     else
                     {
-                        trail.GetComponent<LineRenderer>().SetPosition(1, ray.direction * 10000f);
+                        lineRenderer.SetPosition(1, ray.direction * 10000f);
                     }
 
+                    NetworkServer.Spawn(trail);
                     Destroy(trail, Time.deltaTime);
                     break;
 
