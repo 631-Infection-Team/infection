@@ -3761,7 +3761,9 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
+  - {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc, type: 3}
   showRoomGUI: 1
   minPlayers: 1
   roomPlayerPrefab: {fileID: 6452073728241379646, guid: 44c566a97cbacee4fa5b2fe7cf482ce4,
@@ -6985,6 +6987,10 @@ PrefabInstance:
     - target: {fileID: 400010, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
       propertyPath: m_LocalScale.z
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300006, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
+      propertyPath: m_MotionVectors
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
