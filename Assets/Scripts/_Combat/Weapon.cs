@@ -169,6 +169,12 @@ namespace Infection.Combat
             UpdateWeaponModel();
         }
 
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+            UpdateRemoteWeaponModel();
+        }
+
         private void Update()
         {
             // Zoom in based on aiming percentage
@@ -496,15 +502,15 @@ namespace Infection.Combat
                     }
 
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
-                    GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
-                    trail.GetComponent<LineRenderer>().SetPosition(0, muzzle.position);
+                    LineRenderer trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction)).GetComponent<LineRenderer>();
+                    trail.SetPosition(0, muzzle.position);
                     if (raycast)
                     {
-                        trail.GetComponent<LineRenderer>().SetPosition(1, hit.point);
+                        trail.SetPosition(1, hit.point);
                     }
                     else
                     {
-                        trail.GetComponent<LineRenderer>().SetPosition(1, ray.direction * 10000f);
+                        trail.SetPosition(1, ray.direction * 10000f);
                     }
                     Destroy(trail, Time.deltaTime);
                     break;
@@ -603,27 +609,32 @@ namespace Infection.Combat
                     Destroy(child.gameObject);
                 }
 
-                foreach (Transform child in rightHand)
-                {
-                    Destroy(child.gameObject);
-                }
-
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
-                // Spawn weapon model to show other players
-                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
-                remoteModel.transform.localPosition = Vector3.zero;
-                remoteModel.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
-
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
                 }
+            }
+        }
 
+        [Server]
+        private void UpdateRemoteWeaponModel()
+        {
+            if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.RemoteModelPrefab != null)
+            {
+                // Destroy all children
+                foreach (Transform child in rightHand)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                // Spawn weapon model to show other players
+                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
                 // Other players can see this weapon model but the local player cannot
                 if (isLocalPlayer)
                 {

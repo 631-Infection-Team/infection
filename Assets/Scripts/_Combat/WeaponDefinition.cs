@@ -70,6 +70,8 @@ namespace Infection.Combat
         private Sprite crosshair = null;
         [SerializeField, Tooltip("Prefab for the weapon model with predefined transforms")]
         private GameObject modelPrefab = null;
+        [SerializeField, Tooltip("Prefab for the weapon model shown to other players")]
+        private GameObject remoteModelPrefab = null;
         [SerializeField, Tooltip("Override controller for animations used by WeaponHolder animator")]
         private AnimatorOverrideController animatorOverride = null;
 
@@ -93,6 +95,7 @@ namespace Infection.Combat
         public int MaxReserves => maxReserves;
         public Sprite Crosshair => crosshair;
         public GameObject ModelPrefab => modelPrefab;
+        public GameObject RemoteModelPrefab => remoteModelPrefab;
         public AnimatorOverrideController AnimatorOverride => animatorOverride;
 
         /// <summary>
