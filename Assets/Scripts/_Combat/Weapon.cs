@@ -496,15 +496,15 @@ namespace Infection.Combat
                     }
 
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
-                    GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
-                    trail.GetComponent<LineRenderer>().SetPosition(0, muzzle.position);
+                    LineRenderer trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction)).GetComponent<LineRenderer>();
+                    trail.SetPosition(0, muzzle.position);
                     if (raycast)
                     {
-                        trail.GetComponent<LineRenderer>().SetPosition(1, hit.point);
+                        trail.SetPosition(1, hit.point);
                     }
                     else
                     {
-                        trail.GetComponent<LineRenderer>().SetPosition(1, ray.direction * 10000f);
+                        trail.SetPosition(1, ray.direction * 10000f);
                     }
                     Destroy(trail, Time.deltaTime);
                     break;
