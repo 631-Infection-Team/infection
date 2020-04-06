@@ -268,6 +268,17 @@ namespace Infection.Combat
         /// <returns>Firing state</returns>
         public IEnumerator FireWeapon()
         {
+            if (!isLocalPlayer)
+            {
+                yield break;
+            }
+
+            // Cannot fire weapon if dead
+            if (Player.localPlayer.health <= 0)
+            {
+                yield break;
+            }
+
             // Cannot fire weapon when state is not idle or when reload action interrupts fire
             if (CurrentState != WeaponState.Idle || _reloadInterrupt)
             {
@@ -287,7 +298,7 @@ namespace Infection.Combat
                     {
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
-                        Fire();
+                        CmdFire();
                         _playerAnimator.SetTrigger("Shoot_t");
 
                         // Play fire animation once per burst
@@ -311,7 +322,7 @@ namespace Infection.Combat
                     // Firing automatic or manual type weapon
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
-                    Fire();
+                    CmdFire();
                     _playerAnimator.SetTrigger("Shoot_t");
 
                     // Fire animation
@@ -351,6 +362,12 @@ namespace Infection.Combat
         /// <returns>Reload state</returns>
         public IEnumerator ReloadWeapon()
         {
+            // Cannot reload weapon if dead
+            if (Player.localPlayer.health <= 0)
+            {
+                yield break;
+            }
+
             // Already reloading or not in idle state
             if (CurrentState == WeaponState.Reloading)
             {
@@ -408,6 +425,12 @@ namespace Infection.Combat
         /// <returns>Switching state</returns>
         public IEnumerator SwitchWeapon(int index)
         {
+            // Cannot switch weapon if dead
+            if (Player.localPlayer.health <= 0)
+            {
+                yield break;
+            }
+
             // Cannot switch weapon when not in idle state or current weapon already out
             if (CurrentState != WeaponState.Idle || _currentWeaponIndex == index)
             {
@@ -467,7 +490,9 @@ namespace Infection.Combat
         /// Fire the weapon. Waiting for weapon state is not handled here.
         /// This method is only used to raycast and consume ammo.
         /// </summary>
-        private void Fire()
+
+        [Command]
+        private void CmdFire()
         {
             if (Player.localPlayer.health <= 0) return;
 
@@ -490,6 +515,7 @@ namespace Infection.Combat
                         if (targetPlayer)
                         {
                             Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
+
                             Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                         }
                         else
@@ -502,16 +528,21 @@ namespace Infection.Combat
                     }
 
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
-                    LineRenderer trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction)).GetComponent<LineRenderer>();
-                    trail.SetPosition(0, muzzle.position);
+                    GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
+                    LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
+                    lineRenderer.SetPosition(0, muzzle.position);
+                    
+
                     if (raycast)
                     {
-                        trail.SetPosition(1, hit.point);
+                        lineRenderer.SetPosition(1, hit.point);
                     }
                     else
                     {
-                        trail.SetPosition(1, ray.direction * 10000f);
+                        lineRenderer.SetPosition(1, ray.direction * 10000f);
                     }
+
+                    NetworkServer.Spawn(trail);
                     Destroy(trail, Time.deltaTime);
                     break;
 
@@ -537,6 +568,15 @@ namespace Infection.Combat
             onFire?.Invoke();
         }
 
+        [ClientRpc]
+        public void RpcOnFire()
+        {
+            // Do client side stuff here
+
+            // Call this to start server side stuff
+            CmdFire();
+        }
+
         /// <summary>
         /// Generate Vector3 influence using weapon accuracy which will sway the bullet trajectory.
         /// </summary>
@@ -545,13 +585,13 @@ namespace Infection.Combat
         {
             // Cache variables for repeated access
             Transform cameraTransform = _camera.transform;
+
             // Accuracy reduction when not aiming
             float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
             float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
 
             // Divide by 4 to reduce the max angle from 180 degrees to 45 degrees
-            return (cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) +
-                   cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy)) / 4f;
+            return (cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) + cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy)) / 4f;
         }
 
         /// <summary>
@@ -615,6 +655,11 @@ namespace Infection.Combat
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
+                // Spawn weapon model to show other players
+                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
+                remoteModel.transform.localPosition = Vector3.zero;
+                remoteModel.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
+
                 if (!isLocalPlayer)
                 {
                     weaponModel.SetActive(false);
@@ -635,11 +680,10 @@ namespace Infection.Combat
 
                 // Spawn weapon model to show other players
                 GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
+                
                 // Other players can see this weapon model but the local player cannot
-                if (isLocalPlayer)
-                {
-                    remoteModel.SetActive(false);
-                }
+                weaponModel.SetActive(isLocalPlayer);
+                remoteModel.SetActive(!isLocalPlayer);
             }
         }
 

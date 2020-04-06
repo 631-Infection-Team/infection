@@ -226,19 +226,12 @@ namespace Infection
             {
                 if (state != "DEAD")
                 {
-                    if (isLocalPlayer)
-                    {
-                        CameraHandler();
-                        MovementHandler();
-
-                    }
+                    CameraHandler();
+                    MovementHandler();
                 }
                 else if (state == "DEAD")
                 {
-                    if (isLocalPlayer)
-                    {
-                        CmdRespawn();
-                    }
+                    CmdRespawn();
                 }
                 else
                 {

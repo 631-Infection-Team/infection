@@ -23,7 +23,6 @@ namespace Infection
     public class NetRoomManager : NetworkRoomManager
     {
         public static NetRoomManager netRoomManager;
-
         public override void Start()
         {
             base.Start();
