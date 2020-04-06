@@ -102,17 +102,20 @@ namespace Infection
             //    we would see animation latencies for rubberband movement if we
             //    have to wait for MOVING state to be received from the server
 
-            if (isClient) // no need for animations on the server
-            {
-                animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
-                animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2);
-
-                animator.SetFloat("Speed_f", 0.0f);
-                animator.SetBool("Death_b", state == "DEAD");
-                animator.SetBool("Grounded", true);
-            }
+            UpdateAnimator();
 
             Utils.InvokeMany(typeof(Player), this, "LateUpdate_");
+        }
+
+        [Server]
+        private void UpdateAnimator()
+        {
+            animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
+            animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2);
+
+            animator.SetFloat("Speed_f", move.magnitude);
+            animator.SetBool("Death_b", state == "DEAD");
+            animator.SetBool("Grounded", true);
         }
 
         void OnDestroy()
@@ -313,7 +316,7 @@ namespace Infection
             float actualSpeed = inputRun ? runSpeed : walkSpeed;
             if (lostFooting) speedAtJump = actualSpeed;
 
-            Vector3 move = new Vector3(inputHorizontal, 0, inputVertical);
+            move = new Vector3(inputHorizontal, 0, inputVertical);
             if (move.magnitude > 1) move = move.normalized;
 
             float calcSpeed = isGrounded ? actualSpeed : speedAtJump;

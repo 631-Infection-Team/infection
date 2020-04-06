@@ -1,3 +1,36 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:adce3a0d86fcb1e7f35c9ec410967f7a408784411ffe16a9b42cda090c393bc0
-size 1022
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf29a0e59a24190a38c2bf1438fc39d, type: 3}
+  m_Name: M4 Carbine
+  m_EditorClassIdentifier: 
+  weaponName: M4 Carbine
+  weaponClass: {fileID: 11400000, guid: 20b3eb510d696c3459a2273ef8b912a4, type: 2}
+  triggerType: 0
+  weaponType: 0
+  silencer: 0
+  damage: 6.5
+  fireRate: 0.09
+  accuracy: 0.925
+  recoilMultiplier: 0.1
+  aimZoomMultiplier: 1.2
+  reloadTime: 2
+  readyTime: 0.45
+  holsterTime: 0.65
+  aimTime: 0.2
+  clipSize: 30
+  maxReserves: 120
+  crosshair: {fileID: 21300000, guid: 7a3f495e8306eb941833afcbf973421f, type: 3}
+  modelPrefab: {fileID: 8880830736068855380, guid: 9e25c3eaf5fe06847be7c8ffc482d0bf,
+    type: 3}
+  remoteModelPrefab: {fileID: 4943078099721483148, guid: 3c5fdafdeaf198645809e5b9b993774f,
+    type: 3}
+  animatorOverride: {fileID: 22100000, guid: 06342cc67c887ee4b924cb062fae17ee, type: 2}
