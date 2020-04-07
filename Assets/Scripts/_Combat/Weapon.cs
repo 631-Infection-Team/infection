@@ -682,7 +682,7 @@ namespace Infection.Combat
                 GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
                 
                 // Other players can see this weapon model but the local player cannot
-                weaponModel.SetActive(isLocalPlayer);
+                // weaponModel.SetActive(isLocalPlayer);
                 remoteModel.SetActive(!isLocalPlayer);
             }
         }
