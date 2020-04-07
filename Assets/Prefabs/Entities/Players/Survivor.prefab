@@ -5942,7 +5942,7 @@ PrefabInstance:
     - target: {fileID: 1575668633003622740, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_Radius
-      value: 0.6
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1575668633003622740, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
@@ -6004,6 +6004,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Survivor
       objectReference: {fileID: 0}
+    - target: {fileID: 5112528301519911423, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 7633405686835286224}
     - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: weaponHolder
