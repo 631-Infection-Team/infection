@@ -6004,6 +6004,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Survivor
       objectReference: {fileID: 0}
+    - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: weaponHolder
+      value: 
+      objectReference: {fileID: 7198912688058541693}
+    - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: rightHand
+      value: 
+      objectReference: {fileID: 7633405686844836736}
+    - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: raycastMask.m_Bits
+      value: 8705
+      objectReference: {fileID: 0}
     - target: {fileID: 6057538199351420654, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6074,11 +6089,27 @@ PrefabInstance:
       propertyPath: HUD
       value: 
       objectReference: {fileID: 5330879360966034309}
+    - target: {fileID: 6338752244662701214, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 7633405686835286224}
+    - target: {fileID: 6338752244662701214, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: bloodImpactVfx
+      value: 
+      objectReference: {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc,
+        type: 3}
     - target: {fileID: 6825092283269041638, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_AssetId
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6833779995520619437, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: playerWeapon
+      value: 
+      objectReference: {fileID: 6386887192373054019}
     - target: {fileID: 7438611407998415787, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_RootOrder
@@ -6106,6 +6137,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63daeaf1cf8a1934faa122b9a73e82db, type: 3}
+--- !u!114 &6386887192373054019 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+    type: 3}
+  m_PrefabInstance: {fileID: 1554145502435860694}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5330879360966034309 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6659268664629551955, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+    type: 3}
+  m_PrefabInstance: {fileID: 1554145502435860694}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4720297959940851256 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6057538199351420654, guid: 63daeaf1cf8a1934faa122b9a73e82db,
@@ -6118,9 +6167,9 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1554145502435860694}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5330879360966034309 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6659268664629551955, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+--- !u!4 &7198912688058541693 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8536225559644849835, guid: 63daeaf1cf8a1934faa122b9a73e82db,
     type: 3}
   m_PrefabInstance: {fileID: 1554145502435860694}
   m_PrefabAsset: {fileID: 0}
