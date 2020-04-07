@@ -10,9 +10,9 @@ namespace Infection.UI
         [Header("Components")]
         [SerializeField] private Transform[] disableOnChange = new Transform[12];
 
-        public void Start()
+        public void PlayClickSound()
         {
-
+            // GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
 
         public void SetActivePanel(Transform panel)
