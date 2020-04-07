@@ -3757,7 +3757,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 4
   authenticator: {fileID: 550456082}
-  playerPrefab: {fileID: 1352473803470926471, guid: e4c5cd544d91b25489f3af9d922425f8,
+  playerPrefab: {fileID: 2902475906943674202, guid: 753114047792ddd419e49a713bce11b3,
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
@@ -6511,6 +6511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1151974915}
   - component: {fileID: 1151974916}
+  - component: {fileID: 1151974917}
   m_Layer: 0
   m_Name: Menus
   m_TagString: Untagged
@@ -6551,6 +6552,29 @@ MonoBehaviour:
   - {fileID: 630822531}
   - {fileID: 2087929626}
   - {fileID: 288505845}
+--- !u!114 &1151974917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151974914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/UI_Click
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
 --- !u!1001 &1155711742
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18384,6 +18408,17 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 550456080}
         m_MethodName: StartClient
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1151974916}
+        m_MethodName: PlayClickSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

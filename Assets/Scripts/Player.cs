@@ -4,7 +4,6 @@ using UnityEngine;
 namespace Infection
 {
     [RequireComponent(typeof(CharacterController))]
-    [RequireComponent(typeof(Animator))]
     public class Player : Entity
     {
         public static Player localPlayer;

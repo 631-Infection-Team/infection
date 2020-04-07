@@ -34,9 +34,10 @@ namespace Infection
 
         protected virtual void Start()
         {
-            if (!isClient)
+            if (isClient)
             {
-                animator.enabled = false;
+                animator = gameObject.GetComponentInChildren<Animator>();
+                animator.enabled = true;
             }
         }
 
