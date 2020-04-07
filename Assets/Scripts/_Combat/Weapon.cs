@@ -531,7 +531,7 @@ namespace Infection.Combat
                     GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
                     LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
                     lineRenderer.SetPosition(0, muzzle.position);
-                    
+
 
                     if (raycast)
                     {
@@ -655,15 +655,7 @@ namespace Infection.Combat
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
 
-                // Spawn weapon model to show other players
-                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, rightHand);
-                remoteModel.transform.localPosition = Vector3.zero;
-                remoteModel.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
-
-                if (!isLocalPlayer)
-                {
-                    weaponModel.SetActive(false);
-                }
+                weaponModel.SetActive(isLocalPlayer);
             }
         }
 
@@ -680,9 +672,8 @@ namespace Infection.Combat
 
                 // Spawn weapon model to show other players
                 GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
-                
+
                 // Other players can see this weapon model but the local player cannot
-                // weaponModel.SetActive(isLocalPlayer);
                 remoteModel.SetActive(!isLocalPlayer);
             }
         }
