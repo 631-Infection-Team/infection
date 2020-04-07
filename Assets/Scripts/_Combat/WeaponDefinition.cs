@@ -80,10 +80,12 @@ namespace Infection.Combat
         public TriggerType TriggerType => triggerType;
         public WeaponType WeaponType => weaponType;
         public bool Silencer => silencer;
+
         public float Damage => damage;
         public float FireRate => fireRate;
         public float Accuracy => accuracy;
         public float RecoilMultiplier => recoilMultiplier;
+
         public float AimZoomMultiplier => aimZoomMultiplier;
 
         public float ReloadTime => reloadTime;
