@@ -202,44 +202,45 @@ namespace Infection.Combat
         /// Equip a new weapon in an empty slot. If there are no empty slots, replace currently equipped weapon.
         /// </summary>
         /// <param name="newWeapon">New weapon to equip</param>
-        public void EquipWeapon(WeaponItem newWeapon)
+        public WeaponItem EquipWeapon(WeaponItem newWeapon)
         {
             // Player has no weapons
             // TODO: Find solution for edge case where player has other weapons but current weapon is null
             if (HasMoreWeapons && CurrentWeapon == null)
             {
-
             }
 
+            WeaponItem oldWeapon = null;
             if (CurrentWeapon == null)
             {
                 CurrentWeapon = newWeapon;
                 UpdateWeaponModel();
                 UpdateAnimatorOverride();
-
-                // Update listeners
-                OnWeaponChange?.Invoke();
-                onEquip?.Invoke();
-
-                return;
-            }
-
-            // Player has an empty slot in inventory
-            int emptySlot = Array.FindIndex(heldWeapons, w => w == null);
-            if (emptySlot > -1)
-            {
-                // Equip the new weapon and switch to it
-                heldWeapons[emptySlot] = newWeapon;
-                CycleWeapons();
             }
             else
             {
-                // No more space in inventory, replace current weapon with new one
-                WeaponItem old = ReplaceWeapon(_currentWeaponIndex, newWeapon);
-                Debug.Log("Replaced " + old.WeaponDefinition.WeaponName + " with " + newWeapon.WeaponDefinition.WeaponName);
+                // Player has an empty slot in inventory
+                int emptySlot = Array.FindIndex(heldWeapons, w => w == null);
+                if (emptySlot > -1)
+                {
+                    // Equip the new weapon and switch to it
+                    heldWeapons[emptySlot] = newWeapon;
+                    CycleWeapons();
+                }
+                else
+                {
+                    // No more space in inventory, replace current weapon with new one
+                    oldWeapon = ReplaceWeapon(_currentWeaponIndex, newWeapon);
+                    Debug.Log("Replaced " + oldWeapon.WeaponDefinition.WeaponName + " with " + newWeapon.WeaponDefinition.WeaponName);
+                }
             }
 
+            // Update listeners
+            OnWeaponChange?.Invoke();
+            OnAmmoChange?.Invoke();
             onEquip?.Invoke();
+
+            return oldWeapon;
         }
 
         /// <summary>

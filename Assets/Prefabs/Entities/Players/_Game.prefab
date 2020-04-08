@@ -245,7 +245,8 @@ GameObject:
   - component: {fileID: 6338752244662701214}
   - component: {fileID: 7315649375351402718}
   - component: {fileID: 8348657226313444660}
-  m_Layer: 0
+  - component: {fileID: 6291546893828503028}
+  m_Layer: 11
   m_Name: _Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,6 +505,22 @@ MonoBehaviour:
   minimapMarker: {fileID: 444308803621602433}
   playerMarker: {fileID: 2100000, guid: 1927cd16cec26a643aebdb52bdeba978, type: 2}
   enemyMarker: {fileID: 2100000, guid: 249ca9533f377b9458d5a2d9b226337a, type: 2}
+--- !u!114 &6291546893828503028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4455965949840066444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3163fb1eb2f94dc7b554c5cacf5e89a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupRange: 4
+  pickupMask:
+    serializedVersion: 2
+    m_Bits: 65536
 --- !u!1 &5394642424875660755
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,7 +738,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 48951
+    m_Bits: 114487
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

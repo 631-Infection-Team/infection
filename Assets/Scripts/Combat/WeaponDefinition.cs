@@ -48,6 +48,8 @@ namespace Infection.Combat
         [Header("Special Action")]
         [SerializeField, Tooltip("Amount of magnification in field of view when aiming"), Range(0.001f, 8.0f)]
         private float aimZoomMultiplier = 1.10f;
+        [SerializeField, Tooltip("Prefab for the weapon used for weapon pickups")]
+        private GameObject pickupPrefab = null;
 
         [Header("Timers")]
         [SerializeField, Tooltip("Time to reload current weapon, lower is faster"), Range(0.001f, 5.0f)]
@@ -87,6 +89,7 @@ namespace Infection.Combat
         public float RecoilMultiplier => recoilMultiplier;
 
         public float AimZoomMultiplier => aimZoomMultiplier;
+        public GameObject PickupPrefab => pickupPrefab;
 
         public float ReloadTime => reloadTime;
         public float ReadyTime => readyTime;
