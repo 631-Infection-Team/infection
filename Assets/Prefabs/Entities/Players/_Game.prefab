@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444308803621602433}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 1a6a8b33c89dd3e4aa8bbb474eedb46d, type: 3}
 --- !u!23 &6413096921644609971
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -244,7 +244,9 @@ GameObject:
   - component: {fileID: 2610476336617106276}
   - component: {fileID: 6338752244662701214}
   - component: {fileID: 7315649375351402718}
-  m_Layer: 0
+  - component: {fileID: 8348657226313444660}
+  - component: {fileID: 6291546893828503028}
+  m_Layer: 11
   m_Name: _Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,6 +488,39 @@ MonoBehaviour:
   useLocalTransformOnly: 0
   ownerChangeIndicator: 1
   receivedStatesCounter: 0
+--- !u!114 &8348657226313444660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4455965949840066444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4bbc469e534e7194c7615258c63c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  minimapMarker: {fileID: 444308803621602433}
+  playerMarker: {fileID: 2100000, guid: 1927cd16cec26a643aebdb52bdeba978, type: 2}
+  enemyMarker: {fileID: 2100000, guid: 249ca9533f377b9458d5a2d9b226337a, type: 2}
+--- !u!114 &6291546893828503028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4455965949840066444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3163fb1eb2f94dc7b554c5cacf5e89a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupRange: 4
+  pickupMask:
+    serializedVersion: 2
+    m_Bits: 65536
 --- !u!1 &5394642424875660755
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,7 +669,7 @@ ParentConstraint:
   m_IsContraintActive: 1
   m_IsLocked: 1
   m_Sources:
-  - sourceTransform: {fileID: 0}
+  - sourceTransform: {fileID: 6057538199351420654}
     weight: 1
 --- !u!1 &6810202792318848192
 GameObject:
@@ -703,7 +738,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 48951
+    m_Bits: 114487
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
