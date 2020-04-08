@@ -7,11 +7,20 @@ namespace _UI
     {
         [SerializeField] private GameObject minimapMarker = null;
         [SerializeField] private Material playerMarker = null;
-        [SerializeField] private Material allyMarker = null;
+        // [SerializeField] private Material allyMarker = null;
         [SerializeField] private Material enemyMarker = null;
 
-        private void Start()
+        public override void OnStartLocalPlayer()
         {
+            base.OnStartLocalPlayer();
+
+            minimapMarker.SetActive(true);
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
             if (isLocalPlayer)
             {
                 minimapMarker.GetComponent<MeshRenderer>().material = playerMarker;
@@ -20,8 +29,6 @@ namespace _UI
             {
                 minimapMarker.GetComponent<MeshRenderer>().material = enemyMarker;
             }
-
-            minimapMarker.SetActive(true);
         }
     }
 }
