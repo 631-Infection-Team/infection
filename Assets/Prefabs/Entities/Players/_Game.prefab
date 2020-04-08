@@ -652,7 +652,7 @@ ParentConstraint:
   m_IsContraintActive: 1
   m_IsLocked: 1
   m_Sources:
-  - sourceTransform: {fileID: 0}
+  - sourceTransform: {fileID: 6057538199351420654}
     weight: 1
 --- !u!1 &6810202792318848192
 GameObject:
