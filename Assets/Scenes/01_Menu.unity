@@ -6552,6 +6552,8 @@ MonoBehaviour:
   - {fileID: 630822531}
   - {fileID: 2087929626}
   - {fileID: 288505845}
+  clickEvent: event:/UI_Click
+  hoverEvent: event:/UI_Hover
 --- !u!114 &1151974917
 MonoBehaviour:
   m_ObjectHideFlags: 0
