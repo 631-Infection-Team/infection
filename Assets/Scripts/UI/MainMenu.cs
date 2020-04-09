@@ -10,22 +10,31 @@ namespace Infection.UI
     {
         [Header("Components")]
         [SerializeField] private Transform[] disableOnChange = new Transform[12];
-        private StudioEventEmitter studioEventEmitter;
+        private StudioEventEmitter studioEventEmitter = null;
 
         [Header("Audio")]
-        [EventRef, SerializeField] private string clickEvent;
-        [EventRef, SerializeField] private string hoverEvent;
+        [EventRef, SerializeField] private string clickEvent = "";
+        [EventRef, SerializeField] private string hoverEvent = "";
 
-        private void Start()
+        private void Awake()
         {
             studioEventEmitter = GetComponent<StudioEventEmitter>();
         }
 
-        public void SetActivePanel(Transform panel)
+        public void PlaySoundClick()
         {
             studioEventEmitter.Event = clickEvent;
             studioEventEmitter.Play();
+        }
 
+        public void PlaySoundHover()
+        {
+            studioEventEmitter.Event = hoverEvent;
+            studioEventEmitter.Play();
+        }
+
+        public void SetActivePanel(Transform panel)
+        {
             foreach (Transform child in disableOnChange)
             {
                 child.gameObject.SetActive(child == panel);
