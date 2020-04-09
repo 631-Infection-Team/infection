@@ -18,6 +18,9 @@ namespace Infection
         public float runSpeed = 12f;
         public float JumpSpeed = 5f;
         public bool canMove = true;
+        public bool canShoot = true;
+        public bool canLook = true;
+        public bool canInteract = true;
         public bool isGrounded = false;
         public float verticalLook;
         public float horizontalLook;
@@ -43,6 +46,7 @@ namespace Infection
         private float speedAtJump;
         private float verticalSpeed;
         private float lastGrounded;
+        private bool isPaused;
 
         protected override void Awake()
         {
@@ -62,6 +66,7 @@ namespace Infection
             isGrounded = true;
             verticalLook = 0.0f;
             horizontalLook = gameObject.transform.localEulerAngles.y;
+            Cursor.lockState = CursorLockMode.Locked;
 
             Utils.InvokeMany(typeof(Player), this, "OnStartLocalPlayer_");
         }
@@ -151,7 +156,8 @@ namespace Infection
         }
 
         [Command]
-        public void CmdRespawn() {
+        public void CmdRespawn()
+        {
             RpcOnRespawn();
         }
 
@@ -237,8 +243,8 @@ namespace Infection
                     Debug.LogError("invalid state:" + state);
                 }
 
+                InputHandler();
                 GravityHandler();
-                CursorHandler();
             }
 
             Utils.InvokeMany(typeof(Player), this, "UpdateClient_");
@@ -331,7 +337,7 @@ namespace Infection
         [Client]
         void CameraHandler()
         {
-            if (!canMove) return;
+            if (!canLook) return;
 
             float lookY = Input.GetAxis("Look Y");
             float lookX = Input.GetAxis("Look X");
@@ -342,7 +348,7 @@ namespace Infection
 
             Vector3 currentAngles = cam.transform.localEulerAngles;
             currentAngles.x = verticalLook;
-            // currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
+            currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
 
             cam.transform.localEulerAngles = currentAngles;
 
@@ -356,12 +362,23 @@ namespace Infection
         }
 
         [Client]
-        void CursorHandler()
+        void InputHandler()
         {
-            if (!canMove) return;
+            bool pause = Input.GetKeyDown(KeyCode.Escape);
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            if (pause)
+            {
+                isPaused = !isPaused;
+                canMove = !isPaused;
+                canShoot = !isPaused;
+                canLook = !isPaused;
+                canInteract = !isPaused;
+                Cursor.visible = isPaused;
+
+                HUD.GetComponent<HUD>().TogglePause(isPaused);
+            }
+
+            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
         void OnTriggerEnter(Collider col)
