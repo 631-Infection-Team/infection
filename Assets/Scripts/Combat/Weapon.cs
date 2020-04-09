@@ -177,6 +177,11 @@ namespace Infection.Combat
 
         private void Update()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             // Zoom in based on aiming percentage
             float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
             _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
@@ -270,12 +275,6 @@ namespace Infection.Combat
         public IEnumerator FireWeapon()
         {
             if (!isLocalPlayer)
-            {
-                yield break;
-            }
-
-            // Cannot fire weapon if dead
-            if (Player.localPlayer.health <= 0)
             {
                 yield break;
             }
@@ -516,12 +515,13 @@ namespace Infection.Combat
                         if (targetPlayer)
                         {
                             Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
-
-                            Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            GameObject projectile = Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(projectile);
                         }
                         else
                         {
-                            Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            GameObject projectile = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(projectile);
                         }
 
                         Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
@@ -533,7 +533,6 @@ namespace Infection.Combat
                     LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
                     lineRenderer.SetPosition(0, muzzle.position);
 
-
                     if (raycast)
                     {
                         lineRenderer.SetPosition(1, hit.point);
@@ -543,7 +542,6 @@ namespace Infection.Combat
                         lineRenderer.SetPosition(1, ray.direction * 10000f);
                     }
 
-                    NetworkServer.Spawn(trail);
                     Destroy(trail, Time.deltaTime);
                     break;
 
@@ -572,9 +570,6 @@ namespace Infection.Combat
         [ClientRpc]
         public void RpcOnFire()
         {
-            // Do client side stuff here
-
-            // Call this to start server side stuff
             CmdFire();
         }
 
