@@ -91,6 +91,16 @@ namespace Infection.Combat
                     // Switch to the previous weapon
                     _weapon.CycleWeapons(-1);
                 }
+                else if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    // Switch to first weapon
+                    StartCoroutine(_weapon.SwitchWeapon(0));
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    // Switch to second weapon
+                    StartCoroutine(_weapon.SwitchWeapon(1));
+                }
             }
         }
     }
