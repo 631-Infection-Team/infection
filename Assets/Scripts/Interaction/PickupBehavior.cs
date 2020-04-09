@@ -9,16 +9,23 @@ namespace Infection.Interaction
         [SerializeField] private LayerMask pickupMask;
 
         private Camera _camera = null;
+        private Player _player = null;
 
         private ItemPickup _raycastObj = null;
 
         private void Awake()
         {
             _camera = GetComponent<Player>().cam;
+            _player = GetComponent<Player>();
         }
 
         private void Update()
         {
+            if (!_player.canInteract)
+            {
+                return;
+            }
+
             Transform camTransform = _camera.transform;
             Ray ray = new Ray(camTransform.position, camTransform.forward);
             if (Physics.Raycast(ray, out var hit, pickupRange, pickupMask))
