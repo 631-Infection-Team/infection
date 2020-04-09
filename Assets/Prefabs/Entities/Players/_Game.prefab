@@ -318,7 +318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  clientAuthority: 1
+  clientAuthority: 0
   animator: {fileID: 0}
 --- !u!143 &1575668633003622740
 CharacterController:
@@ -427,6 +427,9 @@ MonoBehaviour:
   runSpeed: 12
   JumpSpeed: 5
   canMove: 1
+  canShoot: 1
+  canLook: 1
+  canInteract: 1
   isGrounded: 0
   verticalLook: 0
   horizontalLook: 0

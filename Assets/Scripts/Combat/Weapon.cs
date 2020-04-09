@@ -492,7 +492,7 @@ namespace Infection.Combat
         /// </summary>
 
         [Command]
-        private void CmdFire()
+        public void CmdFire()
         {
             if (Player.localPlayer.health <= 0) return;
 
@@ -570,7 +570,7 @@ namespace Infection.Combat
         [ClientRpc]
         public void RpcOnFire()
         {
-            CmdFire();
+            // Do client things that should replicate between all clients
         }
 
         /// <summary>
