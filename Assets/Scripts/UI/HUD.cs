@@ -60,9 +60,9 @@ namespace Infection
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
-        public void TogglePause()
+        public void TogglePause(bool state)
         {
-            isPaused = !isPaused;
+            isPaused = state;
             pauseMenu.SetActive(isPaused);
 
             Player.localPlayer.canMove = !isPaused;
