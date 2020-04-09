@@ -29,11 +29,6 @@ namespace Infection.Combat
                 return;
             }
 
-            if (!Player.localPlayer.canShoot)
-            {
-                return;
-            }
-
             if (LockControl)
             {
                 return;

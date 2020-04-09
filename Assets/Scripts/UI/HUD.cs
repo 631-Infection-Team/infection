@@ -18,6 +18,8 @@ namespace Infection
         [SerializeField] private TextMeshProUGUI weaponNameDisplay = null;
         [SerializeField] private TextMeshProUGUI magazineDisplay = null;
         [SerializeField] private TextMeshProUGUI reservesDisplay = null;
+        [SerializeField] private TextMeshProUGUI timerDisplay = null;
+        [SerializeField] private TextMeshProUGUI roundDisplay = null;
         [SerializeField] private Weapon playerWeapon = null;
 
         private float _originalCrosshairOpacity = 0f;
@@ -34,6 +36,8 @@ namespace Infection
             // Clear status and alert messages at start
             statusMessageDisplay.text = "";
             alertMessageDisplay.text = "";
+            timerDisplay.text = "";
+            roundDisplay.text = "";
 
             // Set weapon info at start
             UpdateWeaponAmmoDisplay();
@@ -66,6 +70,19 @@ namespace Infection
             pauseMenu.SetActive(isPaused);
 
             Player.localPlayer.canMove = !isPaused;
+        }
+
+        public void UpdateTimer(float timeLeft)
+        {
+            int min = Mathf.FloorToInt(timeLeft / 60);
+            int sec = Mathf.FloorToInt(timeLeft % 60);
+
+            timerDisplay.text = min.ToString("00") + ":" + sec.ToString("00");
+        }
+
+        public void UpdateRound(int number)
+        {
+            roundDisplay.text = "Round " + number.ToString();
         }
 
         private IEnumerator UpdateAlertMessage(string message, float duration)

@@ -22,7 +22,7 @@ namespace Infection
         public bool canLook = true;
         public bool canInteract = true;
         public bool isGrounded = false;
-        public float verticalLook;
+        [SyncVar] public float verticalLook;
         public float horizontalLook;
 
         [Header("Team")]
@@ -94,7 +94,7 @@ namespace Infection
             Utils.InvokeMany(typeof(Player), this, "Start_");
         }
 
-        void LateUpdate()
+        private void LateUpdate()
         {
             // pass parameters to animation state machine
             // => passing the states directly is the most reliable way to avoid all
@@ -111,7 +111,21 @@ namespace Infection
             Utils.InvokeMany(typeof(Player), this, "LateUpdate_");
         }
 
-        [Server]
+        private void OnTriggerEnter(Collider col)
+        {
+            Zone zone = col.GetComponent<Zone>();
+
+            if (col.isTrigger && zone)
+            {
+                if (zone.zoneType == Zone.ZoneTypes.Kill)
+                {
+                    Debug.Log("Hit a kill trigger.");
+
+                    DealDamageTo(this, health);
+                }
+            }
+        }
+
         private void UpdateAnimator()
         {
             animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
@@ -122,7 +136,7 @@ namespace Infection
             animator.SetBool("Grounded", true);
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             if (!isServer && !isClient) return;
 
@@ -379,21 +393,6 @@ namespace Infection
             }
 
             Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-        }
-
-        void OnTriggerEnter(Collider col)
-        {
-            Zone zone = col.GetComponent<Zone>();
-
-            if (col.isTrigger && zone)
-            {
-                if (zone.zoneType == Zone.ZoneTypes.Kill)
-                {
-                    Debug.Log("Hit a kill trigger.");
-
-                    DealDamageTo(this, health);
-                }
-            }
         }
     }
 }
