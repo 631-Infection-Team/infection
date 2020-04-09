@@ -348,7 +348,7 @@ namespace Infection
 
             Vector3 currentAngles = cam.transform.localEulerAngles;
             currentAngles.x = verticalLook;
-            // currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
+            currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
 
             cam.transform.localEulerAngles = currentAngles;
 
@@ -372,19 +372,13 @@ namespace Infection
                 canMove = !isPaused;
                 canShoot = !isPaused;
                 canLook = !isPaused;
+                canInteract = !isPaused;
+                Cursor.visible = isPaused;
 
-                if (isPaused)
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                }
-                else
-                {
-                    Cursor.lockState = CursorLockMode.None;
-                }
-
-                Cursor.visible = !isPaused;
                 HUD.GetComponent<HUD>().TogglePause(isPaused);
             }
+
+            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
         void OnTriggerEnter(Collider col)
