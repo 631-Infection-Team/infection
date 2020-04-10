@@ -41,27 +41,19 @@ namespace Infection
             }
         }
 
-        public virtual bool IsWorthUpdating()
-        {
-            return netIdentity.observers == null || netIdentity.observers.Count > 0;
-        }
-
         void Update()
         {
-            if (IsWorthUpdating())
+            if (isClient)
             {
-                if (isClient)
-                {
-                    UpdateClient();
-                }
-
-                if (isServer)
-                {
-                    state = UpdateServer();
-                }
-
-                Utils.InvokeMany(typeof(Entity), this, "Update_");
+                UpdateClient();
             }
+
+            if (isServer)
+            {
+                state = UpdateServer();
+            }
+
+            Utils.InvokeMany(typeof(Entity), this, "Update_");
         }
 
         public virtual bool CanAttack(Entity entity)
@@ -72,13 +64,6 @@ namespace Infection
         protected abstract string UpdateServer();
 
         protected abstract void UpdateClient();
-
-        [ClientRpc]
-        public void RpcOnRespawn()
-        {
-            gameObject.transform.position = NetRoomManager.netRoomManager.GetStartPosition().position;
-            health = healthMax;
-        }
 
         [Server]
         public virtual void DealDamageTo(Entity entity, float amount)

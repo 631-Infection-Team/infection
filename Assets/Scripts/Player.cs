@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections;
 using UnityEngine;
 
 namespace Infection
@@ -169,10 +170,29 @@ namespace Infection
             return state == "MOVING" && !IsMoving(); // only fire when stopped moving
         }
 
+        IEnumerator RespawnTimer()
+        {
+            yield return new WaitForSeconds(respawnTime);
+
+            health = healthMax;
+            state = "IDLE";
+
+            RpcOnRespawn();
+        }
+
+        [ClientRpc]
+        public void RpcOnRespawn()
+        {
+            Transform spawnPoint = NetRoomManager.netRoomManager.GetStartPosition();
+
+            gameObject.transform.position = spawnPoint.position;
+            state = "IDLE";
+        }
+
         [Command]
         public void CmdRespawn()
         {
-            RpcOnRespawn();
+            StartCoroutine(RespawnTimer());
         }
 
         // finite state machine - server
@@ -362,7 +382,7 @@ namespace Infection
 
             Vector3 currentAngles = cam.transform.localEulerAngles;
             currentAngles.x = verticalLook;
-            currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
+            // currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
 
             cam.transform.localEulerAngles = currentAngles;
 
@@ -389,7 +409,7 @@ namespace Infection
                 canInteract = !isPaused;
                 Cursor.visible = isPaused;
 
-                HUD.GetComponent<HUD>().TogglePause(isPaused);
+                HUD.GetComponent<HUD>().SetPaused(isPaused);
             }
 
             Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;

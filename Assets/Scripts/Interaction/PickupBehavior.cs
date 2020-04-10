@@ -6,10 +6,9 @@ namespace Infection.Interaction
     public class PickupBehavior : MonoBehaviour
     {
         [SerializeField] private float pickupRange = 4f;
-        [SerializeField] private LayerMask pickupMask;
+        [SerializeField] private LayerMask pickupMask = new LayerMask();
 
         private Camera _camera = null;
-
         private ItemPickup _raycastObj = null;
 
         private void Awake()
