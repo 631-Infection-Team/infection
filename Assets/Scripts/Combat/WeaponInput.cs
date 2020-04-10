@@ -6,12 +6,8 @@ namespace Infection.Combat
     [RequireComponent(typeof(Weapon))]
     public class WeaponInput : NetworkBehaviour
     {
-        /// <summary>
-        /// Prevent the player from controlling the weapon. Used for when the game is paused.
-        /// </summary>
-        public bool LockControl = false;
-
         // Components
+        private Player _player = null;
         private Weapon _weapon = null;
 
         // Properties
@@ -19,6 +15,7 @@ namespace Infection.Combat
 
         private void Awake()
         {
+            _player = GetComponent<Player>();
             _weapon = GetComponent<Weapon>();
         }
 
@@ -29,7 +26,7 @@ namespace Infection.Combat
                 return;
             }
 
-            if (LockControl)
+            if (!_player.canShoot)
             {
                 return;
             }

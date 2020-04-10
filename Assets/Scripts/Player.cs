@@ -35,6 +35,9 @@ namespace Infection
         [Header("Balance")]
         public int respawnTime = 5;
 
+        public string localPlayerLayer = "LocalPlayer";
+        public string remotePlayerLayer = "RemotePlayer";
+
         public enum Team
         {
             Spectator,
@@ -75,6 +78,8 @@ namespace Infection
         public override void OnStartClient()
         {
             base.OnStartClient();
+
+            gameObject.layer = LayerMask.NameToLayer(isLocalPlayer ? localPlayerLayer : remotePlayerLayer);
         }
 
         public override void OnStartServer()

@@ -436,6 +436,8 @@ MonoBehaviour:
   team: 1
   bloodImpactVfx: {fileID: 0}
   respawnTime: 5
+  localPlayerLayer: LocalPlayer
+  remotePlayerLayer: RemotePlayer
 --- !u!114 &7315649375351402718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,7 +703,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6810202792318848192}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8536225559644849835}
