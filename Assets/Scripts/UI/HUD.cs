@@ -71,8 +71,6 @@ namespace Infection
             isPaused = state;
             playerPanel.SetActive(!isPaused);
             pausePanel.SetActive(isPaused);
-
-            Player.localPlayer.canMove = !isPaused;
         }
 
         public void UpdateTimer(float timeLeft)

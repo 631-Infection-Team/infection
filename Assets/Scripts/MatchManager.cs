@@ -25,7 +25,7 @@ namespace Infection
         {
             if (!isServer) return;
 
-            SetState(game);
+            SetState(preGame);
             InvokeRepeating("Tick", 1f, 1f);
         }
 
