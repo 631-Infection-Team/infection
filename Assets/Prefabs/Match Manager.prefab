@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4918958100804580551}
   - component: {fileID: 4918958100804580549}
-  - component: {fileID: 4918958100804580548}
+  - component: {fileID: 2117562285273853747}
   m_Layer: 0
   m_Name: Match Manager
   m_TagString: Untagged
@@ -47,7 +47,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   m_AssetId: 
---- !u!114 &4918958100804580548
+--- !u!114 &2117562285273853747
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,10 +63,10 @@ MonoBehaviour:
   syncInterval: 0.1
   preGame:
     name: Pre-Game
-    time: 30
+    time: 10
   game:
     name: Game
-    time: 120
+    time: 15
   postGame:
     name: Post-Game
-    time: 30
+    time: 10

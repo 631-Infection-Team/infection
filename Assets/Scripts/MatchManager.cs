@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Infection
 {
-    public class Match : NetworkBehaviour
+    public class MatchManager : NetworkBehaviour
     {
         [System.Serializable]
         private class State
         {
-            public string name;
-            public int time;
+            public string name = "";
+            public int time = 0;
         }
 
         [Header("Settings")]
@@ -23,31 +23,43 @@ namespace Infection
         private int currentRound = 1;
         private void Start()
         {
-            SetState(game);
-            StartCoroutine(Tick());
-        }
+            if (!isServer) return;
 
-        private void SetState(State state)
-        {
-            this.state = state;
-            currentTime = state.time;
+            SetState(game);
+            InvokeRepeating("Tick", 1f, 1f);
         }
 
         [Server]
-        private IEnumerator Tick()
+        private void SetState(State state)
         {
-            if (!isServer) yield break;
+            this.state = state;
+            currentTime = state.time + 1;
+        }
 
-            while (currentTime > 0)
+        [Server]
+        private void Tick()
+        {
+            if (currentTime > 0)
             {
-                yield return new WaitForSecondsRealtime(1f);
-
                 currentTime -= 1;
                 RpcTick();
             }
-            
-            // Round over goto next state
-            // Make sure to increase current round
+            else
+            {
+                if (state == preGame)
+                {
+                    SetState(game);
+                    currentRound += 1;
+                }
+                else if (state == game)
+                {
+                    SetState(postGame);
+                }
+                else if (state == postGame)
+                {
+                    SetState(preGame);
+                }
+            }
         }
 
         [ClientRpc]

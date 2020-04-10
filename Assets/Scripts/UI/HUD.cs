@@ -12,7 +12,9 @@ namespace Infection
         public bool isPaused;
 
         [SerializeField] private Image crosshair = null;
-        [SerializeField] private GameObject pauseMenu = null;
+        [SerializeField] private GameObject playerPanel = null;
+        [SerializeField] private GameObject deadPanel = null;
+        [SerializeField] private GameObject pausePanel = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI alertMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI weaponNameDisplay = null;
@@ -64,10 +66,11 @@ namespace Infection
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
         }
 
-        public void TogglePause(bool state)
+        public void SetPaused(bool state)
         {
             isPaused = state;
-            pauseMenu.SetActive(isPaused);
+            playerPanel.SetActive(!isPaused);
+            pausePanel.SetActive(isPaused);
 
             Player.localPlayer.canMove = !isPaused;
         }
