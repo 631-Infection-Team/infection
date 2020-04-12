@@ -318,7 +318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  clientAuthority: 0
+  clientAuthority: 1
   animator: {fileID: 0}
 --- !u!143 &1575668633003622740
 CharacterController:

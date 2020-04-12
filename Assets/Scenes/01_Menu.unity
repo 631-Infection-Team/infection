@@ -3688,7 +3688,7 @@ GameObject:
   - component: {fileID: 550456080}
   - component: {fileID: 550456082}
   m_Layer: 0
-  m_Name: Network Room Manager
+  m_Name: NetworkRoomManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

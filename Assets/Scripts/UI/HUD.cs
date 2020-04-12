@@ -71,8 +71,6 @@ namespace Infection
             isPaused = state;
             playerPanel.SetActive(!isPaused);
             pausePanel.SetActive(isPaused);
-
-            Player.localPlayer.canMove = !isPaused;
         }
 
         public void UpdateTimer(float timeLeft)
@@ -80,12 +78,13 @@ namespace Infection
             int min = Mathf.FloorToInt(timeLeft / 60);
             int sec = Mathf.FloorToInt(timeLeft % 60);
 
+            timerDisplay.color = sec <= 10 ? new Color(255, 0, 0) : new Color(255, 255, 255);
             timerDisplay.text = min.ToString("00") + ":" + sec.ToString("00");
         }
 
-        public void UpdateRound(int number)
+        public void UpdateRound(string info)
         {
-            roundDisplay.text = "Round " + number.ToString();
+            roundDisplay.text = info;
         }
 
         private IEnumerator UpdateAlertMessage(string message, float duration)
