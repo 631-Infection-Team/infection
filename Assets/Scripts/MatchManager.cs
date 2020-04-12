@@ -20,13 +20,28 @@ namespace Infection
 
         private State state;
         private int currentTime = 0;
-        private int currentRound = 1;
+        private int currentRound = 0;
         private void Start()
         {
             if (!isServer) return;
 
             SetState(preGame);
             InvokeRepeating("Tick", 1f, 1f);
+        }
+
+        [Server]
+        private string GetRoundInfo()
+        {
+            if (!isServer) return "";
+
+            if (state == game)
+            {
+                return "Round " + currentRound;
+            }
+            else
+            {
+                return state.name;
+            }
         }
 
         [Server]
@@ -68,7 +83,7 @@ namespace Infection
             HUD hud = Player.localPlayer.HUD.GetComponent<HUD>();
 
             hud.UpdateTimer(currentTime);
-            hud.UpdateRound(currentRound);
+            hud.UpdateRound(GetRoundInfo());
         }
     }
 }
