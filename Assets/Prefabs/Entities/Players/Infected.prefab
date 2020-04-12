@@ -6004,6 +6004,11 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 8238577291356014918}
+    - target: {fileID: 5112528301519911423, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: clientAuthority
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6057538199351420654, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_LocalPosition.x

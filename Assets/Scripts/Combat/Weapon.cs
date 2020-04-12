@@ -136,6 +136,7 @@ namespace Infection.Combat
 
         private void Awake()
         {
+            raycastMask = LayerMask.GetMask("Default");
             _camera = GetComponent<Player>().cam;
             _playerAnimator = GetComponent<Player>().animator;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
@@ -298,8 +299,8 @@ namespace Infection.Combat
                     {
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
-                        CmdFire();
                         _playerAnimator.SetTrigger("Shoot_t");
+                        CmdFire();
 
                         // Play fire animation once per burst
                         if (!animationStarted)
@@ -322,8 +323,8 @@ namespace Infection.Combat
                     // Firing automatic or manual type weapon
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
-                    CmdFire();
                     _playerAnimator.SetTrigger("Shoot_t");
+                    CmdFire();
 
                     // Fire animation
                     _weaponHolderAnimator.SetTrigger("Fire");
@@ -494,7 +495,7 @@ namespace Infection.Combat
         [Command]
         public void CmdFire()
         {
-            if (Player.localPlayer.health <= 0) return;
+            if (!Player.localPlayer.canShoot) return;
 
             Vector3 influence = CalculateAccuracyInfluence();
 
