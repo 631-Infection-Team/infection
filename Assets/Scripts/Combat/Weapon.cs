@@ -569,7 +569,7 @@ namespace Infection.Combat
         [ClientRpc]
         public void RpcOnFire()
         {
-            // Do client things that should replicate between all clients
+            if (!Player.localPlayer.canShoot) return;
         }
 
         /// <summary>

@@ -175,29 +175,33 @@ namespace Infection
             return state == "MOVING" && !IsMoving(); // only fire when stopped moving
         }
 
-        IEnumerator RespawnTimer()
+        [ClientRpc]
+        public override void RpcOnDamageReceived(int amount)
         {
-            yield return new WaitForSeconds(respawnTime);
-
-            health = healthMax;
-            state = "IDLE";
-
-            RpcOnRespawn();
+            HUD hud = HUD.GetComponent<HUD>();
+            hud.SetHealth(health);
+            hud.SetHealthMax(healthMax);
         }
 
         [ClientRpc]
         public void RpcOnRespawn()
         {
             Transform spawnPoint = NetRoomManager.netRoomManager.GetStartPosition();
-
             gameObject.transform.position = spawnPoint.position;
             state = "IDLE";
+
+            HUD hud = HUD.GetComponent<HUD>();
+            hud.SetHealth(health);
+            hud.SetHealthMax(healthMax);
         }
 
         [Command]
         public void CmdRespawn()
         {
-            StartCoroutine(RespawnTimer());
+            health = healthMax;
+            state = "IDLE";
+
+            RpcOnRespawn();
         }
 
         // finite state machine - server

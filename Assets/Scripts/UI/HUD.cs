@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Infection.Combat;
 using Mirror;
 using TMPro;
@@ -15,6 +16,7 @@ namespace Infection
         [SerializeField] private GameObject playerPanel = null;
         [SerializeField] private GameObject deadPanel = null;
         [SerializeField] private GameObject pausePanel = null;
+        [SerializeField] private TextMeshProUGUI healthValueDisplay = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI alertMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI weaponNameDisplay = null;
@@ -22,6 +24,7 @@ namespace Infection
         [SerializeField] private TextMeshProUGUI reservesDisplay = null;
         [SerializeField] private TextMeshProUGUI timerDisplay = null;
         [SerializeField] private TextMeshProUGUI roundDisplay = null;
+        [SerializeField] private Slider healthSliderDisplay = null;
         [SerializeField] private Weapon playerWeapon = null;
 
         private float _originalCrosshairOpacity = 0f;
@@ -85,6 +88,17 @@ namespace Infection
         public void UpdateRound(string info)
         {
             roundDisplay.text = info;
+        }
+
+        public void SetHealthMax(int healthMax)
+        {
+            healthSliderDisplay.maxValue = healthMax;
+        }
+
+        public void SetHealth(int health)
+        {
+            healthValueDisplay.text = health.ToString();
+            healthSliderDisplay.value = health;
         }
 
         private IEnumerator UpdateAlertMessage(string message, float duration)

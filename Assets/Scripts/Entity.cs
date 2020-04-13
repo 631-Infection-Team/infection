@@ -6,11 +6,11 @@ namespace Infection
     public abstract partial class Entity : NetworkBehaviour
     {
         [Header("State")]
-        [SyncVar, SerializeField] public string state = "IDLE";
+        [SyncVar] public string state = "IDLE";
 
         [Header("Health")]
-        [SerializeField] protected int healthMax = 100;
         [SyncVar] public int health = 100;
+        public int healthMax = 100;
 
         [Header("Components")]
         public Animator animator;
@@ -80,7 +80,7 @@ namespace Infection
         }
 
         [ClientRpc]
-        void RpcOnDamageReceived(int amount)
+        public virtual void RpcOnDamageReceived(int amount)
         {
             Utils.InvokeMany(typeof(Entity), this, "OnDamageReceived_", amount);
         }

@@ -1230,6 +1230,7 @@ MonoBehaviour:
   playerPanel: {fileID: 8793184040588917448}
   deadPanel: {fileID: 8944225923567005416}
   pausePanel: {fileID: 8376310534343971783}
+  healthValueDisplay: {fileID: 8804496512578497175}
   statusMessageDisplay: {fileID: 2888676023010288973}
   alertMessageDisplay: {fileID: 2004372477428830609}
   weaponNameDisplay: {fileID: 999029430281964329}
@@ -1237,6 +1238,7 @@ MonoBehaviour:
   reservesDisplay: {fileID: 2664191513313324760}
   timerDisplay: {fileID: 5248322230953649036}
   roundDisplay: {fileID: 1060834557947926057}
+  healthSliderDisplay: {fileID: 578383391338863414}
   playerWeapon: {fileID: 0}
 --- !u!1 &3863822202247467387
 GameObject:
