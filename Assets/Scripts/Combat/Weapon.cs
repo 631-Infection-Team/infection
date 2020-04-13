@@ -163,10 +163,8 @@ namespace Infection.Combat
             // Spawn the weapon model and play ready weapon animation
             UpdateAnimatorOverride();
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
-            CurrentState = WeaponState.Switching;
             StartCoroutine(ReadyAnimation());
             OnWeaponChange?.Invoke();
-            CurrentState = WeaponState.Idle;
             UpdateWeaponModel();
         }
 
@@ -719,6 +717,7 @@ namespace Infection.Combat
         /// <returns>Ready animation</returns>
         private IEnumerator ReadyAnimation()
         {
+            CurrentState = WeaponState.Switching;
             // Start playing animation for ready time
             _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
             _weaponHolderAnimator.SetBool("Ready", true);
@@ -729,6 +728,7 @@ namespace Infection.Combat
             // Reset animator parameters
             _weaponHolderAnimator.SetBool("Ready", false);
             _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
+            CurrentState = WeaponState.Idle;
         }
 
         public class StateChangedEventArgs : EventArgs
