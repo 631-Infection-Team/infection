@@ -31,16 +31,6 @@ namespace Infection
             SetState(preGame);
         }
 
-        [Server]
-        private void SetState(State state)
-        {
-            if (!isServer) return;
-
-            this.state = state;
-            currentTime = state.time + 1;
-        }
-
-        [Server]
         private void Update()
         {
             if (!isServer) return;
@@ -72,6 +62,15 @@ namespace Infection
                     }
                 }
             }
+        }
+
+        [Server]
+        private void SetState(State state)
+        {
+            if (!isServer) return;
+
+            this.state = state;
+            currentTime = state.time;
         }
 
         [ClientRpc]
