@@ -8,33 +8,6 @@ namespace Infection
     public class Player : Entity
     {
         public static Player localPlayer;
-
-        [Header("Components")]
-        public Camera cam = null;
-        public GameObject model = null;
-        public GameObject HUD = null;
-
-        [Header("Movement")]
-        public float walkSpeed = 8f;
-        public float runSpeed = 12f;
-        public float JumpSpeed = 5f;
-        public bool canMove = true;
-        public bool canShoot = true;
-        public bool canLook = true;
-        public bool canInteract = true;
-        public bool isGrounded = false;
-        [SyncVar] public float verticalLook;
-        public float horizontalLook;
-
-        [Header("Team")]
-        [SyncVar] public Team team = Team.Survivor;
-
-        [Header("Visual Effects")]
-        public GameObject bloodImpactVfx = null;
-
-        [Header("Balance")]
-        public int respawnTime = 5;
-
         public enum Team
         {
             Spectator,
@@ -42,19 +15,42 @@ namespace Infection
             Infected
         }
 
+        public enum State
+        {
+            Idle,
+            Moving,
+            Dead
+        }
+
+        [Header("Components")]
+        public Camera cam = null;
+        public GameObject model = null;
+        public GameObject HUD = null;
+        public GameObject bloodImpactVfx = null;
+        public Animator animator = null;
+
+        [Header("Movement")]
+        public float walkSpeed = 8f;
+        public float runSpeed = 12f;
+        public float JumpSpeed = 5f;
+        public float verticalLook = 0f;
+        public float horizontalLook = 0f;
+        public bool canMove = true;
+        public bool canShoot = true;
+        public bool canLook = true;
+        public bool canInteract = true;
+        public bool isGrounded = false;
+
+        [Header("Configuration")]
+        [SyncVar] public Team team = Team.Survivor;
+        [SyncVar] public State state = State.Idle;
+
         private CharacterController characterController;
         private Vector3 move;
         private float speedAtJump;
         private float verticalSpeed;
         private float lastGrounded;
         private bool isPaused;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            Utils.InvokeMany(typeof(Player), this, "Awake_");
-        }
 
         public override void OnStartLocalPlayer()
         {
@@ -64,52 +60,42 @@ namespace Infection
             cam.gameObject.SetActive(true);
             model.gameObject.SetActive(false);
 
-            isGrounded = true;
-            verticalLook = 0.0f;
             horizontalLook = gameObject.transform.localEulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
-
-            Utils.InvokeMany(typeof(Player), this, "OnStartLocalPlayer_");
         }
 
-        public override void OnStartClient()
+        private void Start()
         {
-            base.OnStartClient();
-        }
-
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
-
-            Utils.InvokeMany(typeof(Player), this, "OnStartServer_");
-        }
-
-        protected override void Start()
-        {
-            if (!isServer && !isClient) return;
-
             characterController = gameObject.GetComponent<CharacterController>();
+            animator = gameObject.GetComponentInChildren<Animator>();
+        }
 
-            base.Start();
+        private void Update()
+        {
+            if (isLocalPlayer)
+            {
+                if (state == State.Dead)
+                {
+                    CmdRespawn();
+                }
+                else
+                {
+                    CameraHandler();
+                    MovementHandler();
+                    GravityHandler();
+                }
 
-            Utils.InvokeMany(typeof(Player), this, "Start_");
+                InputHandler();
+            }
         }
 
         private void LateUpdate()
         {
-            // pass parameters to animation state machine
-            // => passing the states directly is the most reliable way to avoid all
-            //    kinds of glitches like movement sliding, attack twitching, etc.
-            // => make sure to import all looping animations like idle/run/attack
-            //    with 'loop time' enabled, otherwise the client might only play it
-            //    once
-            // => MOVING state is set to local IsMovement result directly. otherwise
-            //    we would see animation latencies for rubberband movement if we
-            //    have to wait for MOVING state to be received from the server
-
-            UpdateAnimator();
-
-            Utils.InvokeMany(typeof(Player), this, "LateUpdate_");
+            animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
+            animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2f);
+            animator.SetFloat("Speed_f", move.magnitude);
+            animator.SetBool("Death_b", state == State.Dead);
+            animator.SetBool("Grounded", true);
         }
 
         private void OnTriggerEnter(Collider col)
@@ -120,54 +106,31 @@ namespace Infection
             {
                 if (zone.zoneType == Zone.ZoneTypes.Kill)
                 {
-                    Debug.Log("Hit a kill trigger.");
-
                     DealDamageTo(this, health);
                 }
             }
         }
 
-        private void UpdateAnimator()
-        {
-            animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
-            animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2);
-
-            animator.SetFloat("Speed_f", move.magnitude);
-            animator.SetBool("Death_b", state == "DEAD");
-            animator.SetBool("Grounded", true);
-        }
-
         private void OnDestroy()
         {
-            if (!isServer && !isClient) return;
-
             if (isLocalPlayer)
             {
                 localPlayer = null;
             }
-
-            Utils.InvokeMany(typeof(Player), this, "OnDestroy_");
         }
 
-        public bool IsMoving()
+        public void DealDamageTo(Player player, float amount)
         {
-            return move != Vector3.zero;
-        }
+            if (CanAttack(player))
+            {
+                player.health -= Mathf.RoundToInt(amount);
+                player.RpcOnDamageReceived(Mathf.RoundToInt(amount));
 
-        // finite state machine events
-        bool EventDied()
-        {
-            return health <= 0;
-        }
-
-        bool EventMoveStart()
-        {
-            return state != "MOVING" && IsMoving(); // only fire when started moving
-        }
-
-        bool EventMoveEnd()
-        {
-            return state == "MOVING" && !IsMoving(); // only fire when stopped moving
+                if (player.health <= 0)
+                {
+                    player.state = State.Dead;
+                }
+            }
         }
 
         [ClientRpc]
@@ -183,7 +146,6 @@ namespace Infection
         {
             Transform spawnPoint = NetRoomManager.netRoomManager.GetStartPosition();
             gameObject.transform.position = spawnPoint.position;
-            state = "IDLE";
 
             HUD hud = HUD.GetComponent<HUD>();
             hud.SetHealth(health);
@@ -193,122 +155,13 @@ namespace Infection
         [Command]
         public void CmdRespawn()
         {
+            state = State.Idle;
             health = healthMax;
-            state = "IDLE";
 
             RpcOnRespawn();
         }
 
-        // finite state machine - server
-        [Server]
-        string UpdateServer_IDLE()
-        {
-            if (EventDied())
-            {
-                OnDeath();
-                return "DEAD";
-            }
-            if (EventMoveStart())
-            {
-                return "MOVING";
-            }
-            if (EventMoveEnd()) { }
-
-            return "IDLE";
-        }
-
-        [Server]
-        string UpdateServer_MOVING()
-        {
-            if (EventDied())
-            {
-                OnDeath();
-                return "DEAD";
-            }
-            if (EventMoveEnd())
-            {
-                return "IDLE";
-            }
-            if (EventMoveStart()) { }
-
-            return "MOVING";
-        }
-
-        [Server]
-        string UpdateServer_DEAD()
-        {
-            if (EventMoveStart()) { }
-            if (EventMoveEnd()) { }
-            if (EventDied()) { }
-
-            return "DEAD";
-        }
-
-        [Server]
-        protected override string UpdateServer()
-        {
-            if (state == "IDLE") return UpdateServer_IDLE();
-            if (state == "MOVING") return UpdateServer_MOVING();
-            if (state == "DEAD") return UpdateServer_DEAD();
-
-            Debug.LogError("invalid state:" + state);
-            return "IDLE";
-        }
-
-        [Server]
-        protected override void OnDeath()
-        {
-            base.OnDeath();
-        }
-
-        // finite state machine - client
-        [Client]
-        protected override void UpdateClient()
-        {
-            if (isLocalPlayer)
-            {
-                if (state != "DEAD")
-                {
-                    CameraHandler();
-                    MovementHandler();
-                }
-                else if (state == "DEAD")
-                {
-                    CmdRespawn();
-                }
-                else
-                {
-                    Debug.LogError("invalid state:" + state);
-                }
-
-                InputHandler();
-                GravityHandler();
-            }
-
-            Utils.InvokeMany(typeof(Player), this, "UpdateClient_");
-        }
-
-        public override bool CanAttack(Entity entity)
-        {
-            // Can only attack other players who aren't on the same team as you.
-            // Disabled until we can test this easier.
-            /**
-            if (entity is Player)
-            {
-                Player victim = (Player)entity;
-                return base.CanAttack(entity) && team != victim.team;
-            }
-            else
-            {
-                return base.CanAttack(entity) && entity;
-            }
-            **/
-
-            return base.CanAttack(entity) && entity is Player;
-        }
-
-        [Client]
-        void GravityHandler()
+        private void GravityHandler()
         {
             verticalSpeed += Physics.gravity.y * Time.deltaTime;
             verticalSpeed = Mathf.Clamp(verticalSpeed, Physics.gravity.y * 2, JumpSpeed);
@@ -319,8 +172,7 @@ namespace Infection
             if ((flag & CollisionFlags.Below) != 0) verticalSpeed = 0;
         }
 
-        [Client]
-        void MovementHandler()
+        private void MovementHandler()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
             float inputVertical = Input.GetAxis("Vertical");
@@ -328,7 +180,12 @@ namespace Infection
             bool inputRun = Input.GetButton("Run");
             bool lostFooting = false;
 
-            if (!characterController.isGrounded)
+            if (characterController.isGrounded)
+            {
+                lastGrounded = 0f;
+                isGrounded = true;
+            }
+            else
             {
                 if (isGrounded)
                 {
@@ -341,66 +198,58 @@ namespace Infection
                     }
                 }
             }
-            else
+
+            if (canMove)
             {
-                lastGrounded = 0f;
-                isGrounded = true;
+                if (isGrounded && inputJump)
+                {
+                    verticalSpeed = JumpSpeed;
+                    isGrounded = false;
+                    lostFooting = true;
+                }
+
+                float actualSpeed = inputRun ? runSpeed : walkSpeed;
+                if (lostFooting) speedAtJump = actualSpeed;
+
+                move = new Vector3(inputHorizontal, 0, inputVertical);
+                if (move.magnitude > 1) move = move.normalized;
+
+                float calcSpeed = isGrounded ? actualSpeed : speedAtJump;
+                move = move * calcSpeed * Time.deltaTime;
+                move = transform.TransformDirection(move);
+
+                characterController.Move(move);
             }
-
-            if (!canMove) return;
-
-            if (isGrounded && inputJump)
-            {
-                verticalSpeed = JumpSpeed;
-                isGrounded = false;
-                lostFooting = true;
-            }
-
-            float actualSpeed = inputRun ? runSpeed : walkSpeed;
-            if (lostFooting) speedAtJump = actualSpeed;
-
-            move = new Vector3(inputHorizontal, 0, inputVertical);
-            if (move.magnitude > 1) move = move.normalized;
-
-            float calcSpeed = isGrounded ? actualSpeed : speedAtJump;
-            move = move * calcSpeed * Time.deltaTime;
-            move = transform.TransformDirection(move);
-
-            characterController.Move(move);
-
-            // draw direction for debugging
-            // Debug.DrawLine(transform.position, transform.position + direction, Color.green, 0, false);
         }
 
-        [Client]
-        void CameraHandler()
+        private void CameraHandler()
         {
-            if (!canLook) return;
+            if (canLook)
+            {
+                float lookY = Input.GetAxis("Look Y");
+                float lookX = Input.GetAxis("Look X");
 
-            float lookY = Input.GetAxis("Look Y");
-            float lookX = Input.GetAxis("Look X");
+                verticalLook -= lookY;
+                if (verticalLook > 90f) verticalLook = 90f;
+                if (verticalLook < -90f) verticalLook = -90f;
 
-            verticalLook -= lookY;
-            if (verticalLook > 90f) verticalLook = 90f;
-            if (verticalLook < -90f) verticalLook = -90f;
+                Vector3 currentAngles = cam.transform.localEulerAngles;
+                currentAngles.x = verticalLook;
+                // currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
 
-            Vector3 currentAngles = cam.transform.localEulerAngles;
-            currentAngles.x = verticalLook;
-            // currentAngles.z = Vector3.Dot(characterController.velocity, -transform.right);
+                cam.transform.localEulerAngles = currentAngles;
 
-            cam.transform.localEulerAngles = currentAngles;
+                horizontalLook += lookX;
+                if (horizontalLook > 360) horizontalLook -= 360.0f;
+                if (horizontalLook < 0) horizontalLook += 360.0f;
 
-            horizontalLook += lookX;
-            if (horizontalLook > 360) horizontalLook -= 360.0f;
-            if (horizontalLook < 0) horizontalLook += 360.0f;
-
-            currentAngles = transform.localEulerAngles;
-            currentAngles.y = horizontalLook;
-            transform.localEulerAngles = currentAngles;
+                currentAngles = transform.localEulerAngles;
+                currentAngles.y = horizontalLook;
+                transform.localEulerAngles = currentAngles;
+            }
         }
 
-        [Client]
-        void InputHandler()
+        private void InputHandler()
         {
             bool pause = Input.GetKeyDown(KeyCode.Escape);
 
