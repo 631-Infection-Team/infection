@@ -2171,7 +2171,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8238577291348872594}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: dbbc53a6bc8f5c64bb234194ce1380aa, type: 3}
   m_Controller: {fileID: 9100000, guid: 92c93b80307cf90438fcfadd52eab10c, type: 2}
   m_CullingMode: 1
@@ -5942,12 +5942,17 @@ PrefabInstance:
     - target: {fileID: 1575668633003622740, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_Height
-      value: 2.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1575668633003622740, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_Radius
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1575668633003622740, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1771029896984945644, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
@@ -6079,6 +6084,11 @@ PrefabInstance:
       propertyPath: HUD
       value: 
       objectReference: {fileID: 5145629997517809711}
+    - target: {fileID: 6338752244662701214, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: team
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6825092283269041638, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_AssetId
