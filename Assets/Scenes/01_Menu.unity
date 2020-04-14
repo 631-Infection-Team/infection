@@ -6511,6 +6511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1151974915}
   - component: {fileID: 1151974916}
+  - component: {fileID: 1151974918}
   - component: {fileID: 1151974917}
   m_Layer: 0
   m_Name: Menus
@@ -6567,7 +6568,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: 
-  Event: 
+  Event: event:/UI_Click
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
+--- !u!114 &1151974918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151974914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/UI_Hover
   PlayEvent: 0
   StopEvent: 0
   AllowFadeout: 1
@@ -7038,7 +7062,6 @@ GameObject:
   - component: {fileID: 1189055624}
   - component: {fileID: 1189055626}
   - component: {fileID: 1189055625}
-  - component: {fileID: 1189055627}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7184,29 +7207,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189055623}
   m_CullTransparentMesh: 0
---- !u!114 &1189055627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1189055623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: Player
-  Event: event:/UI_Hover
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 0
-  OverrideMaxDistance: 0
 --- !u!1001 &1193172763
 PrefabInstance:
   m_ObjectHideFlags: 0
