@@ -7,6 +7,8 @@ namespace Infection.Interaction
     {
         [SerializeField] private WeaponItem weaponItem = null;
 
+        public override string ItemName => weaponItem.WeaponDefinition.WeaponName;
+
         public WeaponItem WeaponItem
         {
             get => weaponItem;

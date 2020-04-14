@@ -24,6 +24,7 @@ namespace Infection.Interaction
             _meshRenderer.material = isHighlight ? highlightMaterial : _baseMaterial;
         }
 
+        public abstract string ItemName { get; }
         public abstract void GrantPickup(PickupBehavior pickupBehavior);
     }
 }
