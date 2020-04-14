@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Infection.Combat;
+using Infection.Interaction;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Infection
         [SerializeField] private TextMeshProUGUI healthValueDisplay = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI alertMessageDisplay = null;
+        [SerializeField] private TextMeshProUGUI interactionMessageDisplay = null;
         [SerializeField] private TextMeshProUGUI weaponNameDisplay = null;
         [SerializeField] private TextMeshProUGUI magazineDisplay = null;
         [SerializeField] private TextMeshProUGUI reservesDisplay = null;
@@ -26,6 +28,7 @@ namespace Infection
         [SerializeField] private TextMeshProUGUI roundDisplay = null;
         [SerializeField] private Slider healthSliderDisplay = null;
         [SerializeField] private Weapon playerWeapon = null;
+        [SerializeField] private PickupBehavior playerPickupBehavior = null;
 
         private float _originalCrosshairOpacity = 0f;
         private Vector3 _originalCrosshairSize;
@@ -44,6 +47,8 @@ namespace Infection
             timerDisplay.text = "";
             roundDisplay.text = "";
 
+            interactionMessageDisplay.gameObject.SetActive(false);
+
             // Set weapon info at start
             UpdateWeaponAmmoDisplay();
             UpdateWeaponNameDisplay();
@@ -56,6 +61,8 @@ namespace Infection
             playerWeapon.OnAimingChange += UpdateCrosshairOpacity;
             playerWeapon.OnRecoil += ExpandCrosshair;
             playerWeapon.OnAlertEvent += UpdateAlertMessage;
+
+            playerPickupBehavior.OnLookAt += UpdateInteractionMessage;
         }
 
         private void OnDisable()
@@ -67,6 +74,8 @@ namespace Infection
             playerWeapon.OnAimingChange -= UpdateCrosshairOpacity;
             playerWeapon.OnRecoil -= ExpandCrosshair;
             playerWeapon.OnAlertEvent -= UpdateAlertMessage;
+
+            playerPickupBehavior.OnLookAt -= UpdateInteractionMessage;
         }
 
         public void SetPaused(bool state)
@@ -158,6 +167,12 @@ namespace Infection
                     break;
             }
             statusMessageDisplay.text = statusMessage;
+        }
+
+        private void UpdateInteractionMessage(string s)
+        {
+            interactionMessageDisplay.text = s != null ? $"Pickup {s}" : "";
+            interactionMessageDisplay.gameObject.SetActive(s != null);
         }
     }
 }
