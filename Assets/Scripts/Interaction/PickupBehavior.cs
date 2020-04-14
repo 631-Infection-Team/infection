@@ -8,6 +8,9 @@ namespace Infection.Interaction
         [SerializeField] private float pickupRange = 4f;
         [SerializeField] private LayerMask pickupMask = new LayerMask();
 
+        public event LookAt OnLookAt;
+        public delegate void LookAt(string name);
+
         private Camera _camera = null;
         private Player _player = null;
 
@@ -43,6 +46,7 @@ namespace Infection.Interaction
                     // Store target and change material to highlight material
                     _raycastObj = pickup;
                     _raycastObj.Highlight(true);
+                    OnLookAt?.Invoke(_raycastObj.ItemName);
                 }
                 // Pickup button has been pressed
                 if (Input.GetButtonDown("Pickup"))
@@ -50,6 +54,7 @@ namespace Infection.Interaction
                     if (pickup != null)
                     {
                         PickupItem(pickup);
+                        ResetTarget();
                     }
                 }
             }
@@ -58,9 +63,7 @@ namespace Infection.Interaction
                 // Not pointing at any target
                 if (_raycastObj != null)
                 {
-                    // Reset previous target material and clear reference
-                    _raycastObj.Highlight(false);
-                    _raycastObj = null;
+                    ResetTarget();
                 }
             }
         }
@@ -69,6 +72,14 @@ namespace Infection.Interaction
         {
             pickup.GrantPickup(this);
             Debug.Log("Picked up item: " + pickup);
+        }
+
+        private void ResetTarget()
+        {
+            // Reset previous target material and clear reference
+            _raycastObj.Highlight(false);
+            _raycastObj = null;
+            OnLookAt?.Invoke(null);
         }
     }
 }

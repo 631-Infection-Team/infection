@@ -1151,6 +1151,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3973022533197991997, guid: 6ca088554fae7b54fbfa60b9f0c54d11,
+        type: 3}
+      propertyPath: playerWeapon
+      value: 
+      objectReference: {fileID: 5562973679141694101}
+    - target: {fileID: 3973022533197991997, guid: 6ca088554fae7b54fbfa60b9f0c54d11,
+        type: 3}
+      propertyPath: playerPickupBehavior
+      value: 
+      objectReference: {fileID: 6291546893828503028}
     - target: {fileID: 4544052739217422675, guid: 6ca088554fae7b54fbfa60b9f0c54d11,
         type: 3}
       propertyPath: m_textInfo.characterCount
