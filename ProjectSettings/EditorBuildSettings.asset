@@ -1,2 +1,8 @@
-oid sha256:1277a030cd413258c2c55d94b44c515b9fded7d171c3dd9908ab99c6f42a330f
-size 659
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes: []
+  m_configObjects: {}
