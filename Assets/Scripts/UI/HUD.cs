@@ -33,6 +33,18 @@ namespace Infection
         private float _originalCrosshairOpacity = 0f;
         private Vector3 _originalCrosshairSize;
 
+        // HUD animations
+        private Animation _healthTextAnim = null;
+        private Animation _magazineAnim = null;
+        private Animation _timerAnim = null;
+
+        private void Awake()
+        {
+            _healthTextAnim = healthValueDisplay.gameObject.GetComponent<Animation>();
+            _magazineAnim = magazineDisplay.gameObject.GetComponent<Animation>();
+            _timerAnim = timerDisplay.gameObject.GetComponent<Animation>();
+        }
+
         private void Start()
         {
             _originalCrosshairOpacity = crosshair.color.a;
@@ -90,8 +102,11 @@ namespace Infection
             int min = Mathf.FloorToInt(timeLeft / 60);
             int sec = Mathf.FloorToInt(timeLeft % 60);
 
-            timerDisplay.color = sec <= 10 ? new Color(255, 0, 0) : new Color(255, 255, 255);
+            timerDisplay.color = sec <= 10 ? new Color(255, 0, 0, 0.8f) : new Color(255, 255, 255, 0.8f);
             timerDisplay.text = min.ToString("00") + ":" + sec.ToString("00");
+
+            // Round Timer animation
+            _timerAnim.Play();
         }
 
         public void UpdateRound(string info)
@@ -108,6 +123,13 @@ namespace Infection
         {
             healthValueDisplay.text = health.ToString();
             healthSliderDisplay.value = health;
+
+            // Health Text animation
+            if (_healthTextAnim.isPlaying)
+            {
+                _healthTextAnim.Stop();
+            }
+            _healthTextAnim.Play();
         }
 
         private IEnumerator UpdateAlertMessage(string message, float duration)
@@ -120,6 +142,13 @@ namespace Infection
         private void UpdateWeaponAmmoDisplay()
         {
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
+
+            // Magazine animation
+            if (_magazineAnim.isPlaying)
+            {
+                _magazineAnim.Stop();
+            }
+            _magazineAnim.Play();
 
             if (playerWeapon.CurrentWeapon.Reserves < 0)
             {
