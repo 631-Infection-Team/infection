@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: 
-  Event: event:/weapon_AK
+  Event: event:/Player/Weapons/weapon_AK
   PlayEvent: 11
   StopEvent: 0
   AllowFadeout: 1

@@ -123,8 +123,8 @@ namespace Infection
         {
             if (CanAttack(player))
             {
-                player.health -= Mathf.RoundToInt(amount);
-                player.RpcOnDamageReceived(Mathf.RoundToInt(amount));
+                player.health -= Mathf.Clamp(Mathf.RoundToInt(amount), 0, healthMax);
+                player.RpcOnDamageReceived(Mathf.Clamp(Mathf.RoundToInt(amount), 0, healthMax));
 
                 if (player.health <= 0)
                 {
@@ -136,20 +136,26 @@ namespace Infection
         [ClientRpc]
         public override void RpcOnDamageReceived(int amount)
         {
-            HUD hud = HUD.GetComponent<HUD>();
-            hud.SetHealth(health);
-            hud.SetHealthMax(healthMax);
+            if (isLocalPlayer)
+            {
+                HUD hud = HUD.GetComponent<HUD>();
+                hud.SetHealth(health);
+                hud.SetHealthMax(healthMax);
+            }
         }
 
         [ClientRpc]
         public void RpcOnRespawn()
         {
-            Transform spawnPoint = NetRoomManager.netRoomManager.GetStartPosition();
-            gameObject.transform.position = spawnPoint.position;
+            if (isLocalPlayer)
+            {
+                Transform spawnPoint = NetRoomManager.netRoomManager.GetStartPosition();
+                gameObject.transform.position = spawnPoint.position;
 
-            HUD hud = HUD.GetComponent<HUD>();
-            hud.SetHealth(health);
-            hud.SetHealthMax(healthMax);
+                HUD hud = HUD.GetComponent<HUD>();
+                hud.SetHealth(health);
+                hud.SetHealthMax(healthMax);
+            }
         }
 
         [Command]
