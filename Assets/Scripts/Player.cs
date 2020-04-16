@@ -123,7 +123,7 @@ namespace Infection
         {
             if (CanAttack(victim))
             {
-                victim.health -= Mathf.Clamp(Mathf.RoundToInt(amount), 0, healthMax);
+                victim.health = Mathf.Clamp(Mathf.RoundToInt(victim.health - amount), 0, healthMax);
                 victim.RpcOnDamageReceived(victim.health);
 
                 if (victim.health <= 0)
