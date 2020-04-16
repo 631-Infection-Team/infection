@@ -43,11 +43,13 @@ namespace Infection.UI
 
         public void Quit()
         {
-#if UNITY_EDITOR
+            #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
-#else
+            
+            #else
             Application.Quit();
-#endif
+            
+            #endif
         }
     }
 }
