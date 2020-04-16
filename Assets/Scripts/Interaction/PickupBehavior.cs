@@ -18,8 +18,8 @@ namespace Infection.Interaction
 
         private void Awake()
         {
-            _camera = GetComponent<Player>().cam;
             _player = GetComponent<Player>();
+            _camera = _player.cam;
         }
 
         private void Update()
@@ -71,7 +71,6 @@ namespace Infection.Interaction
         private void PickupItem(IPickup pickup)
         {
             pickup.GrantPickup(this);
-            Debug.Log("Picked up item: " + pickup);
         }
 
         private void ResetTarget()
