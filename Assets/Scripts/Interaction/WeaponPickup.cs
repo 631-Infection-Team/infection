@@ -15,7 +15,7 @@ namespace Infection.Interaction
             set => weaponItem = value;
         }
 
-        public override void GrantPickup(PickupBehavior pickupBehavior)
+        protected override void OnGrantPickup(PickupBehavior pickupBehavior)
         {
             if (WeaponItem == null)
             {
@@ -41,7 +41,7 @@ namespace Infection.Interaction
                 // TODO: Player should not be on "Default" layer, otherwise player will collide with the object when dropping old weapon
                 pickup.GetComponent<Rigidbody>().AddRelativeForce(2f, 5f, 0f, ForceMode.Impulse);
 
-                // Destroy this weapon pickup because player just picked it up
+                // Destroy this pickup because player just picked it up
                 Destroy(gameObject);
             }
         }
