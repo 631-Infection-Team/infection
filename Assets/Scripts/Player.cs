@@ -31,7 +31,7 @@ namespace Infection
 
         [Header("Movement")]
         public float walkSpeed = 8f;
-        public float runSpeed = 12f;
+        public float runSpeed = 48f;
         public float JumpSpeed = 5f;
         public float verticalLook = 0f;
         public float horizontalLook = 0f;

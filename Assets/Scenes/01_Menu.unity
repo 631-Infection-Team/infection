@@ -71,7 +71,7 @@ LightmapSettings:
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
-    m_BakeBackend: 2
+    m_BakeBackend: 1
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
@@ -2218,7 +2218,7 @@ GameObject:
   - component: {fileID: 338424123}
   - component: {fileID: 338424122}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Quality_Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4666,7 +4666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
+  m_sendNavigationEvents: 0
   m_DragThreshold: 10
 --- !u!4 &693270575
 Transform:
@@ -11607,7 +11607,7 @@ GameObject:
   - component: {fileID: 1725246355}
   - component: {fileID: 1725246354}
   m_Layer: 5
-  m_Name: Title
+  m_Name: Setting_Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18268,7 +18268,7 @@ GameObject:
   - component: {fileID: 2043064131}
   - component: {fileID: 2043064130}
   m_Layer: 5
-  m_Name: Subtitle
+  m_Name: Video_Subtitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
