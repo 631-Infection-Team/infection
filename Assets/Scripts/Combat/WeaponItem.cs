@@ -49,6 +49,9 @@ namespace Infection.Combat
             reserves -= ammoToAdd;
         }
 
+        /// <summary>
+        /// Fill up magazine to max clip size and reserves to max reserves.
+        /// </summary>
         public void FillUpAmmo()
         {
             magazine = WeaponDefinition.ClipSize;
