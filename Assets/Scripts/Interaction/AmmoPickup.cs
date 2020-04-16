@@ -1,4 +1,6 @@
-﻿using Infection.Combat;
+﻿using UnityEngine;
+using Infection.Combat;
+using FMODUnity;
 
 namespace Infection.Interaction
 {

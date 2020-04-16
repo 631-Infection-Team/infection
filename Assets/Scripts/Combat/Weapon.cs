@@ -362,7 +362,7 @@ namespace Infection.Combat
         public IEnumerator ReloadWeapon()
         {
             // Cannot reload weapon if dead
-            if (Player.localPlayer.health <= 0)
+            if (!Player.localPlayer.canShoot)
             {
                 yield break;
             }
