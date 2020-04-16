@@ -573,6 +573,19 @@ namespace Infection.Combat
         }
 
         /// <summary>
+        /// Fill up all weapons to max ammo and reserves.
+        /// </summary>
+        public void RefillAmmo()
+        {
+            foreach (WeaponItem weaponItem in heldWeapons)
+            {
+                weaponItem.FillUpAmmo();
+            }
+
+            OnAmmoChange?.Invoke();
+        }
+
+        /// <summary>
         /// Generate Vector3 influence using weapon accuracy which will sway the bullet trajectory.
         /// </summary>
         /// <returns></returns>
