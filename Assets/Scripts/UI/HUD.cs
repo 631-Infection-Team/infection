@@ -14,6 +14,7 @@ namespace Infection
         public bool isPaused;
 
         [SerializeField] private Image crosshair = null;
+        [SerializeField] private Sprite defaultCrosshair = null;
         [SerializeField] private GameObject playerPanel = null;
         [SerializeField] private GameObject deadPanel = null;
         [SerializeField] private GameObject pausePanel = null;
@@ -142,6 +143,14 @@ namespace Infection
 
         private void UpdateWeaponAmmoDisplay()
         {
+            // No weapon
+            if (playerWeapon.CurrentWeapon == null)
+            {
+                magazineDisplay.text = "-";
+                reservesDisplay.text = "";
+                return;
+            }
+
             magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
 
             // Magazine animation
@@ -162,12 +171,26 @@ namespace Infection
 
         private void UpdateWeaponNameDisplay()
         {
-            weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.WeaponDefinition.WeaponName}";
+            if (playerWeapon.CurrentWeapon != null)
+            {
+                weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.WeaponDefinition.WeaponName}";
+            }
+            else
+            {
+                weaponNameDisplay.text = "No Weapon";
+            }
         }
 
         private void UpdateCrosshair()
         {
-            crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
+            if (playerWeapon.CurrentWeapon != null)
+            {
+                crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
+            }
+            else
+            {
+                crosshair.sprite = defaultCrosshair;
+            }
         }
 
         private void UpdateCrosshairOpacity(object sender, Weapon.PercentageEventArgs e)
