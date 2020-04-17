@@ -123,6 +123,7 @@ namespace Infection
         {
             healthValueDisplay.text = health.ToString();
             healthSliderDisplay.value = health;
+            healthValueDisplay.color = health <= (healthSliderDisplay.maxValue / 4) ? Color.red : Color.white;
 
             // Health Text animation
             if (_healthTextAnim.isPlaying)
