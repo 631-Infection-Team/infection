@@ -37,7 +37,7 @@ namespace Infection.Combat
                 _fireDown = false;
             }
 
-            if (_weapon.CurrentWeapon.WeaponDefinition)
+            if (_weapon.CurrentWeapon != null && _weapon.CurrentWeapon.WeaponDefinition)
             {
                 switch (_weapon.CurrentWeapon.WeaponDefinition.TriggerType)
                 {

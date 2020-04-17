@@ -1244,6 +1244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPaused: 0
   crosshair: {fileID: 3863822202247467385}
+  defaultCrosshair: {fileID: 21300000, guid: 6ed1cd0261f84f245b6d0cf674401c10, type: 3}
   playerPanel: {fileID: 8793184040588917448}
   deadPanel: {fileID: 8944225923567005416}
   pausePanel: {fileID: 8376310534343971783}
