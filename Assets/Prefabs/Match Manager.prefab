@@ -66,7 +66,12 @@ MonoBehaviour:
     time: 10
   game:
     name: Game
-    time: 40
+    time: 120
   postGame:
     name: Post-Game
     time: 10
+  state:
+    name: 
+    time: 0
+  currentTime: 0
+  currentRound: 0

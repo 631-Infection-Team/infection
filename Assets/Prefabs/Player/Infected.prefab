@@ -6127,6 +6127,12 @@ PrefabInstance:
       propertyPath: team
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6338752244662701214, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: bloodImpactVfx
+      value: 
+      objectReference: {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc,
+        type: 3}
     - target: {fileID: 6825092283269041638, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_AssetId
