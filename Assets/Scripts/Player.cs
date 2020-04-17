@@ -76,7 +76,7 @@ namespace Infection
             {
                 if (state == State.Dead)
                 {
-                    CmdRespawn();
+                    // CmdRespawn();
                 }
                 else
                 {
@@ -119,16 +119,16 @@ namespace Infection
             }
         }
 
-        public void DealDamageTo(Player player, float amount)
+        public void DealDamageTo(Player victim, float amount)
         {
-            if (CanAttack(player))
+            if (CanAttack(victim))
             {
-                player.health -= Mathf.Clamp(Mathf.RoundToInt(amount), 0, healthMax);
-                player.RpcOnDamageReceived(Mathf.Clamp(Mathf.RoundToInt(amount), 0, healthMax));
+                victim.health = Mathf.Clamp(Mathf.RoundToInt(victim.health - amount), 0, healthMax);
+                victim.RpcOnDamageReceived(victim.health);
 
-                if (player.health <= 0)
+                if (victim.health <= 0)
                 {
-                    player.state = State.Dead;
+                    victim.state = State.Dead;
                 }
             }
         }
@@ -141,6 +141,14 @@ namespace Infection
                 HUD hud = HUD.GetComponent<HUD>();
                 hud.SetHealth(health);
                 hud.SetHealthMax(healthMax);
+
+                if (health <= 0)
+                {
+                    canShoot = false;
+                    canMove = false;
+                    canInteract = false;
+                    canLook = false;
+                }
             }
         }
 
@@ -155,6 +163,11 @@ namespace Infection
                 HUD hud = HUD.GetComponent<HUD>();
                 hud.SetHealth(health);
                 hud.SetHealthMax(healthMax);
+
+                canShoot = true;
+                canMove = true;
+                canInteract = true;
+                canLook = true;
             }
         }
 
@@ -258,6 +271,12 @@ namespace Infection
         private void InputHandler()
         {
             bool pause = Input.GetKeyDown(KeyCode.Escape);
+            bool devKey = Input.GetKey(KeyCode.K);
+
+            if (devKey)
+            {
+                DealDamageTo(this, 1);
+            }
 
             if (pause)
             {
