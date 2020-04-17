@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1640411939}
   - component: {fileID: 1640411938}
   - component: {fileID: 114120949833802732}
+  - component: {fileID: 4993758711941806715}
   m_Layer: 16
   m_Name: Ammo Pickup
   m_TagString: Untagged
@@ -138,3 +139,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 2100000, guid: 158376f67649ef845bbc1a6109279b6b, type: 2}
+--- !u!114 &4993758711941806715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7957661843046083906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Player/Weapons/weapon_reload
+  PlayEvent: 2
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
