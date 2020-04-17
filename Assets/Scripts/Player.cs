@@ -63,6 +63,7 @@ namespace Infection
 
             horizontalLook = gameObject.transform.localEulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
+            gameObject.transform.position = NetRoomManager.netRoomManager.GetStartPosition().position;
         }
 
         private void Start()
