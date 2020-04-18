@@ -24,10 +24,11 @@ namespace Infection
 
         [Header("Components")]
         public Camera cam = null;
+        public Animator animator = null;
         public GameObject model = null;
         public GameObject HUD = null;
+        public GameObject InfectedPlayer = null;
         public GameObject bloodImpactVfx = null;
-        public Animator animator = null;
 
         [Header("Movement")]
         public float walkSpeed = 8f;
@@ -41,7 +42,7 @@ namespace Infection
         public bool canInteract = true;
         public bool isGrounded = false;
 
-        [Header("Configuration")]
+        [Header("Gameplay")]
         [SyncVar] public Team team = Team.Survivor;
         [SyncVar] public State state = State.Idle;
 
@@ -95,7 +96,7 @@ namespace Infection
             animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2f);
             animator.SetFloat("Speed_f", move.magnitude);
             animator.SetBool("Death_b", state == State.Dead);
-            animator.SetBool("Grounded", true);
+            animator.SetBool("Grounded", isGrounded);
         }
 
         private void OnTriggerEnter(Collider col)
@@ -119,17 +120,37 @@ namespace Infection
             }
         }
 
+        private void OnTakeDamage(float amount)
+        {
+            health = Mathf.Clamp(Mathf.RoundToInt(health - amount), 0, healthMax);
+
+            if (health <= 0)
+            {
+                state = State.Dead;
+
+                if (team == Team.Survivor)
+                {
+                    NetworkServer.DestroyPlayerForConnection(connectionToClient);
+
+                    GameObject infectedPlayer = Instantiate(InfectedPlayer);
+                    NetworkServer.Spawn(infectedPlayer, connectionToClient);
+                    NetworkServer.AddPlayerForConnection(connectionToClient, infectedPlayer);
+                }
+
+                // Respawn
+                state = State.Idle;
+                health = healthMax;
+
+                RpcOnRespawn();
+            }
+        }
+
         public void DealDamageTo(Player victim, float amount)
         {
             if (CanAttack(victim))
             {
-                victim.health = Mathf.Clamp(Mathf.RoundToInt(victim.health - amount), 0, healthMax);
+                victim.OnTakeDamage(amount);
                 victim.RpcOnDamageReceived(victim.health);
-
-                if (victim.health <= 0)
-                {
-                    victim.state = State.Dead;
-                }
             }
         }
 
@@ -169,15 +190,6 @@ namespace Infection
                 canInteract = true;
                 canLook = true;
             }
-        }
-
-        [Command]
-        public void CmdRespawn()
-        {
-            state = State.Idle;
-            health = healthMax;
-
-            RpcOnRespawn();
         }
 
         private void GravityHandler()

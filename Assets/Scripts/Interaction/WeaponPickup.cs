@@ -29,20 +29,20 @@ namespace Infection.Interaction
                 WeaponItem oldWeapon = playerWeapon.EquipWeapon(WeaponItem);
                 Transform playerTransform = playerWeapon.transform;
 
-                // Forward vector for weapon pickup object is the direction the weapon is facing, so it needs to be facing left of our player
-                Quaternion rotation = Quaternion.LookRotation(-playerTransform.right);
-                // Local rotation for dropping weapon should be 0, 0, -90, which would have it lay flat
-                rotation *= Quaternion.Euler(0f, 0f, -90f);
+                if (oldWeapon != null)
+                {
+                    // Forward vector for weapon pickup object is the direction the weapon is facing, so it needs to be facing left of our player
+                    Quaternion rotation = Quaternion.LookRotation(-playerTransform.right);
+                    // Local rotation for dropping weapon should be 0, 0, -90, which would have it lay flat
+                    rotation *= Quaternion.Euler(0f, 0f, -90f);
 
-                GameObject pickup = Instantiate(oldWeapon.WeaponDefinition.PickupPrefab, playerTransform.position, rotation);
-                pickup.GetComponent<WeaponPickup>().WeaponItem = oldWeapon;
+                    GameObject pickup = Instantiate(oldWeapon.WeaponDefinition.PickupPrefab, playerTransform.position, rotation);
+                    pickup.GetComponent<WeaponPickup>().WeaponItem = oldWeapon;
 
-                // Throw weapon up a little and forward a lot
-                // TODO: Player should not be on "Default" layer, otherwise player will collide with the object when dropping old weapon
-                pickup.GetComponent<Rigidbody>().AddRelativeForce(2f, 5f, 0f, ForceMode.Impulse);
-
-                // Destroy this pickup because player just picked it up
-                Destroy(gameObject);
+                    // Throw weapon up a little and forward a lot
+                    // TODO: Player should not be on "Default" layer, otherwise player will collide with the object when dropping old weapon
+                    pickup.GetComponent<Rigidbody>().AddRelativeForce(2f, 5f, 0f, ForceMode.Impulse);
+                }
             }
         }
     }

@@ -181,9 +181,12 @@ namespace Infection.Combat
                 return;
             }
 
-            // Zoom in based on aiming percentage
-            float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
-            _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            if (CurrentWeapon != null)
+            {
+                // Zoom in based on aiming percentage
+                float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
+                _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            }
 
             // Gradually reduce instability percentage while weapon is calming down
             if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
@@ -586,9 +589,29 @@ namespace Infection.Combat
         }
 
         /// <summary>
+        /// Sets all weapon items in heldWeapons to null. Resets currently equipped weapon index to 0.
+        /// </summary>
+        /// <returns>Array of weapons that were removed</returns>
+        public WeaponItem[] UnequipAllWeapons()
+        {
+            WeaponItem[] weapons = heldWeapons;
+            for (int i = 0; i < heldWeapons.Length; i++)
+            {
+                heldWeapons[i] = null;
+            }
+
+            _currentWeaponIndex = 0;
+            UpdateWeaponModel();
+            OnWeaponChange?.Invoke();
+            OnAmmoChange?.Invoke();
+
+            return weapons;
+        }
+
+        /// <summary>
         /// Generate Vector3 influence using weapon accuracy which will sway the bullet trajectory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Influence</returns>
         private Vector3 CalculateAccuracyInfluence()
         {
             // Cache variables for repeated access
@@ -649,14 +672,14 @@ namespace Infection.Combat
             muzzle = null;
             muzzleFlash = null;
 
-            if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
+            // Destroy all children
+            foreach (Transform child in weaponHolder)
             {
-                // Destroy all children
-                foreach (Transform child in weaponHolder)
-                {
-                    Destroy(child.gameObject);
-                }
+                Destroy(child.gameObject);
+            }
 
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
+            {
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
@@ -688,6 +711,13 @@ namespace Infection.Combat
 
         private void UpdateAnimatorWeaponType()
         {
+            if (CurrentWeapon == null)
+            {
+                _playerAnimator.SetInteger("WeaponType_int", 0);
+                _playerAnimator.SetBool("FullAuto_b", false);
+                return;
+            }
+
             _playerAnimator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
             _playerAnimator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
         }

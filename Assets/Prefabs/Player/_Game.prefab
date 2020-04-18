@@ -240,9 +240,9 @@ GameObject:
   - component: {fileID: 293505934766424350}
   - component: {fileID: 5112528301519911423}
   - component: {fileID: 1575668633003622740}
+  - component: {fileID: 6338752244662701214}
   - component: {fileID: 5562973679141694101}
   - component: {fileID: 2610476336617106276}
-  - component: {fileID: 6338752244662701214}
   - component: {fileID: 7315649375351402718}
   - component: {fileID: 8348657226313444660}
   - component: {fileID: 6291546893828503028}
@@ -338,6 +338,39 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &6338752244662701214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4455965949840066444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5661022232304f4497c974c8544e05e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  health: 100
+  healthMax: 100
+  cam: {fileID: 0}
+  model: {fileID: 0}
+  HUD: {fileID: 0}
+  bloodImpactVfx: {fileID: 0}
+  animator: {fileID: 0}
+  walkSpeed: 8
+  runSpeed: 12
+  JumpSpeed: 5
+  verticalLook: 0
+  horizontalLook: 0
+  canMove: 1
+  canShoot: 1
+  canLook: 1
+  canInteract: 1
+  isGrounded: 0
+  team: 1
+  state: 0
 --- !u!114 &5562973679141694101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,39 +434,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &6338752244662701214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4455965949840066444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5661022232304f4497c974c8544e05e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  health: 100
-  healthMax: 100
-  cam: {fileID: 0}
-  model: {fileID: 0}
-  HUD: {fileID: 0}
-  bloodImpactVfx: {fileID: 0}
-  animator: {fileID: 0}
-  walkSpeed: 8
-  runSpeed: 12
-  JumpSpeed: 5
-  verticalLook: 0
-  horizontalLook: 0
-  canMove: 1
-  canShoot: 1
-  canLook: 1
-  canInteract: 1
-  isGrounded: 0
-  team: 1
-  state: 0
 --- !u!114 &7315649375351402718
 MonoBehaviour:
   m_ObjectHideFlags: 0
