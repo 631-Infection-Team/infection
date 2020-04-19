@@ -67,7 +67,19 @@ namespace Infection.Combat
         /// </summary>
         public WeaponItem CurrentWeapon
         {
-            get => heldWeapons[_currentWeaponIndex];
+            get
+            {
+                if (heldWeapons.Length > 0)
+                {
+                    return heldWeapons[_currentWeaponIndex];
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+
             private set => heldWeapons[_currentWeaponIndex] = value;
         }
 

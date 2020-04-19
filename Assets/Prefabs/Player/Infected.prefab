@@ -6054,6 +6054,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
+      propertyPath: heldWeapons.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
       propertyPath: weaponHolder
       value: 
       objectReference: {fileID: 7887009396553354711}
