@@ -67,7 +67,19 @@ namespace Infection.Combat
         /// </summary>
         public WeaponItem CurrentWeapon
         {
-            get => heldWeapons[_currentWeaponIndex];
+            get
+            {
+                if (heldWeapons.Length > 0)
+                {
+                    return heldWeapons[_currentWeaponIndex];
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+
             private set => heldWeapons[_currentWeaponIndex] = value;
         }
 
@@ -519,14 +531,17 @@ namespace Infection.Combat
                             Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
                             GameObject projectile = Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                             NetworkServer.Spawn(projectile);
+                            RpcOnFire();
                         }
                         else
                         {
                             GameObject projectile = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                             NetworkServer.Spawn(projectile);
+                            RpcOnFire();
                         }
 
-                        Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                        // Disabled for now while I test networking. 
+                        // Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
 

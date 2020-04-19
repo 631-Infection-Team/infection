@@ -1,10 +1,12 @@
 ﻿using Mirror;
 using System.Collections;
 using UnityEngine;
+using FMODUnity;
 
 namespace Infection
 {
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(StudioEventEmitter))]
     public class Player : Entity
     {
         public static Player localPlayer;
@@ -46,6 +48,7 @@ namespace Infection
         [SyncVar] public Team team = Team.Survivor;
         [SyncVar] public State state = State.Idle;
 
+        
         private CharacterController characterController;
         private Vector3 move;
         private float speedAtJump;
@@ -63,6 +66,7 @@ namespace Infection
 
             horizontalLook = gameObject.transform.localEulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
+            gameObject.transform.position = NetRoomManager.netRoomManager.GetStartPosition().position;
         }
 
         private void Start()
@@ -75,11 +79,7 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
-                if (state == State.Dead)
-                {
-                    // CmdRespawn();
-                }
-                else
+                if (state != State.Dead)
                 {
                     CameraHandler();
                     MovementHandler();
@@ -92,13 +92,17 @@ namespace Infection
 
         private void LateUpdate()
         {
-            animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
-            animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2f);
-            animator.SetFloat("Speed_f", move.magnitude);
-            animator.SetBool("Death_b", state == State.Dead);
-            animator.SetBool("Grounded", isGrounded);
+            if (isLocalPlayer)
+            {
+                animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
+                animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2f);
+                animator.SetFloat("Speed_f", move.magnitude);
+                animator.SetBool("Death_b", state == State.Dead);
+                animator.SetBool("Grounded", isGrounded);
+            }
         }
 
+        [ServerCallback]
         private void OnTriggerEnter(Collider col)
         {
             Zone zone = col.GetComponent<Zone>();
@@ -192,6 +196,7 @@ namespace Infection
             }
         }
 
+        [ClientCallback]
         private void GravityHandler()
         {
             verticalSpeed += Physics.gravity.y * Time.deltaTime;
@@ -203,6 +208,7 @@ namespace Infection
             if ((flag & CollisionFlags.Below) != 0) verticalSpeed = 0;
         }
 
+        [ClientCallback]
         private void MovementHandler()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
@@ -253,6 +259,7 @@ namespace Infection
             }
         }
 
+        [ClientCallback]
         private void CameraHandler()
         {
             if (canLook)
@@ -280,6 +287,7 @@ namespace Infection
             }
         }
 
+        [ClientCallback]
         private void InputHandler()
         {
             bool pause = Input.GetKeyDown(KeyCode.Escape);
