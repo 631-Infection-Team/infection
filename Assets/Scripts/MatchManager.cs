@@ -79,17 +79,20 @@ namespace Infection
             if (isClient)
             {
                 HUD hud = Player.localPlayer.HUD.GetComponent<HUD>();
-
-                if (state == game)
+                
+                if (hud != null)
                 {
-                    hud.UpdateRound("Round " + currentRound);
-                }
-                else
-                {
-                    hud.UpdateRound(state.name);
-                }
+                    if (state == game)
+                    {
+                        hud.UpdateRound("Round " + currentRound);
+                    }
+                    else
+                    {
+                        hud.UpdateRound(state.name);
+                    }
 
-                hud.UpdateTimer(currentTime);
+                    hud.UpdateTimer(currentTime);
+                }
             }
         }
     }
