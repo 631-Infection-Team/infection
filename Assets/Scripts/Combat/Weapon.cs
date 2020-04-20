@@ -510,6 +510,8 @@ namespace Infection.Combat
         {
             if (!Player.localPlayer.canShoot) return;
 
+            Player.localPlayer.verticalLook += -_instabilityPercentage;
+            Player.localPlayer.horizontalLook += Random.Range(-_instabilityPercentage, _instabilityPercentage);
             Vector3 influence = CalculateAccuracyInfluence();
 
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
