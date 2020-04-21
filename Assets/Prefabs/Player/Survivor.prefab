@@ -5979,11 +5979,6 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 3678562110643750354, guid: 63daeaf1cf8a1934faa122b9a73e82db,
-        type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 113463
-      objectReference: {fileID: 0}
     - target: {fileID: 3718483562372428431, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_AnchorMin.y
