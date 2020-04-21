@@ -504,14 +504,11 @@ namespace Infection.Combat
         /// Fire the weapon. Waiting for weapon state is not handled here.
         /// This method is only used to raycast and consume ammo.
         /// </summary>
-
         [Command]
         public void CmdFire()
         {
             if (!Player.localPlayer.canShoot) return;
 
-            Player.localPlayer.verticalLook += -_instabilityPercentage;
-            Player.localPlayer.horizontalLook += Random.Range(-_instabilityPercentage, _instabilityPercentage);
             Vector3 influence = CalculateAccuracyInfluence();
 
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
@@ -542,7 +539,7 @@ namespace Infection.Combat
                             RpcOnFire();
                         }
 
-                        // Disabled for now while I test networking. 
+                        // Disabled for now while I test networking.
                         // Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
@@ -577,6 +574,10 @@ namespace Infection.Combat
 
             // Apply recoil
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
+            // Camera recoil
+            float recoil = CurrentWeapon.WeaponDefinition.RecoilMultiplier + 1f;
+            Player.localPlayer.verticalLook += -recoil;
+            Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
