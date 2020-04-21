@@ -48,7 +48,6 @@ namespace Infection
         [SyncVar] public Team team = Team.Survivor;
         [SyncVar] public State state = State.Idle;
 
-        
         private CharacterController characterController;
         private Vector3 move;
         private float speedAtJump;
@@ -63,10 +62,12 @@ namespace Infection
             HUD.gameObject.SetActive(true);
             cam.gameObject.SetActive(true);
             model.gameObject.SetActive(false);
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            model.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 
             horizontalLook = gameObject.transform.localEulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
-            gameObject.transform.position = NetRoomManager.netRoomManager.GetStartPosition().position;
+            gameObject.transform.position = NetworkManager.singleton.GetStartPosition().position;
         }
 
         private void Start()
@@ -77,7 +78,7 @@ namespace Infection
 
         private void Update()
         {
-            if (isLocalPlayer)
+            if (isClient && isLocalPlayer)
             {
                 if (state != State.Dead)
                 {
@@ -92,26 +93,49 @@ namespace Infection
 
         private void LateUpdate()
         {
-            if (isLocalPlayer)
+            if (isClient && isLocalPlayer)
             {
-                animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
-                animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2f);
-                animator.SetFloat("Speed_f", move.magnitude);
-                animator.SetBool("Death_b", state == State.Dead);
-                animator.SetBool("Grounded", isGrounded);
+                if (team == Team.Survivor)
+                {
+                    animator.SetFloat("Head_Vertical_f", -(verticalLook / 90f));
+                    animator.SetFloat("Body_Vertical_f", -(verticalLook / 90f) / 2f);
+                    animator.SetFloat("Speed_f", move.magnitude);
+                    animator.SetBool("Death_b", state == State.Dead);
+                    animator.SetBool("Grounded", state != State.Dead && isGrounded);
+                }
             }
         }
 
-        [ServerCallback]
         private void OnTriggerEnter(Collider col)
         {
-            Zone zone = col.GetComponent<Zone>();
+            Trigger trigger = col.GetComponent<Trigger>();
 
-            if (col.isTrigger && zone)
+            if (trigger)
             {
-                if (zone.zoneType == Zone.ZoneTypes.Kill)
+                if (trigger.type == Trigger.Type.Kill)
                 {
                     DealDamageTo(this, health);
+                }
+                else if (trigger.type == Trigger.Type.Fire)
+                {
+                    StartCoroutine(Fire());
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider col)
+        {
+            Trigger trigger = col.GetComponent<Trigger>();
+
+            if (trigger)
+            {
+                if (trigger.type == Trigger.Type.Kill)
+                {
+                    DealDamageTo(this, health);
+                }
+                else if (trigger.type == Trigger.Type.Fire)
+                {
+                    StopCoroutine(Fire());
                 }
             }
         }
@@ -124,9 +148,21 @@ namespace Infection
             }
         }
 
-        private void OnTakeDamage(float amount)
+        private IEnumerator Fire()
         {
+            DealDamageTo(this, 2f);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        private void OnTakeDamage(float amount, RaycastHit hit = new RaycastHit(), Vector3 direction = new Vector3())
+        {
+            if (team == Team.Spectator) return;
+
             health = Mathf.Clamp(Mathf.RoundToInt(health - amount), 0, healthMax);
+            direction = hit.point == Vector3.zero ? characterController.transform.forward : direction;
+            hit.point = hit.point == Vector3.zero ? gameObject.transform.position : hit.point;
+            GameObject particles = Instantiate(bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(direction, hit.normal)));
+            NetworkServer.Spawn(particles);
 
             if (health <= 0)
             {
@@ -135,13 +171,14 @@ namespace Infection
                 if (team == Team.Survivor)
                 {
                     NetworkServer.DestroyPlayerForConnection(connectionToClient);
-
                     GameObject infectedPlayer = Instantiate(InfectedPlayer);
                     NetworkServer.Spawn(infectedPlayer, connectionToClient);
                     NetworkServer.AddPlayerForConnection(connectionToClient, infectedPlayer);
                 }
 
                 // Respawn
+                StopAllCoroutines();
+
                 state = State.Idle;
                 health = healthMax;
 
@@ -154,12 +191,12 @@ namespace Infection
             if (CanAttack(victim))
             {
                 victim.OnTakeDamage(amount);
-                victim.RpcOnDamageReceived(victim.health);
+                victim.RpcOnDamageReceived();
             }
         }
 
         [ClientRpc]
-        public override void RpcOnDamageReceived(int amount)
+        public override void RpcOnDamageReceived()
         {
             if (isLocalPlayer)
             {
@@ -182,7 +219,7 @@ namespace Infection
         {
             if (isLocalPlayer)
             {
-                Transform spawnPoint = NetRoomManager.netRoomManager.GetStartPosition();
+                Transform spawnPoint = NetRoomManager.singleton.GetStartPosition();
                 gameObject.transform.position = spawnPoint.position;
 
                 HUD hud = HUD.GetComponent<HUD>();
@@ -196,7 +233,7 @@ namespace Infection
             }
         }
 
-        [ClientCallback]
+        [Client]
         private void GravityHandler()
         {
             verticalSpeed += Physics.gravity.y * Time.deltaTime;
@@ -208,7 +245,7 @@ namespace Infection
             if ((flag & CollisionFlags.Below) != 0) verticalSpeed = 0;
         }
 
-        [ClientCallback]
+        [Client]
         private void MovementHandler()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
@@ -259,7 +296,7 @@ namespace Infection
             }
         }
 
-        [ClientCallback]
+        [Client]
         private void CameraHandler()
         {
             if (canLook)
@@ -287,7 +324,7 @@ namespace Infection
             }
         }
 
-        [ClientCallback]
+        [Client]
         private void InputHandler()
         {
             bool pause = Input.GetKeyDown(KeyCode.Escape);

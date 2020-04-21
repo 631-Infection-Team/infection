@@ -528,14 +528,12 @@ namespace Infection.Combat
                         if (targetPlayer)
                         {
                             Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
-                            GameObject projectile = Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(projectile);
                             RpcOnFire();
                         }
                         else
                         {
-                            GameObject projectile = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(projectile);
+                            GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(particles);
                             RpcOnFire();
                         }
 

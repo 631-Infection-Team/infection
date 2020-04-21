@@ -123,7 +123,7 @@ namespace Infection
         public void SetHealth(int health)
         {
             healthValueDisplay.text = health.ToString();
-            healthSliderDisplay.value = health;
+            healthSliderDisplay.value = Mathf.Clamp(health, 0, healthSliderDisplay.maxValue);
             healthValueDisplay.color = health <= (healthSliderDisplay.maxValue / 4) ? Color.red : Color.white;
 
             // Health Text animation
