@@ -8,4 +8,8 @@ AnimatorOverrideController:
   m_PrefabAsset: {fileID: 0}
   m_Name: Winchester
   m_Controller: {fileID: 9100000, guid: 0e8a2e2eb2dad754d9039d781982fcf0, type: 2}
-  m_Clips: []
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: a1680965ec34a1a43a7c0c20e8cf1ac2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: edf9979a2b4c64d4fba572f111a9df4c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 85fc62ed4f0be9e49bde03fca2307fb3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6d8ba345a20a23548ac4b158fb9e50bd, type: 2}
