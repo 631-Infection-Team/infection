@@ -398,8 +398,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   accuracyReduction: 0.2
-  bulletImpactVfx: {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc,
-    type: 3}
+  bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
   bulletTrailVfx: {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7,
     type: 3}
   weaponHolder: {fileID: 0}
