@@ -44,6 +44,8 @@ namespace Infection.Combat
         private float accuracy = 0.995f;
         [SerializeField, Tooltip("Amount of recoil from each shot, higher is more intense"), Range(0.001f, 2.0f)]
         private float recoilMultiplier = 0.1f;
+        [SerializeField, Tooltip("Additional vertical intensity applied on top of regular recoil multiplier"), Range(0.001f, 2.0f)]
+        private float verticalRecoilIntensity = 0f;
 
         [Header("Special Action")]
         [SerializeField, Tooltip("Amount of magnification in field of view when aiming"), Range(0.001f, 8.0f)]
@@ -87,6 +89,7 @@ namespace Infection.Combat
         public float FireRate => fireRate;
         public float Accuracy => accuracy;
         public float RecoilMultiplier => recoilMultiplier;
+        public float VerticalRecoilIntensity => verticalRecoilIntensity;
 
         public float AimZoomMultiplier => aimZoomMultiplier;
         public GameObject PickupPrefab => pickupPrefab;
