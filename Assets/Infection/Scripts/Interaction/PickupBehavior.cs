@@ -19,16 +19,11 @@ namespace Infection.Interaction
         private void Awake()
         {
             _player = GetComponent<Player>();
-            _camera = _player.cam;
+            _camera = _player.camera;
         }
 
         private void Update()
         {
-            if (!_player.canInteract)
-            {
-                return;
-            }
-
             Transform camTransform = _camera.transform;
             Ray ray = new Ray(camTransform.position, camTransform.forward);
             if (Physics.Raycast(ray, out var hit, pickupRange, pickupMask))

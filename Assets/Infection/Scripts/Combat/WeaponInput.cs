@@ -26,11 +26,6 @@ namespace Infection.Combat
                 return;
             }
 
-            if (!_player.canShoot)
-            {
-                return;
-            }
-
             // Reset fire when trigger is released
             if (Input.GetAxis("Fire") <= 0f)
             {

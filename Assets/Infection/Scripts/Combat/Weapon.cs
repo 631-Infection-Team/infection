@@ -149,8 +149,8 @@ namespace Infection.Combat
         private void Awake()
         {
             raycastMask = LayerMask.GetMask("Default");
-            _camera = GetComponent<Player>().cam;
-            _playerAnimator = GetComponent<Player>().animator;
+            _camera = GetComponent<Player>().camera;
+            //_playerAnimator = GetComponent<Player>().animator;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
@@ -336,7 +336,7 @@ namespace Infection.Combat
                     // Firing automatic or manual type weapon
                     // Fire the weapon
                     CurrentState = WeaponState.Firing;
-                    _playerAnimator.SetTrigger("Shoot_t");
+                    //_playerAnimator.SetTrigger("Shoot_t");
                     CmdFire();
 
                     // Fire animation
@@ -376,12 +376,6 @@ namespace Infection.Combat
         /// <returns>Reload state</returns>
         public IEnumerator ReloadWeapon()
         {
-            // Cannot reload weapon if dead
-            if (!Player.localPlayer.canShoot)
-            {
-                yield break;
-            }
-
             // Already reloading or not in idle state
             if (CurrentState == WeaponState.Reloading)
             {
@@ -439,12 +433,6 @@ namespace Infection.Combat
         /// <returns>Switching state</returns>
         public IEnumerator SwitchWeapon(int index)
         {
-            // Cannot switch weapon if dead
-            if (Player.localPlayer.health <= 0)
-            {
-                yield break;
-            }
-
             // Cannot switch weapon when not in idle state or current weapon already out
             if (CurrentState != WeaponState.Idle || _currentWeaponIndex == index)
             {
@@ -507,8 +495,6 @@ namespace Infection.Combat
         [Command]
         public void CmdFire()
         {
-            if (!Player.localPlayer.canShoot) return;
-
             Vector3 influence = CalculateAccuracyInfluence();
 
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
@@ -527,7 +513,8 @@ namespace Infection.Combat
 
                         if (targetPlayer)
                         {
-                            Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
+                            //Player localplayer = GetComponent<Player>();
+                            //localplayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
                             RpcOnFire();
                         }
                         else
@@ -574,8 +561,8 @@ namespace Infection.Combat
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
             // Camera recoil
             float recoil = CurrentWeapon.WeaponDefinition.RecoilMultiplier + 1f;
-            Player.localPlayer.verticalLook += -recoil;
-            Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
+            //Player.localPlayer.verticalLook += -recoil;
+            //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
@@ -588,7 +575,7 @@ namespace Infection.Combat
         [ClientRpc]
         public void RpcOnFire()
         {
-            if (!Player.localPlayer.canShoot) return;
+            // This is called on every client whenever a weapon is fired.
         }
 
         /// <summary>
