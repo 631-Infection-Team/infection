@@ -15,6 +15,6 @@ namespace Infection
         }
 
         [ClientRpc]
-        public abstract void RpcOnDamageReceived(int amount);
+        public abstract void RpcOnDamageReceived();
     }
 }

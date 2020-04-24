@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &114929497784174648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585621391352620768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+--- !u!1001 &3796512072285924132
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2499121606899560326, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899584452, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Name
+      value: Remote Desert Eagle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899584452, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899587920, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899594346, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899595598, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899738362, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499121606899898106, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646665150643036570, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8151996438819827553, guid: 6508793d633396d468a92e60bb3553cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6508793d633396d468a92e60bb3553cf, type: 3}
+--- !u!1 &1585621391352620768 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2499121606899584452, guid: 6508793d633396d468a92e60bb3553cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 3796512072285924132}
+  m_PrefabAsset: {fileID: 0}

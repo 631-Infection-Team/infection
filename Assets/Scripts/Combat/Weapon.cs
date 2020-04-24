@@ -67,7 +67,19 @@ namespace Infection.Combat
         /// </summary>
         public WeaponItem CurrentWeapon
         {
-            get => heldWeapons[_currentWeaponIndex];
+            get
+            {
+                if (heldWeapons.Length > 0)
+                {
+                    return heldWeapons[_currentWeaponIndex];
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+
             private set => heldWeapons[_currentWeaponIndex] = value;
         }
 
@@ -492,7 +504,6 @@ namespace Infection.Combat
         /// Fire the weapon. Waiting for weapon state is not handled here.
         /// This method is only used to raycast and consume ammo.
         /// </summary>
-
         [Command]
         public void CmdFire()
         {
@@ -517,16 +528,17 @@ namespace Infection.Combat
                         if (targetPlayer)
                         {
                             Player.localPlayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
-                            GameObject projectile = Instantiate(targetPlayer.bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(projectile);
+                            RpcOnFire();
                         }
                         else
                         {
-                            GameObject projectile = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(projectile);
+                            GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(particles);
+                            RpcOnFire();
                         }
 
-                        Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
+                        // Disabled for now while I test networking.
+                        // Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
 
@@ -560,6 +572,10 @@ namespace Infection.Combat
 
             // Apply recoil
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
+            // Camera recoil
+            float recoil = CurrentWeapon.WeaponDefinition.RecoilMultiplier + 1f;
+            Player.localPlayer.verticalLook += -recoil;
+            Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
             // Subtract ammo
             CurrentWeapon.ConsumeMagazine(1);
@@ -693,19 +709,20 @@ namespace Infection.Combat
         [Server]
         private void UpdateRemoteWeaponModel()
         {
-            if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.RemoteModelPrefab != null)
+            if (CurrentWeapon != null)
             {
-                // Destroy all children
-                foreach (Transform child in rightHand)
+                if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.RemoteModelPrefab != null)
                 {
-                    Destroy(child.gameObject);
+                    // Destroy all children
+                    foreach (Transform child in rightHand)
+                    {
+                        Destroy(child.gameObject);
+                    }
+
+                    GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
+                    NetworkServer.Spawn(remoteModel);
+                    remoteModel.SetActive(!isLocalPlayer);
                 }
-
-                // Spawn weapon model to show other players
-                GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
-
-                // Other players can see this weapon model but the local player cannot
-                remoteModel.SetActive(!isLocalPlayer);
             }
         }
 
@@ -725,14 +742,17 @@ namespace Infection.Combat
         private void UpdateAnimatorOverride()
         {
             // Update animator override or reset to default animator controller
-            var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
-            if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
+            if (CurrentWeapon != null)
             {
-                _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
-            }
-            else if (overrideController != null)
-            {
-                _weaponHolderAnimator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
+                var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
+                if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
+                {
+                    _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
+                }
+                else if (overrideController != null)
+                {
+                    _weaponHolderAnimator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
+                }
             }
         }
 

@@ -6029,6 +6029,18 @@ PrefabInstance:
       propertyPath: raycastMask.m_Bits
       value: 8705
       objectReference: {fileID: 0}
+    - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: heldWeapons.Array.data[0].weaponDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: d19292a0f6d11b14db6845c307e43412,
+        type: 2}
+    - target: {fileID: 5562973679141694101, guid: 63daeaf1cf8a1934faa122b9a73e82db,
+        type: 3}
+      propertyPath: heldWeapons.Array.data[1].weaponDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f4ea5883ee12b64d9a36ab3a83c23b3,
+        type: 2}
     - target: {fileID: 6057538199351420654, guid: 63daeaf1cf8a1934faa122b9a73e82db,
         type: 3}
       propertyPath: m_LocalPosition.x
