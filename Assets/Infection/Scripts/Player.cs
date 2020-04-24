@@ -9,12 +9,15 @@ namespace Infection
     [RequireComponent(typeof(PlayerCamera))]
     public class Player : NetworkBehaviour
     {
-        [SyncVar] public int health = 100;
-        [SerializeField] private int maxHealth = 100;
-        [SyncVar] public bool isDead = false;
+        [Header("Components")]
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
+
+        [Header("Health")]
+        [SyncVar] public int health = 100;
+        [SerializeField] private int maxHealth = 100;
+        [SyncVar, HideInInspector] public bool isDead = false;
 
         public override void OnStartLocalPlayer()
         {

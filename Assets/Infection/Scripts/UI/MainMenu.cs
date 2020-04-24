@@ -1,55 +1,18 @@
-﻿using UnityEngine;
-using FMODUnity;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace Infection.UI
+namespace Infection
 {
+    [DisallowMultipleComponent]
     public class MainMenu : MonoBehaviour
     {
-        [Header("Components")]
-        [SerializeField] private Transform[] disableOnChange = new Transform[12];
-        private StudioEventEmitter studioEventEmitter = null;
+        public NetworkRoomManagerInfection networkRoomManagerInfection;
 
-        [Header("Audio")]
-        [EventRef, SerializeField] private string clickEvent = "";
-        [EventRef, SerializeField] private string hoverEvent = "";
-
-        private void Awake()
+        public void hostChangeMap(string sceneName)
         {
-            studioEventEmitter = GetComponent<StudioEventEmitter>();
-        }
-
-        public void PlaySoundClick()
-        {
-            studioEventEmitter.Event = clickEvent;
-            studioEventEmitter.Play();
-        }
-
-        public void PlaySoundHover()
-        {
-            studioEventEmitter.Event = hoverEvent;
-            studioEventEmitter.Play();
-        }
-
-        public void SetActivePanel(Transform panel)
-        {
-            foreach (Transform child in disableOnChange)
-            {
-                child.gameObject.SetActive(child == panel);
-            }
-        }
-
-        public void Quit()
-        {
-            #if UNITY_EDITOR
-            EditorApplication.isPlaying = false;
-            
-            #else
-            Application.Quit();
-            
-            #endif
+            networkRoomManagerInfection.GameplayScene = sceneName;
         }
     }
 }
+
