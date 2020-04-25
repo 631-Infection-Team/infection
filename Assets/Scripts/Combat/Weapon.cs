@@ -34,6 +34,7 @@ namespace Infection.Combat
         [Header("Transforms for weapon model")]
         [SerializeField] private Transform weaponHolder = null;
         [SerializeField] private Transform muzzle = null;
+        [SerializeField] private Transform remoteMuzzle = null;
         [SerializeField] private Transform muzzleFlash = null;
         [SerializeField, Tooltip("Used for rendering on remote players")]
         private Transform rightHand = null;
@@ -234,6 +235,7 @@ namespace Infection.Combat
             {
                 CurrentWeapon = newWeapon;
                 UpdateWeaponModel();
+                UpdateRemoteWeaponModel();
                 UpdateAnimatorOverride();
             }
             else
@@ -273,6 +275,7 @@ namespace Infection.Combat
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
             UpdateWeaponModel();
+            UpdateRemoteWeaponModel();
             UpdateAnimatorOverride();
 
             // Update listeners
@@ -460,6 +463,7 @@ namespace Infection.Combat
             // Change the weapon
             _currentWeaponIndex = index;
             UpdateWeaponModel();
+            UpdateRemoteWeaponModel();
             UpdateAnimatorOverride();
 
             // Update listeners
@@ -543,9 +547,10 @@ namespace Infection.Combat
                     }
 
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
-                    GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
+                    var startPos = isLocalPlayer ? muzzle.position : remoteMuzzle.position;
+                    GameObject trail = Instantiate(bulletTrailVfx, startPos, Quaternion.LookRotation(ray.direction));
                     LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
-                    lineRenderer.SetPosition(0, muzzle.position);
+                    lineRenderer.SetPosition(0, startPos);
 
                     if (raycast)
                     {
@@ -618,6 +623,7 @@ namespace Infection.Combat
 
             _currentWeaponIndex = 0;
             UpdateWeaponModel();
+            UpdateRemoteWeaponModel();
             OnWeaponChange?.Invoke();
             OnAmmoChange?.Invoke();
 
@@ -709,17 +715,22 @@ namespace Infection.Combat
         [Server]
         private void UpdateRemoteWeaponModel()
         {
+            // Reset remote muzzle transform
+            remoteMuzzle = null;
+
+            // Destroy all children
+            foreach (Transform child in rightHand)
+            {
+                NetworkServer.Destroy(child.gameObject);
+            }
+
             if (CurrentWeapon != null)
             {
                 if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.RemoteModelPrefab != null)
                 {
-                    // Destroy all children
-                    foreach (Transform child in rightHand)
-                    {
-                        Destroy(child.gameObject);
-                    }
-
                     GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
+                    // Set remote muzzle transform. The child object must be called Muzzle
+                    remoteMuzzle = remoteModel.transform.Find("Muzzle");
                     NetworkServer.Spawn(remoteModel);
                     remoteModel.SetActive(!isLocalPlayer);
                 }
