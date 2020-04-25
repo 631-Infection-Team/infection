@@ -2,11 +2,10 @@
 
 namespace Infection
 {
-    public enum Type { Kill, Fire }
-
     [RequireComponent(typeof(BoxCollider))]
     public class Trigger : MonoBehaviour
     {
+        public enum Type { Kill, Fire }
         public Type type = Type.Kill;
         [SerializeField] private Color gizmoColor = new Color(0, 1, 1, 0.25f);
         [SerializeField] private Color gizmoWireColor = new Color(1, 1, 1, 0.8f);

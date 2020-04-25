@@ -33,6 +33,17 @@ namespace Infection
             }
         }
 
+        public void OnTriggerEnter(Collider other)
+        {
+            Trigger trigger = other.GetComponent<Trigger>();
+            if (trigger == null) return;
+
+            if (trigger.type == Trigger.Type.Kill)
+            {
+                player.RpcTakeDamage(player.health, other.GetComponent<NetworkIdentity>().netId);
+            }
+        }
+
         private void InputHandler()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");

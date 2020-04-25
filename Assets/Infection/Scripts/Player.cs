@@ -36,7 +36,7 @@ namespace Infection
         }
 
         [ClientRpc]
-        public void RpcOnTakeDamage(int amount, string sourceID)
+        public void RpcTakeDamage(int amount, uint sourceID)
         {
             if (isDead) return;
 
@@ -45,7 +45,7 @@ namespace Infection
             if (health <= 0) OnDeath(sourceID);
         }
 
-        private void OnDeath(string sourceID)
+        private void OnDeath(uint sourceID)
         {
             GetComponent<CharacterController>().enabled = false;
             isDead = true;
