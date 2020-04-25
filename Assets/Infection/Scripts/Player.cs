@@ -21,8 +21,11 @@ namespace Infection
 
         public override void OnStartLocalPlayer()
         {
+            base.OnStartLocalPlayer();
             cameraContainer.SetActive(true);
             graphics.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public void Start()
@@ -35,44 +38,62 @@ namespace Infection
             health = Mathf.Clamp(health + amount, 0, maxHealth);
         }
 
-        [ClientRpc]
-        public void RpcTakeDamage(int amount, uint sourceID)
+        public void TakeDamage(int amount, uint sourceID)
         {
             if (isDead) return;
 
             health = Mathf.Clamp(health -= amount, 0, maxHealth);
+            if (health <= 0) Death(sourceID);
 
-            if (health <= 0) OnDeath(sourceID);
-        }
-
-        private void OnDeath(uint sourceID)
-        {
-            GetComponent<CharacterController>().enabled = false;
-            isDead = true;
-
-            Debug.Log(gameObject.name + " was killed by " + sourceID);
-
-            StartCoroutine(Respawn());
+            RpcOnTakeDamage();
         }
 
         private void SetDefaults()
         {
-            GetComponent<CharacterController>().enabled = true;
             health = maxHealth;
             isDead = false;
         }
 
+        private void Death(uint sourceID)
+        {
+            isDead = true;
+            Debug.Log(gameObject.name + " was killed by " + sourceID);
+
+            RpcOnDeath();
+            StartCoroutine(Respawn());
+        }
+
         private IEnumerator Respawn()
         {
+            RpcOnRespawn();
+
             yield return new WaitForSeconds(3);
 
+            SetDefaults();
+        }
+
+        [ClientRpc]
+        public void RpcOnTakeDamage()
+        {
+            Debug.Log("Health: " + health);
+        }
+
+        [ClientRpc]
+        public void RpcOnDeath()
+        {
+            GetComponent<CharacterController>().enabled = false;
+            graphics.SetActive(false);
+        }
+
+        [ClientRpc]
+        public void RpcOnRespawn()
+        {
+            GetComponent<CharacterController>().enabled = true;
             Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
             transform.position = spawnPoint.position;
             transform.rotation = spawnPoint.rotation;
 
-            yield return new WaitForSeconds(0.1f);
-
-            SetDefaults();
+            if (!isLocalPlayer) graphics.SetActive(true);
         }
     }
 }

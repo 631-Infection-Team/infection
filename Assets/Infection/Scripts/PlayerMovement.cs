@@ -16,7 +16,8 @@ namespace Infection
 
         [Header("Movement")]
         [HideInInspector] public bool isGrounded = false;
-        private float moveSpeed = 12f;
+        private readonly float moveSpeed = 12f;
+        private readonly float jumpSpeed = 5f;
         private float lastGrounded;
         private float velocityAtJump;
         private float verticalVelocity;
@@ -24,23 +25,23 @@ namespace Infection
 
         public void Update()
         {
-            if (isLocalPlayer)
-            {
-                if (player.isDead) return;
+            if (!isLocalPlayer) return;
+            if (player.isDead) return;
 
-                InputHandler();
-                GravityHandler();
-            }
+            InputHandler();
+            GravityHandler();
         }
 
         public void OnTriggerEnter(Collider other)
         {
+            if (!isServer) return;
+
             Trigger trigger = other.GetComponent<Trigger>();
             if (trigger == null) return;
 
             if (trigger.type == Trigger.Type.Kill)
             {
-                player.RpcTakeDamage(player.health, other.GetComponent<NetworkIdentity>().netId);
+                player.TakeDamage(player.health, other.GetComponent<NetworkIdentity>().netId);
             }
         }
 
@@ -91,7 +92,7 @@ namespace Infection
         private void GravityHandler()
         {
             verticalVelocity += Physics.gravity.y * Time.deltaTime;
-            verticalVelocity = Mathf.Clamp(verticalVelocity, Physics.gravity.y * 2, 5f);
+            verticalVelocity = Mathf.Clamp(verticalVelocity, Physics.gravity.y * 2, jumpSpeed);
 
             Vector3 verticalMove = new Vector3(0, verticalVelocity * Time.deltaTime, 0);
             CollisionFlags flag = characterController.Move(verticalMove);
