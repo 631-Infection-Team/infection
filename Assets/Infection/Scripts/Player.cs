@@ -9,15 +9,20 @@ namespace Infection
     [RequireComponent(typeof(PlayerCamera))]
     public class Player : NetworkBehaviour
     {
+        public enum Team { SURVIVOR, INFECTED }
+
         [Header("Components")]
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
 
         [Header("Health")]
-        [SyncVar] public int health = 100;
+        [SyncVar(hook = nameof(OnHealthChanged))] public int health = 100;
         [SerializeField] private int maxHealth = 100;
         [SyncVar, HideInInspector] public bool isDead = false;
+
+        [Header("Team")]
+        [SyncVar] public Team team = Team.SURVIVOR;
 
         public override void OnStartLocalPlayer()
         {
@@ -35,6 +40,8 @@ namespace Infection
 
         public void Heal(int amount = 100)
         {
+            if (isDead) return;
+
             health = Mathf.Clamp(health + amount, 0, maxHealth);
         }
 
@@ -43,9 +50,16 @@ namespace Infection
             if (isDead) return;
 
             health = Mathf.Clamp(health -= amount, 0, maxHealth);
-            if (health <= 0) Death(sourceID);
-
             RpcOnTakeDamage();
+
+            if (health <= 0) Death(sourceID);
+        }
+
+        public void Infect()
+        {
+            if (team == Team.INFECTED) return;
+
+            team = Team.INFECTED;
         }
 
         private void SetDefaults()
@@ -56,44 +70,47 @@ namespace Infection
 
         private void Death(uint sourceID)
         {
+            health = 0;
             isDead = true;
-            Debug.Log(gameObject.name + " was killed by " + sourceID);
 
             RpcOnDeath();
-            StartCoroutine(Respawn());
+            Respawn();
         }
 
-        private IEnumerator Respawn()
+        private void Respawn()
         {
             RpcOnRespawn();
-
-            yield return new WaitForSeconds(3);
-
             SetDefaults();
+        }
+
+        private void OnHealthChanged(int oldValue, int newValue)
+        {
+            if (isDead) return;
+
+            Debug.Log("Old Health: " + oldValue + ", New Health: " + newValue);
         }
 
         [ClientRpc]
         public void RpcOnTakeDamage()
         {
-            Debug.Log("Health: " + health);
+            // Debug.Log("Health: " + health);
         }
 
         [ClientRpc]
         public void RpcOnDeath()
         {
             GetComponent<CharacterController>().enabled = false;
-            graphics.SetActive(false);
+            Infect();
         }
 
         [ClientRpc]
         public void RpcOnRespawn()
         {
-            GetComponent<CharacterController>().enabled = true;
             Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
             transform.position = spawnPoint.position;
             transform.rotation = spawnPoint.rotation;
 
-            if (!isLocalPlayer) graphics.SetActive(true);
+            GetComponent<CharacterController>().enabled = true;
         }
     }
 }
