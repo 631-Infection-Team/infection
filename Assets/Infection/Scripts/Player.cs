@@ -15,6 +15,8 @@ namespace Infection
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
+        public GameObject survivorGraphics;
+        public GameObject zombieGraphics;
 
         [Header("Health")]
         [SyncVar(hook = nameof(OnHealthChanged))] public int health = 100;
@@ -27,8 +29,11 @@ namespace Infection
         public override void OnStartLocalPlayer()
         {
             base.OnStartLocalPlayer();
+
             cameraContainer.SetActive(true);
             graphics.SetActive(false);
+            zombieGraphics.SetActive(false);
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -60,12 +65,17 @@ namespace Infection
             if (team == Team.INFECTED) return;
 
             team = Team.INFECTED;
+            zombieGraphics.SetActive(true);
+            survivorGraphics.SetActive(false);
         }
 
         private void SetDefaults()
         {
+            team = Team.SURVIVOR;
             health = maxHealth;
             isDead = false;
+            zombieGraphics.SetActive(false);
+            survivorGraphics.SetActive(true);
         }
 
         private void Death(uint sourceID)
