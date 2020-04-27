@@ -1,42 +1,121 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Mirror;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Infection
 {
-    public class MatchManager : MonoBehaviour
+    public class MatchManager : NetworkBehaviour
     {
-        public static MatchManager instance;
-        public float respawnTime = 3f;
-        public delegate void OnPlayerKilledCallback(string player, string source);
-        public OnPlayerKilledCallback onPlayerKilledCallback;
+        public static MatchManager Instance { get; private set; }
 
-        private static Dictionary<string, Player> players = new Dictionary<string, Player>();
+        [Serializable]
+        public class State
+        {
+            public string name = "";
+            public int time = 0;
+        }
+
+        [Header("Settings")]
+        [SerializeField] private State preGame = new State();
+        [SerializeField] private State game = new State();
+        [SerializeField] private State postGame = new State();
+
+        [SyncVar] public State state;
+        [SyncVar] public int currentTime = 0;
+        [SyncVar] public int currentRound = 0;
+        [SyncVar] public List<Player> players = new List<Player>();
+
+        private double nextProcessingTime = 0;
 
         private void Awake()
         {
-            instance = this;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
 
-        public static void RegisterPlayer(string id, Player player)
+        private void OnDestroy()
         {
-            players.Add("player_" + id, player);
-            player.transform.name = "player_" + id;
+            if (this == Instance)
+            {
+                Instance = null;
+            }
         }
 
-        public static void UnRegisterPlayer(string playerID)
+        private void Update()
         {
-            players.Remove(playerID);
+            if (!isServer) return;
+
+            nextProcessingTime += Time.deltaTime;
+            if (nextProcessingTime >= 1)
+            {
+                nextProcessingTime = 0;
+
+                if (currentTime > 0)
+                {
+                    RpcTick();
+                    currentTime -= 1;
+                }
+                else
+                {
+                    if (state == preGame)
+                    {
+                        SetState(game);
+                        currentRound += 1;
+                    }
+                    else if (state == game)
+                    {
+                        SetState(postGame);
+                    }
+                    else if (state == postGame)
+                    {
+                        SetState(preGame);
+                    }
+                }
+            }
         }
 
-        public static Player GetPlayer(string playerID)
+        public override void OnStartServer()
         {
-            return players[playerID];
+            base.OnStartServer();
+            SetState(preGame);
         }
 
-        public static Player[] GetAllPlayers()
+        [Server]
+        private void SetState(State state)
         {
-            return players.Values.ToArray();
+            if (!isServer) return;
+
+            this.state = state;
+            currentTime = state.time;
+        }
+
+        [ClientRpc]
+        public void RpcTick()
+        {
+            if (!isClient) return;
+
+            HUD hud = Player.localPlayer.HUD.GetComponent<HUD>();
+
+            if (hud != null)
+            {
+                if (state == game)
+                {
+                    hud.UpdateRound("Round " + currentRound);
+                }
+                else
+                {
+                    hud.UpdateRound(state.name);
+                }
+
+                hud.UpdateTimer(currentTime);
+            }
         }
     }
 }

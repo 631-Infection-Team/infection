@@ -11,8 +11,11 @@ namespace Infection.Combat
     public class WeaponClass : ScriptableObject
     {
         [SerializeField] private string weaponClassName = "New Weapon Class";
+        [SerializeField, Tooltip("Weapon type int for animator from Synty Simple Apocalypse pack")]
+        private int animatorType = 0;
 
         public string WeaponClassName => weaponClassName;
+        public int AnimatorType => animatorType;
 
         private void OnValidate()
         {

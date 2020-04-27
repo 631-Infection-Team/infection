@@ -24,17 +24,29 @@ namespace Infection
     {
         #region Server Callbacks
 
-        public override void OnRoomStartServer() { }
+        public override void OnRoomStartServer() {
+            base.OnRoomStartServer();
+        }
 
-        public override void OnRoomStartHost() { }
+        public override void OnRoomStartHost() {
+            base.OnRoomStartHost();
+        }
 
-        public override void OnRoomStopHost() { }
+        public override void OnRoomStopHost() {
+            base.OnRoomStopHost();
+        }
 
-        public override void OnRoomServerConnect(NetworkConnection conn) { }
+        public override void OnRoomServerConnect(NetworkConnection conn) {
+            base.OnRoomServerConnect(conn);
+        }
 
-        public override void OnRoomServerDisconnect(NetworkConnection conn) { }
+        public override void OnRoomServerDisconnect(NetworkConnection conn) {
+            base.OnRoomServerDisconnect(conn);
+        }
 
-        public override void OnRoomServerSceneChanged(string sceneName) { }
+        public override void OnRoomServerSceneChanged(string sceneName) {
+            base.OnRoomServerSceneChanged(sceneName);
+        }
 
         public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnection conn)
         {
@@ -43,6 +55,7 @@ namespace Infection
 
         public override GameObject OnRoomServerCreateGamePlayer(NetworkConnection conn, GameObject roomPlayer)
         {
+            MatchManager.Instance.players.Add(roomPlayer.GetComponent<Player>());
             return base.OnRoomServerCreateGamePlayer(conn, roomPlayer);
         }
 
@@ -53,10 +66,7 @@ namespace Infection
 
         public override bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
         {
-            Player player = gamePlayer.GetComponent<Player>();
-            player.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
-
-            return true;
+            return base.OnRoomServerSceneLoadedForPlayer(roomPlayer, gamePlayer);
         }
 
         public override void OnRoomServerPlayersReady()
