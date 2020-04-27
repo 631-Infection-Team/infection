@@ -6523,7 +6523,7 @@ MonoBehaviour:
   roomPlayerPrefab: {fileID: 6452073728241379646, guid: 44c566a97cbacee4fa5b2fe7cf482ce4,
     type: 3}
   RoomScene: 01_Menu
-  GameplayScene: 02_Prototype
+  GameplayScene: 04_Downtown
   roomSlots: []
   allPlayersReady: 0
 --- !u!4 &1147483000
