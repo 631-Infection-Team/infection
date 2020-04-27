@@ -42,11 +42,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e318eea90884a5aa027cbc5998564b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   highlightMaterial: {fileID: 2100000, guid: 15c7ddcaf9ad6d541923d28100aef724, type: 2}
   weaponItem:
     weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
     magazine: 30
     reserves: 120
+--- !u!114 &114910403808597812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177562054245636342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
 --- !u!1001 &177562054245541860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72,7 +89,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 179986, guid: 65389442798920a489c4dd8f72671788, type: 3}
       propertyPath: m_Name
-      value: SA_Wep_AssaultRifle01 Variant
+      value: Pickup AK47
       objectReference: {fileID: 0}
     - target: {fileID: 179986, guid: 65389442798920a489c4dd8f72671788, type: 3}
       propertyPath: m_Layer

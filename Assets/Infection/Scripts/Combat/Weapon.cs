@@ -39,6 +39,9 @@ namespace Infection.Combat
         [SerializeField, Tooltip("Used for rendering on remote players")]
         private Transform rightHand = null;
 
+        [Header("Player")]
+        [SerializeField] private PlayerAnimator playerAnimator = null;
+
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
         /// </summary>
@@ -115,7 +118,7 @@ namespace Infection.Combat
         /// <summary>
         /// The player has other weapons that is not the currently equipped weapon.
         /// </summary>
-        public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && CurrentWeapon != null);
+        public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && w.WeaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.WeaponDefinition != null));
 
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         public event Action OnAmmoChange = null;
@@ -128,7 +131,6 @@ namespace Infection.Combat
 
         // Components
         private Animator _weaponHolderAnimator = null;
-        private Animator _playerAnimator = null;
         private Camera _camera = null;
 
         // Properties
@@ -186,7 +188,7 @@ namespace Infection.Combat
                 return;
             }
 
-            if (CurrentWeapon != null)
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition != null)
             {
                 // Zoom in based on aiming percentage
                 float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
@@ -214,7 +216,8 @@ namespace Infection.Combat
         /// Equip a new weapon in an empty slot. If there are no empty slots, replace currently equipped weapon.
         /// </summary>
         /// <param name="newWeapon">New weapon to equip</param>
-        public WeaponItem EquipWeapon(WeaponItem newWeapon)
+        [Command]
+        public WeaponItem CmdEquipWeapon(WeaponItem newWeapon)
         {
             // Player has no weapons
             // TODO: Find solution for edge case where player has other weapons but current weapon is null
@@ -223,9 +226,9 @@ namespace Infection.Combat
             }
 
             WeaponItem oldWeapon = null;
-            if (CurrentWeapon == null)
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
-                CurrentWeapon = newWeapon;
+                heldWeapons[_currentWeaponIndex] = newWeapon;
                 UpdateWeaponModel();
                 UpdateRemoteWeaponModel();
                 UpdateAnimatorOverride();
@@ -305,7 +308,7 @@ namespace Infection.Combat
                     {
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
-                        _playerAnimator.SetTrigger("Shoot_t");
+                        playerAnimator.Animator.SetTrigger("Shoot_t");
                         CmdFire();
 
                         // Play fire animation once per burst
@@ -405,7 +408,7 @@ namespace Infection.Combat
             // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
             _weaponHolderAnimator.SetTrigger("Reload");
             _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
-            _playerAnimator.SetTrigger("Reload_t");
+            playerAnimator.Animator.SetTrigger("Reload_t");
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
@@ -492,8 +495,13 @@ namespace Infection.Combat
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
-                    // Create ray with accuracy influence
-                    Ray ray = GenerateRay(influence);
+                    // Create a ray from camera transform using an influence vector created from accuracy to rotate ray.
+                    // Cache camera transform for repeated access
+                    Transform cameraTransform = _camera.transform;
+                    // Generate direction with slight random rotation using accuracy
+                    Vector3 direction = cameraTransform.forward + influence;
+                    // Create ray using camera position and direction
+                    Ray ray = new Ray(cameraTransform.position, direction);
 
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
@@ -501,25 +509,26 @@ namespace Infection.Combat
                     // Determine objects hit
                     if (raycast)
                     {
-                        Player targetPlayer = hit.transform.gameObject.GetComponent<Player>();
+                        Player victim = hit.transform.gameObject.GetComponent<Player>();
 
-                        if (targetPlayer)
+                        if (victim)
                         {
                             //Player localplayer = GetComponent<Player>();
                             //localplayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
-                            RpcOnFire();
+                            // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
+                            victim.TakeDamage(10, GetComponent<NetworkIdentity>().netId);
                         }
                         else
                         {
                             GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
                             NetworkServer.Spawn(particles);
-                            RpcOnFire();
                         }
 
                         // Disabled for now while I test networking.
                         // Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
+                    RpcOnFire();
 
                     // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
                     GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
@@ -535,6 +544,7 @@ namespace Infection.Combat
                         lineRenderer.SetPosition(1, ray.direction * 10000f);
                     }
 
+                    NetworkServer.Spawn(trail);
                     Destroy(trail, Time.deltaTime);
                     break;
 
@@ -621,21 +631,6 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// Create a ray from camera transform using an influence vector created from accuracy to rotate ray.
-        /// </summary>
-        /// <param name="influence"></param>
-        /// <returns>Accuracy influenced ray</returns>
-        private Ray GenerateRay(Vector3 influence)
-        {
-            // Cache camera transform for repeated access
-            Transform cameraTransform = _camera.transform;
-            // Generate direction with slight random rotation using accuracy
-            Vector3 direction = cameraTransform.forward + influence;
-            // Create ray using camera position and direction
-            return new Ray(cameraTransform.position, direction);
-        }
-
-        /// <summary>
         /// Shows the muzzle flash for a split second and then hides it. The muzzle flash receives a random scale.
         /// </summary>
         /// <param name="influence">The amount of rotation applied based on weapon accuracy</param>
@@ -673,7 +668,7 @@ namespace Infection.Combat
                 Destroy(child.gameObject);
             }
 
-            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
             {
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
@@ -711,21 +706,21 @@ namespace Infection.Combat
 
         private void UpdateAnimatorWeaponType()
         {
-            if (CurrentWeapon == null)
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
-                _playerAnimator.SetInteger("WeaponType_int", 0);
-                _playerAnimator.SetBool("FullAuto_b", false);
+                playerAnimator.Animator.SetInteger("WeaponType_int", 0);
+                playerAnimator.Animator.SetBool("FullAuto_b", false);
                 return;
             }
 
-            _playerAnimator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
-            _playerAnimator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
+            playerAnimator.Animator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
+            playerAnimator.Animator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
         }
 
         private void UpdateAnimatorOverride()
         {
             // Update animator override or reset to default animator controller
-            if (CurrentWeapon != null)
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition != null)
             {
                 var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
                 if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
@@ -745,6 +740,11 @@ namespace Infection.Combat
         /// <returns>Holster animation</returns>
         private IEnumerator HolsterAnimation()
         {
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
+            {
+                yield return null;
+            }
+
             // Start playing animation for holster time
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
             _weaponHolderAnimator.SetBool("Holster", true);
@@ -763,6 +763,11 @@ namespace Infection.Combat
         /// <returns>Ready animation</returns>
         private IEnumerator ReadyAnimation()
         {
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
+            {
+                yield break;
+            }
+
             CurrentState = WeaponState.Switching;
             // Start playing animation for ready time
             _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);

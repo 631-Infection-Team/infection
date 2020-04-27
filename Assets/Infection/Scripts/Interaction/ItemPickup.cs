@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 namespace Infection.Interaction
 {
-    public abstract class ItemPickup : MonoBehaviour, IPickup
+    public abstract class ItemPickup : NetworkBehaviour, IPickup
     {
         [SerializeField] private Material highlightMaterial = null;
 
@@ -32,7 +33,6 @@ namespace Infection.Interaction
         {
             OnGrantPickup(pickupBehavior);
             Debug.Log("Picked up item: " + ItemName);
-            Destroy(gameObject);
         }
     }
 }

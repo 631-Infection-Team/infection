@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Infection.Combat;
+using UnityEngine;
 
 namespace Infection.Interaction
 {

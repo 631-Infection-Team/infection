@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 namespace Infection.Interaction
 {
@@ -12,6 +13,8 @@ namespace Infection.Interaction
         {
             Player player = pickupBehavior.gameObject.GetComponent<Player>();
             if (player != null) player.Heal(healAmount);
+            NetworkServer.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }
