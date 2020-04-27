@@ -379,6 +379,7 @@ GameObject:
   - component: {fileID: 3863822201554510016}
   - component: {fileID: 3863822201554510017}
   - component: {fileID: 3863822201554510018}
+  - component: {fileID: 8579419789438184825}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -473,6 +474,36 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8579419789438184825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3863822201554510019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c88dc68b6729a54c98469a6da1c865c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPaused: 0
+  crosshair: {fileID: 3863822202247467385}
+  defaultCrosshair: {fileID: 21300000, guid: 6ed1cd0261f84f245b6d0cf674401c10, type: 3}
+  playerPanel: {fileID: 0}
+  deadPanel: {fileID: 0}
+  pausePanel: {fileID: 0}
+  healthValueDisplay: {fileID: 8804496512578497175}
+  statusMessageDisplay: {fileID: 2888676023010288973}
+  alertMessageDisplay: {fileID: 2004372477428830609}
+  interactionMessageDisplay: {fileID: 78896277468201831}
+  weaponNameDisplay: {fileID: 999029430281964329}
+  magazineDisplay: {fileID: 4544052739217422675}
+  reservesDisplay: {fileID: 2664191513313324760}
+  timerDisplay: {fileID: 5248322230953649036}
+  roundDisplay: {fileID: 1060834557947926057}
+  healthSliderDisplay: {fileID: 0}
+  playerWeapon: {fileID: 0}
+  playerPickupBehavior: {fileID: 0}
 --- !u!1 &3863822202247467387
 GameObject:
   m_ObjectHideFlags: 0
