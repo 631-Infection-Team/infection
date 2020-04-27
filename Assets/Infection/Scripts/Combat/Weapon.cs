@@ -39,14 +39,6 @@ namespace Infection.Combat
         [SerializeField, Tooltip("Used for rendering on remote players")]
         private Transform rightHand = null;
 
-        // Unity events. Add listeners from the inspector.
-        [Header("Events for weapon behavior state changes")]
-        [SerializeField] private UnityEvent onEquip = null;
-        [SerializeField] private UnityEvent onFire = null;
-        [SerializeField] private UnityEvent onReload = null;
-        [SerializeField] private UnityEvent onSwitch = null;
-        [SerializeField] private UnityEvent onReplace = null;
-
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
         /// </summary>
@@ -259,7 +251,6 @@ namespace Infection.Combat
             // Update listeners
             OnWeaponChange?.Invoke();
             OnAmmoChange?.Invoke();
-            onEquip?.Invoke();
 
             return oldWeapon;
         }
@@ -280,7 +271,6 @@ namespace Infection.Combat
 
             // Update listeners
             OnWeaponChange?.Invoke();
-            onReplace?.Invoke();
 
             return oldWeapon;
         }
@@ -424,7 +414,6 @@ namespace Infection.Combat
 
             // Update listeners
             OnAmmoChange?.Invoke();
-            onReload?.Invoke();
 
             CurrentState = WeaponState.Idle;
         }
@@ -457,7 +446,6 @@ namespace Infection.Combat
             // Update listeners
             OnAmmoChange?.Invoke();
             OnWeaponChange?.Invoke();
-            onSwitch?.Invoke();
 
             // Play ready animation
             yield return StartCoroutine(ReadyAnimation());
@@ -573,7 +561,6 @@ namespace Infection.Combat
 
             // Update listeners
             OnAmmoChange?.Invoke();
-            onFire?.Invoke();
         }
 
         [ClientRpc]
