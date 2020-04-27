@@ -30,7 +30,7 @@ namespace Tests
         private IEnumerator EquipWeapon()
         {
             // Equip new weapon
-            weapon.EquipWeapon(new WeaponItem(defaultWeapon, 30, 120));
+            weapon.CmdEquipWeapon(new WeaponItem(defaultWeapon, 30, 120));
             yield return new WaitUntil(() => weapon.CurrentState == Weapon.WeaponState.Idle);
         }
 

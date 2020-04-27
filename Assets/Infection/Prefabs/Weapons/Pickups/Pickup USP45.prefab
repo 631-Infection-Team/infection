@@ -30,6 +30,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43396921705582096, guid: 395116b73df8ca84d8dfbaa33dde842e, type: 2}
+--- !u!114 &114201548768772126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3893175649572387255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
 --- !u!114 &114878792991844226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,6 +57,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e318eea90884a5aa027cbc5998564b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   highlightMaterial: {fileID: 2100000, guid: 15c7ddcaf9ad6d541923d28100aef724, type: 2}
   weaponItem:
     weaponDefinition: {fileID: 11400000, guid: 1e0e60e9a355d7645bdec729288c5cc1, type: 2}

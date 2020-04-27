@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 using Infection.Combat;
 using FMODUnity;
 
@@ -17,6 +18,8 @@ namespace Infection.Interaction
             }
 
             weapon.RefillAmmo();
+            NetworkServer.Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

@@ -54,6 +54,10 @@ namespace Infection.Combat
         /// </summary>
         public void FillUpAmmo()
         {
+            if (WeaponDefinition == null)
+            {
+                return;
+            }
             magazine = WeaponDefinition.ClipSize;
             reserves = WeaponDefinition.MaxReserves;
         }

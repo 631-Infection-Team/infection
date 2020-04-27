@@ -13,6 +13,8 @@ namespace Infection
         [SerializeField] private Player player;
         [SerializeField] private Animator survivorAnimator;
         [SerializeField] private Animator zombieAnimator;
+
+        public Animator Animator => animator;
         private Animator animator;
 
         public void Start()

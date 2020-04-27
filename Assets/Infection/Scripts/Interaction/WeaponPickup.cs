@@ -1,4 +1,5 @@
 ﻿using Infection.Combat;
+using Mirror;
 using UnityEngine;
 
 namespace Infection.Interaction
@@ -22,12 +23,13 @@ namespace Infection.Interaction
                 return;
             }
 
-            Weapon playerWeapon = pickupBehavior.gameObject.GetComponent<Weapon>();
-            if (playerWeapon != null && playerWeapon.CurrentState == Weapon.WeaponState.Idle)
+            Weapon weapon = pickupBehavior.gameObject.GetComponent<Weapon>();
+            if (weapon != null && weapon.CurrentState == Weapon.WeaponState.Idle)
             {
+                Debug.Log("Picking up weapon item");
                 // Equip new weapon and drop old weapon, preserve ammo
-                WeaponItem oldWeapon = playerWeapon.EquipWeapon(WeaponItem);
-                Transform playerTransform = playerWeapon.transform;
+                WeaponItem oldWeapon = weapon.CmdEquipWeapon(WeaponItem);
+                Transform playerTransform = weapon.transform;
 
                 if (oldWeapon != null)
                 {
@@ -42,7 +44,11 @@ namespace Infection.Interaction
                     // Throw weapon up a little and forward a lot
                     // TODO: Player should not be on "Default" layer, otherwise player will collide with the object when dropping old weapon
                     pickup.GetComponent<Rigidbody>().AddRelativeForce(2f, 5f, 0f, ForceMode.Impulse);
+                    NetworkServer.Spawn(pickup);
                 }
+
+                NetworkServer.Destroy(gameObject);
+                Destroy(gameObject);
             }
         }
     }
