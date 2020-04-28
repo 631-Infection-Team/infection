@@ -23,19 +23,9 @@ namespace Infection
         private float verticalVelocity;
         private Vector3 moveDirection;
 
-        public void Update()
-        {
-            if (!isLocalPlayer) return;
-            if (player.isDead) return;
-
-            InputHandler();
-            GravityHandler();
-        }
-
+        [ServerCallback]
         public void OnTriggerEnter(Collider other)
         {
-            if (!isServer) return;
-
             Trigger trigger = other.GetComponent<Trigger>();
             if (trigger == null) return;
 
@@ -45,6 +35,17 @@ namespace Infection
             }
         }
 
+        public void Update()
+        {
+            if (!isLocalPlayer) return;
+            if (player.isDead) return;
+            if (!characterController.enabled) return;
+
+            InputHandler();
+            GravityHandler();
+        }
+
+        [Client]
         private void InputHandler()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
@@ -89,6 +90,7 @@ namespace Infection
             characterController.Move(moveDirection);
         }
 
+        [Client]
         private void GravityHandler()
         {
             verticalVelocity += Physics.gravity.y * Time.deltaTime;

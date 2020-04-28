@@ -308,7 +308,7 @@ namespace Infection.Combat
                     {
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
-                        playerAnimator.Animator.SetTrigger("Shoot_t");
+                        //playerAnimator.Animator.SetTrigger("Shoot_t");
                         CmdFire();
 
                         // Play fire animation once per burst
@@ -408,7 +408,7 @@ namespace Infection.Combat
             // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
             _weaponHolderAnimator.SetTrigger("Reload");
             _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
-            playerAnimator.Animator.SetTrigger("Reload_t");
+            //playerAnimator.Animator.SetTrigger("Reload_t");
 
             yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
@@ -708,13 +708,13 @@ namespace Infection.Combat
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
-                playerAnimator.Animator.SetInteger("WeaponType_int", 0);
-                playerAnimator.Animator.SetBool("FullAuto_b", false);
+                //playerAnimator.Animator.SetInteger("WeaponType_int", 0);
+                //playerAnimator.Animator.SetBool("FullAuto_b", false);
                 return;
             }
 
-            playerAnimator.Animator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
-            playerAnimator.Animator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
+            //playerAnimator.Animator.SetInteger("WeaponType_int", CurrentWeapon.WeaponDefinition.WeaponClass.AnimatorType);
+            //playerAnimator.Animator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
         }
 
         private void UpdateAnimatorOverride()
