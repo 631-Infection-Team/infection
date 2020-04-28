@@ -30,6 +30,19 @@ namespace Infection
             if (animator == survivorAnimator) { SurvivorUpdate(); } else { ZombieUpdate(); }
         }
 
+        [Command]
+        public void CmdJump()
+        {
+            RpcOnJump();
+        }
+
+        [ClientRpc]
+        private void RpcOnJump()
+        {
+            animator.SetBool("Jump_b", true);
+            animator.SetBool("Grounded", false);
+        }
+
         private void SurvivorUpdate()
         {
             animator.SetBool("Grounded", true);

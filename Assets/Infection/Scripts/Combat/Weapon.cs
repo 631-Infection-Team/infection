@@ -698,7 +698,7 @@ namespace Infection.Combat
                 {
                     GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
                     remoteMuzzle = remoteModel.transform.Find("Muzzle");
-                    NetworkServer.Spawn(remoteModel, );
+                    NetworkServer.Spawn(remoteModel);
                     remoteModel.SetActive(!isLocalPlayer);
                 }
             }
