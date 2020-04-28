@@ -121,12 +121,12 @@ namespace Infection.Combat
         public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && w.WeaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.WeaponDefinition != null));
 
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
-        public event Action OnAmmoChange = null;
-        public event Action OnWeaponChange = null;
-        public event EventHandler<StateChangedEventArgs> OnStateChange;
-        public event EventHandler<PercentageEventArgs> OnAimingChange;
-        public event EventHandler<PercentageEventArgs> OnRecoil;
-        public event OnAlert OnAlertEvent = null;
+        [SyncEvent] public event Action OnAmmoChange = null;
+        [SyncEvent] public event Action OnWeaponChange = null;
+        [SyncEvent] public event EventHandler<StateChangedEventArgs> OnStateChange;
+        [SyncEvent] public event EventHandler<PercentageEventArgs> OnAimingChange;
+        [SyncEvent] public event EventHandler<PercentageEventArgs> OnRecoil;
+        [SyncEvent] public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
         // Components
@@ -170,7 +170,7 @@ namespace Infection.Combat
             // Spawn the weapon model and play ready weapon animation
             UpdateAnimatorOverride();
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
-            StartCoroutine(ReadyAnimation());
+            StartCoroutine(CmdReadyAnimation());
             OnWeaponChange?.Invoke();
             UpdateWeaponModel();
         }
@@ -178,7 +178,7 @@ namespace Infection.Combat
         public override void OnStartServer()
         {
             base.OnStartServer();
-            UpdateRemoteWeaponModel();
+            CmdUpdateRemoteWeaponModel();
         }
 
         private void Update()
@@ -230,7 +230,7 @@ namespace Infection.Combat
             {
                 heldWeapons[_currentWeaponIndex] = newWeapon;
                 UpdateWeaponModel();
-                UpdateRemoteWeaponModel();
+                CmdUpdateRemoteWeaponModel();
                 UpdateAnimatorOverride();
             }
             else
@@ -269,7 +269,7 @@ namespace Infection.Combat
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
             UpdateWeaponModel();
-            UpdateRemoteWeaponModel();
+            CmdUpdateRemoteWeaponModel();
             UpdateAnimatorOverride();
 
             // Update listeners
@@ -438,12 +438,12 @@ namespace Infection.Combat
             CurrentState = WeaponState.Switching;
 
             // Play holster animation
-            yield return StartCoroutine(HolsterAnimation());
+            yield return StartCoroutine(CmdHolsterAnimation());
 
             // Change the weapon
             _currentWeaponIndex = index;
             UpdateWeaponModel();
-            UpdateRemoteWeaponModel();
+            CmdUpdateRemoteWeaponModel();
             UpdateAnimatorOverride();
 
             // Update listeners
@@ -451,7 +451,7 @@ namespace Infection.Combat
             OnWeaponChange?.Invoke();
 
             // Play ready animation
-            yield return StartCoroutine(ReadyAnimation());
+            yield return StartCoroutine(CmdReadyAnimation());
 
             CurrentState = WeaponState.Idle;
         }
@@ -520,11 +520,8 @@ namespace Infection.Combat
                         }
                         else
                         {
-                            if (isLocalPlayer)
-                            {
-                                GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                                NetworkServer.Spawn(particles);
-                            }
+                            GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(particles);
                         }
 
                         // Disabled for now while I test networking.
@@ -612,7 +609,7 @@ namespace Infection.Combat
 
             _currentWeaponIndex = 0;
             UpdateWeaponModel();
-            UpdateRemoteWeaponModel();
+            CmdUpdateRemoteWeaponModel();
             OnWeaponChange?.Invoke();
             OnAmmoChange?.Invoke();
 
@@ -687,7 +684,7 @@ namespace Infection.Combat
         }
 
         [Command]
-        private void UpdateRemoteWeaponModel()
+        private void CmdUpdateRemoteWeaponModel()
         {
             // Reset remote muzzle transform
             remoteMuzzle = null;
@@ -752,7 +749,7 @@ namespace Infection.Combat
         /// </summary>
         /// <returns>Holster animation</returns>
         [Command]
-        private IEnumerator HolsterAnimation()
+        private IEnumerator CmdHolsterAnimation()
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
@@ -776,7 +773,7 @@ namespace Infection.Combat
         /// </summary>
         /// <returns>Ready animation</returns>
         [Command]
-        private IEnumerator ReadyAnimation()
+        private IEnumerator CmdReadyAnimation()
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {

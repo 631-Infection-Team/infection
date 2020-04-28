@@ -51,6 +51,14 @@ namespace Infection
             if (isDead) CmdRespawn();
         }
 
+        public void OnDestroy()
+        {
+            if (!isLocalPlayer) return;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         public void Heal(int amount = 100)
         {
             health = Mathf.Clamp(health + amount, 0, maxHealth);
