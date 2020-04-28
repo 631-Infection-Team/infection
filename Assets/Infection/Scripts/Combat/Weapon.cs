@@ -170,7 +170,7 @@ namespace Infection.Combat
             // Spawn the weapon model and play ready weapon animation
             UpdateAnimatorOverride();
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
-            StartCoroutine(CmdReadyAnimation());
+            CmdReadyAnimation();
             OnWeaponChange?.Invoke();
             UpdateWeaponModel();
         }
@@ -438,7 +438,7 @@ namespace Infection.Combat
             CurrentState = WeaponState.Switching;
 
             // Play holster animation
-            yield return StartCoroutine(CmdHolsterAnimation());
+            CmdHolsterAnimation();
 
             // Change the weapon
             _currentWeaponIndex = index;
@@ -451,7 +451,7 @@ namespace Infection.Combat
             OnWeaponChange?.Invoke();
 
             // Play ready animation
-            yield return StartCoroutine(CmdReadyAnimation());
+            CmdReadyAnimation();
 
             CurrentState = WeaponState.Idle;
         }
@@ -748,8 +748,7 @@ namespace Infection.Combat
         /// Play the weapon holster animation for the duration of the holster time defined in the weapon definition.
         /// </summary>
         /// <returns>Holster animation</returns>
-        [Command]
-        private IEnumerator CmdHolsterAnimation()
+        private IEnumerator HolsterAnimation()
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
@@ -768,12 +767,17 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
         }
 
+        [Command]
+        private void CmdHolsterAnimation()
+        {
+            StartCoroutine(HolsterAnimation());
+        }
+
         /// <summary>
         /// Play the weapon ready animation for the duration of the ready time defined in the weapon definition.
         /// </summary>
         /// <returns>Ready animation</returns>
-        [Command]
-        private IEnumerator CmdReadyAnimation()
+        private IEnumerator ReadyAnimation()
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
@@ -792,6 +796,12 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetBool("Ready", false);
             _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
             CurrentState = WeaponState.Idle;
+        }
+
+        [Command]
+        private void CmdReadyAnimation()
+        {
+            StartCoroutine(ReadyAnimation());
         }
 
         public class StateChangedEventArgs : EventArgs
