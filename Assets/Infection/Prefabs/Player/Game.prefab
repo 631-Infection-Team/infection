@@ -437,7 +437,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   heldWeapons:
-  - weaponDefinition: {fileID: 0}
+  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
     magazine: 0
     reserves: 0
   - weaponDefinition: {fileID: 0}
