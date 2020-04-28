@@ -520,11 +520,8 @@ namespace Infection.Combat
                         }
                         else
                         {
-                            if (isLocalPlayer)
-                            {
-                                GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                                NetworkServer.Spawn(particles);
-                            }
+                             GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                             NetworkServer.Spawn(particles);
                         }
 
                         // Disabled for now while I test networking.
