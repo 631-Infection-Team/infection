@@ -7,6 +7,8 @@ namespace Infection
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerCamera))]
+    [RequireComponent(typeof(PlayerAnimator))]
+    [RequireComponent(typeof(PlayerMovement))]
     public class Player : NetworkBehaviour
     {
         public enum Team { SURVIVOR, INFECTED }
@@ -19,7 +21,7 @@ namespace Infection
         public GameObject zombieGraphics;
 
         [Header("Health")]
-        [SyncVar(hook = nameof(OnHealthChanged))] public int health = 100;
+        [SyncVar] public int health = 100;
         [SerializeField] private int maxHealth = 100;
         [SyncVar, HideInInspector] public bool isDead = false;
 
@@ -43,39 +45,40 @@ namespace Infection
             SetDefaults();
         }
 
+        public void Update()
+        {
+            if (!isLocalPlayer) return;
+            if (isDead) CmdRespawn();
+        }
+
         public void Heal(int amount = 100)
         {
-            if (isDead) return;
-
             health = Mathf.Clamp(health + amount, 0, maxHealth);
         }
 
         public void TakeDamage(int amount, uint sourceID)
         {
-            if (isDead) return;
-
             health = Mathf.Clamp(health -= amount, 0, maxHealth);
             RpcOnTakeDamage();
 
-            if (health <= 0) Death(sourceID);
+            if (health <= 0)
+            {
+                Death(sourceID);
+                Infect();
+            }
         }
 
         public void Infect()
         {
-            if (team == Team.INFECTED) return;
-
             team = Team.INFECTED;
-            zombieGraphics.SetActive(true);
-            survivorGraphics.SetActive(false);
+
+            RpcOnInfected();
         }
 
         private void SetDefaults()
         {
-            team = Team.SURVIVOR;
             health = maxHealth;
             isDead = false;
-            zombieGraphics.SetActive(false);
-            survivorGraphics.SetActive(true);
         }
 
         private void Death(uint sourceID)
@@ -84,43 +87,47 @@ namespace Infection
             isDead = true;
 
             RpcOnDeath();
-            Respawn();
         }
 
-        private void Respawn()
+        [Command]
+        private void CmdRespawn()
         {
-            RpcOnRespawn();
             SetDefaults();
-        }
-
-        private void OnHealthChanged(int oldValue, int newValue)
-        {
-            if (isDead) return;
-
-            Debug.Log("Old Health: " + oldValue + ", New Health: " + newValue);
+            RpcOnRespawn();
         }
 
         [ClientRpc]
         public void RpcOnTakeDamage()
         {
-            // Debug.Log("Health: " + health);
+            Debug.Log("Health: " + health);
         }
 
         [ClientRpc]
         public void RpcOnDeath()
         {
             GetComponent<CharacterController>().enabled = false;
-            Infect();
+            GetComponent<PlayerMovement>().enabled = false;
+            GetComponent<PlayerAnimator>().enabled = false;
         }
 
         [ClientRpc]
         public void RpcOnRespawn()
         {
+            GetComponent<CharacterController>().enabled = true;
+
             Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
             transform.position = spawnPoint.position;
             transform.rotation = spawnPoint.rotation;
 
-            GetComponent<CharacterController>().enabled = true;
+            GetComponent<PlayerMovement>().enabled = true;
+            GetComponent<PlayerAnimator>().enabled = true;
+        }
+
+        [ClientRpc]
+        public void RpcOnInfected()
+        {
+            zombieGraphics.SetActive(true);
+            survivorGraphics.SetActive(false);
         }
     }
 }
