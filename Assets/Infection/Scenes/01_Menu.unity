@@ -6517,7 +6517,28 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
+  - {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc, type: 3}
+  - {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7, type: 3}
+  - {fileID: 177562054245636342, guid: 904650ba81e86ff4d96baafb616a847c, type: 3}
+  - {fileID: 1086475418494793589, guid: 66cb68680c63eb84fbbc9dcc1083f3ba, type: 3}
+  - {fileID: 1075375297650132287, guid: c543cdb9968df5248807c7bac8623410, type: 3}
+  - {fileID: 296350884696224731, guid: 071685aebcee54945b8c521879ef0644, type: 3}
+  - {fileID: 2932414449255552560, guid: cd4f1fff313ca704eaf9923d697bef47, type: 3}
+  - {fileID: 3893175649572387255, guid: b5c3b56f3c3d6664eb910b67a3bff3e3, type: 3}
+  - {fileID: 749293664587444687, guid: 1cc9523a57800864386d9ffceb214d05, type: 3}
+  - {fileID: 2018926017603860609, guid: 026b290a9e5eaea41ab2db46ca414230, type: 3}
+  - {fileID: 9146349052490218924, guid: c0c8583f1710bd742889e466ac3d4bb4, type: 3}
+  - {fileID: 1585621391352620768, guid: 0c830e2c1f1d54e499c88f71ae6de9f8, type: 3}
+  - {fileID: 4943078099721483148, guid: 3c5fdafdeaf198645809e5b9b993774f, type: 3}
+  - {fileID: 7732732540559570201, guid: e75bf6a01db33e046a7351001cf11f64, type: 3}
+  - {fileID: 1666362126948374191, guid: b1eddb41ab58bc14db6b97afb2832bf2, type: 3}
+  - {fileID: 5413366398020065308, guid: 6ba5f9cf0f4e68740823431a5cc00e35, type: 3}
+  - {fileID: 7957661843046083906, guid: b268eacaafaa0a54aadb31068ce9818f, type: 3}
+  - {fileID: 3324606375007240861, guid: 555230cbe9057814391ca0b9d91f1ac0, type: 3}
+  - {fileID: 4308755926813394405, guid: 24484f4500e9e764aa026e7a2b2b4d46, type: 3}
+  - {fileID: 0}
   showRoomGUI: 1
   minPlayers: 1
   roomPlayerPrefab: {fileID: 6452073728241379646, guid: 44c566a97cbacee4fa5b2fe7cf482ce4,
