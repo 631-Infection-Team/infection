@@ -3256,6 +3256,11 @@ PrefabInstance:
       propertyPath: healAmount
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 114958686105212060, guid: 555230cbe9057814391ca0b9d91f1ac0,
+        type: 3}
+      propertyPath: sceneId
+      value: 484886851
+      objectReference: {fileID: 0}
     - target: {fileID: 3324606375007240861, guid: 555230cbe9057814391ca0b9d91f1ac0,
         type: 3}
       propertyPath: m_Name
@@ -6337,6 +6342,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 45175007}
     m_Modifications:
+    - target: {fileID: 114958686105212060, guid: 555230cbe9057814391ca0b9d91f1ac0,
+        type: 3}
+      propertyPath: sceneId
+      value: 202846893
+      objectReference: {fileID: 0}
     - target: {fileID: 3324606375007240861, guid: 555230cbe9057814391ca0b9d91f1ac0,
         type: 3}
       propertyPath: m_Name
@@ -9254,6 +9264,7 @@ GameObject:
   - component: {fileID: 1598116297}
   - component: {fileID: 1598116296}
   - component: {fileID: 1598116295}
+  - component: {fileID: 1598116298}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -9325,6 +9336,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &1598116298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598116294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListenerNumber: -1
 --- !u!1001 &1601845704
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10261,6 +10285,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 45175007}
     m_Modifications:
+    - target: {fileID: 114562643980418266, guid: b268eacaafaa0a54aadb31068ce9818f,
+        type: 3}
+      propertyPath: sceneId
+      value: 3566178128
+      objectReference: {fileID: 0}
     - target: {fileID: 7957661843046083906, guid: b268eacaafaa0a54aadb31068ce9818f,
         type: 3}
       propertyPath: m_Name
@@ -11551,6 +11580,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 45175007}
     m_Modifications:
+    - target: {fileID: 114562643980418266, guid: b268eacaafaa0a54aadb31068ce9818f,
+        type: 3}
+      propertyPath: sceneId
+      value: 1316547580
+      objectReference: {fileID: 0}
     - target: {fileID: 7957661843046083906, guid: b268eacaafaa0a54aadb31068ce9818f,
         type: 3}
       propertyPath: m_Name
@@ -11902,6 +11936,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 45175007}
     m_Modifications:
+    - target: {fileID: 114562643980418266, guid: b268eacaafaa0a54aadb31068ce9818f,
+        type: 3}
+      propertyPath: sceneId
+      value: 286257828
+      objectReference: {fileID: 0}
     - target: {fileID: 7957661843046083906, guid: b268eacaafaa0a54aadb31068ce9818f,
         type: 3}
       propertyPath: m_Name

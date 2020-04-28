@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1640411938}
   - component: {fileID: 114120949833802732}
   - component: {fileID: 4993758711941806715}
+  - component: {fileID: 114562643980418266}
   m_Layer: 16
   m_Name: Ammo Pickup
   m_TagString: Untagged
@@ -138,6 +139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27940ff392da4cb48555e4be99327afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   highlightMaterial: {fileID: 2100000, guid: 158376f67649ef845bbc1a6109279b6b, type: 2}
 --- !u!114 &4993758711941806715
 MonoBehaviour:
@@ -162,3 +165,18 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &114562643980418266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7957661843046083906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 

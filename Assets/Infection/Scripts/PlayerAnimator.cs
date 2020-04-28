@@ -10,24 +10,20 @@ namespace Infection
     [RequireComponent(typeof(PlayerMovement))]
     public class PlayerAnimator : NetworkBehaviour
     {
-        [SerializeField] private Player player;
-        [SerializeField] private Animator survivorAnimator;
-        [SerializeField] private Animator zombieAnimator;
+        /**
+        [SerializeField] private Player player = null;
+        [SerializeField] private Animator survivorAnimator = null;
+        [SerializeField] private Animator zombieAnimator = null;
 
-        public Animator Animator => animator;
-        private Animator animator;
-
-        public void Start()
-        {
-
-        }
+        private Animator currentAnimator = null;
 
         public void Update()
         {
             if (!isLocalPlayer) return;
+            if (!GetComponent<CharacterController>().enabled) return;
 
-            animator = (player.team == Player.Team.SURVIVOR) ? survivorAnimator : zombieAnimator;
-            if (animator == survivorAnimator) { SurvivorUpdate(); } else { ZombieUpdate(); }
+            currentAnimator = (player.team == Player.Team.SURVIVOR) ? survivorAnimator : zombieAnimator;
+            if (currentAnimator == survivorAnimator) { SurvivorUpdate(); } else { ZombieUpdate(); }
         }
 
         [Command]
@@ -39,21 +35,22 @@ namespace Infection
         [ClientRpc]
         private void RpcOnJump()
         {
-            animator.SetBool("Jump_b", true);
-            animator.SetBool("Grounded", false);
+            currentAnimator.SetBool("Jump_b", true);
+            currentAnimator.SetBool("Grounded", false);
         }
 
         private void SurvivorUpdate()
         {
-            animator.SetBool("Grounded", true);
-            animator.SetFloat("Speed_f", 0f);
+            currentAnimator.SetBool("Grounded", true);
+            currentAnimator.SetFloat("Speed_f", 0f);
         }
 
         private void ZombieUpdate()
         {
-            animator.SetBool("Grounded", true);
-            animator.SetFloat("Speed_f", 1f);
+            currentAnimator.SetBool("Grounded", true);
+            currentAnimator.SetFloat("Speed_f", 1f);
         }
+    **/
     }
 
 }
