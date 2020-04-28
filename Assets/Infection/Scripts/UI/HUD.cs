@@ -67,26 +67,26 @@ namespace Infection
             UpdateWeaponNameDisplay();
             UpdateCrosshair();
 
-            playerWeapon.OnAmmoChange += UpdateWeaponAmmoDisplay;
-            playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
-            playerWeapon.OnWeaponChange += UpdateCrosshair;
-            playerWeapon.OnStateChange += HandleStateChanged;
-            playerWeapon.OnAimingChange += UpdateCrosshairOpacity;
-            playerWeapon.OnRecoil += ExpandCrosshair;
-            playerWeapon.OnAlertEvent += UpdateAlertMessage;
+            playerWeapon.EventOnAmmoChange += UpdateWeaponAmmoDisplay;
+            playerWeapon.EventOnWeaponChange += UpdateWeaponNameDisplay;
+            playerWeapon.EventOnWeaponChange += UpdateCrosshair;
+            playerWeapon.EventOnStateChange += HandleStateChanged;
+            playerWeapon.EventOnAimingChange += UpdateCrosshairOpacity;
+            playerWeapon.EventOnRecoil += ExpandCrosshair;
+            playerWeapon.EventOnAlert += UpdateAlertMessage;
 
             playerPickupBehavior.OnLookAt += UpdateInteractionMessage;
         }
 
         private void OnDisable()
         {
-            playerWeapon.OnAmmoChange -= UpdateWeaponAmmoDisplay;
-            playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
-            playerWeapon.OnWeaponChange -= UpdateCrosshair;
-            playerWeapon.OnStateChange -= HandleStateChanged;
-            playerWeapon.OnAimingChange -= UpdateCrosshairOpacity;
-            playerWeapon.OnRecoil -= ExpandCrosshair;
-            playerWeapon.OnAlertEvent -= UpdateAlertMessage;
+            playerWeapon.EventOnAmmoChange -= UpdateWeaponAmmoDisplay;
+            playerWeapon.EventOnWeaponChange -= UpdateWeaponNameDisplay;
+            playerWeapon.EventOnWeaponChange -= UpdateCrosshair;
+            playerWeapon.EventOnStateChange -= HandleStateChanged;
+            playerWeapon.EventOnAimingChange -= UpdateCrosshairOpacity;
+            playerWeapon.EventOnRecoil -= ExpandCrosshair;
+            playerWeapon.EventOnAlert -= UpdateAlertMessage;
 
             playerPickupBehavior.OnLookAt -= UpdateInteractionMessage;
         }
