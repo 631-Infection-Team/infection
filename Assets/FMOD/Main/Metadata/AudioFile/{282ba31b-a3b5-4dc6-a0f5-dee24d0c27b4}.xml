@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{282ba31b-a3b5-4dc6-a0f5-dee24d0c27b4}">
+		<property name="assetPath">
+			<value>winchester.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>3.1114739229024941</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{842b03ec-f7d3-4875-a164-8e4fc1906ef5}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -495,6 +495,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Muzzle
       objectReference: {fileID: 0}
+    - target: {fileID: 6027439730339048367, guid: 9b7b80b449dcb834ca6e23cd5b0d0fa6,
+        type: 3}
+      propertyPath: Event
+      value: event:/Player/Weapons/weapon_anaconda
+      objectReference: {fileID: 0}
     - target: {fileID: 7121014036245286393, guid: 9b7b80b449dcb834ca6e23cd5b0d0fa6,
         type: 3}
       propertyPath: m_Layer
