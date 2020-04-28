@@ -37,7 +37,7 @@ namespace Infection.Combat
                 switch (_weapon.CurrentWeapon.WeaponDefinition.TriggerType)
                 {
                     case TriggerType.Auto:
-                        // Automatic fire is the same as burst
+                    // Automatic fire is the same as burst
                     case TriggerType.Burst:
                         // Currently you can hold down Fire to fire burst mode weapons
                         if (Input.GetAxis("Fire") > 0f)
