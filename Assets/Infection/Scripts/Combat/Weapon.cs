@@ -51,7 +51,7 @@ namespace Infection.Combat
             set
             {
                 _currentState = value;
-                OnStateChange?.Invoke(this, new StateChangedEventArgs
+                EventOnStateChange?.Invoke(this, new StateChangedEventArgs
                 {
                     State = _currentState
                 });
@@ -90,7 +90,7 @@ namespace Infection.Combat
             set
             {
                 _aimingPercentage = value;
-                OnAimingChange?.Invoke(this, new PercentageEventArgs
+                EventOnAimingChange?.Invoke(this, new PercentageEventArgs
                 {
                     Percentage = _aimingPercentage
                 });
@@ -103,7 +103,7 @@ namespace Infection.Combat
             set
             {
                 _instabilityPercentage = value;
-                OnRecoil?.Invoke(this, new PercentageEventArgs
+                EventOnRecoil?.Invoke(this, new PercentageEventArgs
                 {
                     Percentage = _instabilityPercentage
                 });
@@ -121,12 +121,12 @@ namespace Infection.Combat
         public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && w.WeaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.WeaponDefinition != null));
 
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
-        [SyncEvent] public event Action OnAmmoChange = null;
-        [SyncEvent] public event Action OnWeaponChange = null;
-        [SyncEvent] public event EventHandler<StateChangedEventArgs> OnStateChange;
-        [SyncEvent] public event EventHandler<PercentageEventArgs> OnAimingChange;
-        [SyncEvent] public event EventHandler<PercentageEventArgs> OnRecoil;
-        [SyncEvent] public event OnAlert OnAlertEvent = null;
+        [SyncEvent] public event Action EventOnAmmoChange = null;
+        [SyncEvent] public event Action EventOnWeaponChange = null;
+        [SyncEvent] public event EventHandler<StateChangedEventArgs> EventOnStateChange;
+        [SyncEvent] public event EventHandler<PercentageEventArgs> EventOnAimingChange;
+        [SyncEvent] public event EventHandler<PercentageEventArgs> EventOnRecoil;
+        [SyncEvent] public event OnAlert EventOnAlert = null;
         public delegate IEnumerator OnAlert(string message, float duration);
 
         // Components
@@ -162,7 +162,7 @@ namespace Infection.Combat
             {
                 weaponItem.FillUpAmmo();
             }
-            OnAmmoChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _camera.fieldOfView;
@@ -170,8 +170,8 @@ namespace Infection.Combat
             // Spawn the weapon model and play ready weapon animation
             UpdateAnimatorOverride();
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
-            StartCoroutine(CmdReadyAnimation());
-            OnWeaponChange?.Invoke();
+            CmdReadyAnimation();
+            EventOnWeaponChange?.Invoke();
             UpdateWeaponModel();
         }
 
@@ -204,20 +204,19 @@ namespace Infection.Combat
 
         private void OnEnable()
         {
-            OnWeaponChange += CmdUpdateAnimatorWeaponType;
+            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
         }
 
         private void OnDisable()
         {
-            OnWeaponChange -= CmdUpdateAnimatorWeaponType;
+            EventOnWeaponChange -= CmdUpdateAnimatorWeaponType;
         }
 
         /// <summary>
         /// Equip a new weapon in an empty slot. If there are no empty slots, replace currently equipped weapon.
         /// </summary>
         /// <param name="newWeapon">New weapon to equip</param>
-        [Command]
-        public WeaponItem CmdEquipWeapon(WeaponItem newWeapon)
+        public WeaponItem EquipWeapon(WeaponItem newWeapon)
         {
             // Player has no weapons
             // TODO: Find solution for edge case where player has other weapons but current weapon is null
@@ -228,7 +227,7 @@ namespace Infection.Combat
             WeaponItem oldWeapon = null;
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
-                heldWeapons[_currentWeaponIndex] = newWeapon;
+                CmdEquipWeapon(newWeapon, _currentWeaponIndex);
                 UpdateWeaponModel();
                 CmdUpdateRemoteWeaponModel();
                 UpdateAnimatorOverride();
@@ -240,7 +239,7 @@ namespace Infection.Combat
                 if (emptySlot > -1)
                 {
                     // Equip the new weapon and switch to it
-                    heldWeapons[emptySlot] = newWeapon;
+                    CmdEquipWeapon(newWeapon, emptySlot);
                     CycleWeapons();
                 }
                 else
@@ -252,10 +251,16 @@ namespace Infection.Combat
             }
 
             // Update listeners
-            OnWeaponChange?.Invoke();
-            OnAmmoChange?.Invoke();
+            EventOnWeaponChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
 
             return oldWeapon;
+        }
+
+        [Command]
+        private void CmdEquipWeapon(WeaponItem newWeapon, int slotIndex)
+        {
+            heldWeapons[slotIndex] = newWeapon;
         }
 
         /// <summary>
@@ -273,7 +278,7 @@ namespace Infection.Combat
             UpdateAnimatorOverride();
 
             // Update listeners
-            OnWeaponChange?.Invoke();
+            EventOnWeaponChange?.Invoke();
 
             return oldWeapon;
         }
@@ -351,7 +356,7 @@ namespace Infection.Combat
                 if (CurrentWeapon.Reserves == 0)
                 {
                     Debug.Log("Out of ammo!");
-                    StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 2f));
+                    StartCoroutine(EventOnAlert?.Invoke("Out of ammo", 2f));
                     // Switch to a different weapon if it exists and if it still has ammo left
                     int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.Magazine + w.Reserves > 0);
                     if (nextWeapon > -1)
@@ -385,7 +390,7 @@ namespace Infection.Combat
             if (CurrentWeapon.Reserves == 0)
             {
                 Debug.Log("No more ammo in reserves!");
-                StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 1f));
+                StartCoroutine(EventOnAlert?.Invoke("Out of ammo", 1f));
                 _reloadInterrupt = false;
                 yield break;
             }
@@ -394,7 +399,7 @@ namespace Infection.Combat
             if (CurrentWeapon.Magazine >= CurrentWeapon.WeaponDefinition.ClipSize)
             {
                 Debug.Log("Magazine fully loaded, no need to reload.");
-                StartCoroutine(OnAlertEvent?.Invoke("Magazine full", 1f));
+                StartCoroutine(EventOnAlert?.Invoke("Magazine full", 1f));
                 _reloadInterrupt = false;
                 yield break;
             }
@@ -416,7 +421,7 @@ namespace Infection.Combat
             CurrentWeapon.ReloadMagazine();
 
             // Update listeners
-            OnAmmoChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
 
             CurrentState = WeaponState.Idle;
         }
@@ -438,7 +443,7 @@ namespace Infection.Combat
             CurrentState = WeaponState.Switching;
 
             // Play holster animation
-            yield return StartCoroutine(CmdHolsterAnimation());
+            CmdHolsterAnimation();
 
             // Change the weapon
             _currentWeaponIndex = index;
@@ -447,11 +452,11 @@ namespace Infection.Combat
             UpdateAnimatorOverride();
 
             // Update listeners
-            OnAmmoChange?.Invoke();
-            OnWeaponChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
+            EventOnWeaponChange?.Invoke();
 
             // Play ready animation
-            yield return StartCoroutine(CmdReadyAnimation());
+            CmdReadyAnimation();
 
             CurrentState = WeaponState.Idle;
         }
@@ -573,7 +578,7 @@ namespace Infection.Combat
             CurrentWeapon.ConsumeMagazine(1);
 
             // Update listeners
-            OnAmmoChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
         }
 
         [ClientRpc]
@@ -592,7 +597,7 @@ namespace Infection.Combat
                 weaponItem.FillUpAmmo();
             }
 
-            OnAmmoChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
         }
 
         /// <summary>
@@ -610,8 +615,8 @@ namespace Infection.Combat
             _currentWeaponIndex = 0;
             UpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            OnWeaponChange?.Invoke();
-            OnAmmoChange?.Invoke();
+            EventOnWeaponChange?.Invoke();
+            EventOnAmmoChange?.Invoke();
 
             return weapons;
         }
@@ -748,8 +753,7 @@ namespace Infection.Combat
         /// Play the weapon holster animation for the duration of the holster time defined in the weapon definition.
         /// </summary>
         /// <returns>Holster animation</returns>
-        [Command]
-        private IEnumerator CmdHolsterAnimation()
+        private IEnumerator HolsterAnimation()
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
@@ -768,12 +772,17 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
         }
 
+        [Command]
+        private void CmdHolsterAnimation()
+        {
+            StartCoroutine(HolsterAnimation());
+        }
+
         /// <summary>
         /// Play the weapon ready animation for the duration of the ready time defined in the weapon definition.
         /// </summary>
         /// <returns>Ready animation</returns>
-        [Command]
-        private IEnumerator CmdReadyAnimation()
+        private IEnumerator ReadyAnimation()
         {
             if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
@@ -792,6 +801,12 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetBool("Ready", false);
             _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
             CurrentState = WeaponState.Idle;
+        }
+
+        [Command]
+        private void CmdReadyAnimation()
+        {
+            StartCoroutine(ReadyAnimation());
         }
 
         public class StateChangedEventArgs : EventArgs

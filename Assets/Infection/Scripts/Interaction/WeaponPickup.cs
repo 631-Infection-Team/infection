@@ -28,7 +28,7 @@ namespace Infection.Interaction
             {
                 Debug.Log("Picking up weapon item");
                 // Equip new weapon and drop old weapon, preserve ammo
-                WeaponItem oldWeapon = weapon.CmdEquipWeapon(WeaponItem);
+                WeaponItem oldWeapon = weapon.EquipWeapon(WeaponItem);
                 Transform playerTransform = weapon.transform;
 
                 if (oldWeapon != null)
