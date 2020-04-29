@@ -41,7 +41,7 @@ namespace Tests
             yield return EquipWeapon();
 
             // Check if weapon is equipped and ready
-            Assert.True(weapon.CurrentWeapon.WeaponDefinition.Equals(defaultWeapon));
+            Assert.True(weapon.CurrentWeapon.weaponDefinition.Equals(defaultWeapon));
             Assert.True(weapon.CurrentState == Weapon.WeaponState.Idle);
         }
 
@@ -76,9 +76,9 @@ namespace Tests
 
             // Check remaining ammo
             Debug.Log("Magazine");
-            Debug.Log("Result: " + weapon.CurrentWeapon.Magazine);
-            Debug.Log("Expected: " + weapon.CurrentWeapon.WeaponDefinition.ClipSize);
-            Assert.True(weapon.CurrentWeapon.Magazine == weapon.CurrentWeapon.WeaponDefinition.ClipSize);
+            Debug.Log("Result: " + weapon.CurrentWeapon.magazine);
+            Debug.Log("Expected: " + weapon.CurrentWeapon.weaponDefinition.clipSize);
+            Assert.True(weapon.CurrentWeapon.magazine == weapon.CurrentWeapon.weaponDefinition.clipSize);
         }
 
         [UnityTest]
@@ -93,9 +93,9 @@ namespace Tests
 
             // Check remaining ammo
             Debug.Log("Magazine");
-            Debug.Log("Result: " + weapon.CurrentWeapon.Magazine);
-            Debug.Log("Expected: " + (weapon.CurrentWeapon.WeaponDefinition.ClipSize - 1));
-            Assert.True(weapon.CurrentWeapon.Magazine == weapon.CurrentWeapon.WeaponDefinition.ClipSize - 1);
+            Debug.Log("Result: " + weapon.CurrentWeapon.magazine);
+            Debug.Log("Expected: " + (weapon.CurrentWeapon.weaponDefinition.clipSize - 1));
+            Assert.True(weapon.CurrentWeapon.magazine == weapon.CurrentWeapon.weaponDefinition.clipSize - 1);
         }
 
         [UnityTest]
@@ -117,11 +117,11 @@ namespace Tests
             }
 
             // Check remaining ammo
-            int expected = weapon.CurrentWeapon.WeaponDefinition.GetExpectedMagazineAfterFiringFor(duration);
+            int expected = weapon.CurrentWeapon.weaponDefinition.GetExpectedMagazineAfterFiringFor(duration);
             Debug.Log("Magazine");
-            Debug.Log("Result: " + weapon.CurrentWeapon.Magazine);
+            Debug.Log("Result: " + weapon.CurrentWeapon.magazine);
             Debug.Log("Expected: " + expected);
-            Assert.True(Math.Abs(weapon.CurrentWeapon.Magazine - expected) < 2.0f);
+            Assert.True(Math.Abs(weapon.CurrentWeapon.magazine - expected) < 2.0f);
         }
 
         [UnityTest]
@@ -135,14 +135,14 @@ namespace Tests
 
             float start = Time.time;
             // Fire weapon until magazine is empty
-            while (weapon.CurrentWeapon.Magazine > 0)
+            while (weapon.CurrentWeapon.magazine > 0)
             {
                 yield return weapon.FireWeapon();
             }
 
             // Check how long it took to empty magazine
             float elapsed = Time.time - start;
-            float expectedDuration = weapon.CurrentWeapon.WeaponDefinition.TimeToEmptyMagazine;
+            float expectedDuration = weapon.CurrentWeapon.weaponDefinition.TimeToEmptyMagazine;
             Debug.Log("Duration");
             Debug.Log("Result: " + elapsed);
             Debug.Log("Expected: " + expectedDuration);
@@ -153,7 +153,7 @@ namespace Tests
 
             // Check if weapon reloaded properly after emptying magazine
             yield return new WaitUntil(() => weapon.CurrentState == Weapon.WeaponState.Idle);
-            Assert.True(weapon.CurrentWeapon.Magazine == weapon.CurrentWeapon.WeaponDefinition.ClipSize);
+            Assert.True(weapon.CurrentWeapon.magazine == weapon.CurrentWeapon.weaponDefinition.clipSize);
         }
 
         [UnityTest]
@@ -167,14 +167,14 @@ namespace Tests
 
             float start = Time.time;
             // Fire weapon until reserves is empty
-            while (weapon.CurrentWeapon.Reserves + weapon.CurrentWeapon.Magazine > 0)
+            while (weapon.CurrentWeapon.reserves + weapon.CurrentWeapon.magazine > 0)
             {
                 yield return weapon.FireWeapon();
             }
 
             // Check how long it took to empty reserves
             float elapsed = Time.time - start;
-            float expectedDuration = weapon.CurrentWeapon.WeaponDefinition.TimeToEmptyEntireWeapon;
+            float expectedDuration = weapon.CurrentWeapon.weaponDefinition.TimeToEmptyEntireWeapon;
             Debug.Log("Duration");
             Debug.Log("Result: " + elapsed);
             Debug.Log("Expected: " + expectedDuration);
@@ -185,7 +185,7 @@ namespace Tests
 
             // Check if magazine is still empty and weapon did not reload
             yield return new WaitUntil(() => weapon.CurrentState == Weapon.WeaponState.Idle);
-            Assert.True(weapon.CurrentWeapon.Magazine == 0 && weapon.CurrentWeapon.Reserves == 0);
+            Assert.True(weapon.CurrentWeapon.magazine == 0 && weapon.CurrentWeapon.reserves == 0);
         }
 
         [UnityTest]

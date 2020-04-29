@@ -8,7 +8,7 @@ namespace Infection.Interaction
     {
         [SerializeField] private WeaponItem weaponItem = null;
 
-        public override string ItemName => weaponItem.WeaponDefinition.WeaponName;
+        public override string ItemName => weaponItem.weaponDefinition.weaponName;
 
         public WeaponItem WeaponItem
         {
@@ -38,7 +38,7 @@ namespace Infection.Interaction
                     // Local rotation for dropping weapon should be 0, 0, -90, which would have it lay flat
                     rotation *= Quaternion.Euler(0f, 0f, -90f);
 
-                    GameObject pickup = Instantiate(oldWeapon.WeaponDefinition.PickupPrefab, playerTransform.position, rotation);
+                    GameObject pickup = Instantiate(oldWeapon.weaponDefinition.pickupPrefab, playerTransform.position, rotation);
                     pickup.GetComponent<WeaponPickup>().WeaponItem = oldWeapon;
 
                     // Throw weapon up a little and forward a lot
