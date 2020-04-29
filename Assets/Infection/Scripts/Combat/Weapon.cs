@@ -495,6 +495,7 @@ namespace Infection.Combat
         [Command]
         public void CmdFire()
         {
+            if (!NetworkServer.active) return;
             Vector3 influence = CalculateAccuracyInfluence();
 
             switch (CurrentWeapon.WeaponDefinition.WeaponType)
@@ -516,6 +517,23 @@ namespace Infection.Combat
                     {
                         Player victim = hit.transform.gameObject.GetComponent<Player>();
 
+                        // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
+                        GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
+                        LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
+                        lineRenderer.SetPosition(0, muzzle.position);
+
+                        if (raycast)
+                        {
+                            lineRenderer.SetPosition(1, hit.point);
+                        }
+                        else
+                        {
+                            lineRenderer.SetPosition(1, ray.direction * 10000f);
+                        }
+
+                        NetworkServer.Spawn(trail);
+                        Destroy(trail, Time.deltaTime);
+
                         if (victim)
                         {
                             //Player localplayer = GetComponent<Player>();
@@ -533,27 +551,8 @@ namespace Infection.Combat
                         // Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
                         // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
                     }
+
                     RpcOnFire();
-
-                    if (isLocalPlayer)
-                    {
-                        // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
-                        GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
-                        LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
-                        lineRenderer.SetPosition(0, muzzle.position);
-
-                        if (raycast)
-                        {
-                            lineRenderer.SetPosition(1, hit.point);
-                        }
-                        else
-                        {
-                            lineRenderer.SetPosition(1, ray.direction * 10000f);
-                        }
-
-                        NetworkServer.Spawn(trail);
-                        Destroy(trail, Time.deltaTime);
-                    }
                     break;
 
                 case WeaponType.Projectile:
