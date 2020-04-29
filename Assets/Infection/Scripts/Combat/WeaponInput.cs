@@ -7,11 +7,17 @@ namespace Infection.Combat
     public class WeaponInput : NetworkBehaviour
     {
         // Components
-        public Player player = null;
-        public Weapon weapon = null;
+        private Player _player = null;
+        private Weapon _weapon = null;
 
         // Properties
         private bool _fireDown = false;
+
+        private void Awake()
+        {
+            _player = GetComponent<Player>();
+            _weapon = GetComponent<Weapon>();
+        }
 
         private void Update()
         {
@@ -26,17 +32,17 @@ namespace Infection.Combat
                 _fireDown = false;
             }
 
-            if (weapon.CurrentWeapon != null && weapon.CurrentWeapon.weaponDefinition)
+            if (_weapon.CurrentWeapon != null && _weapon.CurrentWeapon.WeaponDefinition)
             {
-                switch (weapon.CurrentWeapon.weaponDefinition.triggerType)
+                switch (_weapon.CurrentWeapon.WeaponDefinition.TriggerType)
                 {
                     case TriggerType.Auto:
-                    // Automatic fire is the same as burst
+                        // Automatic fire is the same as burst
                     case TriggerType.Burst:
                         // Currently you can hold down Fire to fire burst mode weapons
                         if (Input.GetAxis("Fire") > 0f)
                         {
-                            StartCoroutine(weapon.FireWeapon());
+                            StartCoroutine(_weapon.FireWeapon());
                         }
                         break;
 
@@ -47,7 +53,7 @@ namespace Infection.Combat
                             if (!_fireDown)
                             {
                                 _fireDown = true;
-                                StartCoroutine(weapon.FireWeapon());
+                                StartCoroutine(_weapon.FireWeapon());
                             }
                         }
                         break;
@@ -56,36 +62,36 @@ namespace Infection.Combat
                 // Reload weapon
                 if (Input.GetButtonDown("Reload"))
                 {
-                    StartCoroutine(weapon.ReloadWeapon());
+                    StartCoroutine(_weapon.ReloadWeapon());
                 }
 
                 // Aiming down the sights, in-between is possible with gamepad trigger
-                weapon.SetAim(Input.GetAxis("Aim"));
+                _weapon.SetAim(Input.GetAxis("Aim"));
             }
 
-            if (weapon.HasMoreWeapons)
+            if (_weapon.HasMoreWeapons)
             {
                 // Scroll up XOR Gamepad Button 3
                 if (Input.GetAxis("Mouse ScrollWheel") > 0f ^ Input.GetButtonDown("Switch"))
                 {
                     // Switch to the next weapon
-                    weapon.CycleWeapons();
+                    _weapon.CycleWeapons();
                 }
                 // Scroll down
                 else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
                 {
                     // Switch to the previous weapon
-                    weapon.CycleWeapons(-1);
+                    _weapon.CycleWeapons(-1);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     // Switch to first weapon
-                    StartCoroutine(weapon.SwitchWeapon(0));
+                    StartCoroutine(_weapon.SwitchWeapon(0));
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
                     // Switch to second weapon
-                    StartCoroutine(weapon.SwitchWeapon(1));
+                    StartCoroutine(_weapon.SwitchWeapon(1));
                 }
             }
         }

@@ -3,8 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Mirror;
-using UnityEngine.Networking.PlayerConnection;
-using EventHandler = FMODUnity.EventHandler;
 using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -53,7 +51,10 @@ namespace Infection.Combat
             set
             {
                 _currentState = value;
-                EventOnStateChange?.Invoke(_currentState);
+                OnStateChange?.Invoke(this, new StateChangedEventArgs
+                {
+                    State = _currentState
+                });
             }
         }
 
@@ -89,7 +90,10 @@ namespace Infection.Combat
             set
             {
                 _aimingPercentage = value;
-                EventOnAimingChange?.Invoke(_aimingPercentage);
+                OnAimingChange?.Invoke(this, new PercentageEventArgs
+                {
+                    Percentage = _aimingPercentage
+                });
             }
         }
 
@@ -99,7 +103,10 @@ namespace Infection.Combat
             set
             {
                 _instabilityPercentage = value;
-                EventOnRecoil?.Invoke(_instabilityPercentage);
+                OnRecoil?.Invoke(this, new PercentageEventArgs
+                {
+                    Percentage = _instabilityPercentage
+                });
             }
         }
 
@@ -111,18 +118,16 @@ namespace Infection.Combat
         /// <summary>
         /// The player has other weapons that is not the currently equipped weapon.
         /// </summary>
-        public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && w.weaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.weaponDefinition != null));
+        public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && w.WeaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.WeaponDefinition != null));
 
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
-        [SyncEvent] public event Action EventOnAmmoChange = null;
-        [SyncEvent] public event Action EventOnWeaponChange = null;
-        [SyncEvent] public event StateChangedEvent EventOnStateChange;
-        [SyncEvent] public event PercentageEvent EventOnAimingChange;
-        [SyncEvent] public event PercentageEvent EventOnRecoil;
-        [SyncEvent] public event OnAlert EventOnAlert = null;
+        public event Action OnAmmoChange = null;
+        public event Action OnWeaponChange = null;
+        public event EventHandler<StateChangedEventArgs> OnStateChange;
+        public event EventHandler<PercentageEventArgs> OnAimingChange;
+        public event EventHandler<PercentageEventArgs> OnRecoil;
+        public event OnAlert OnAlertEvent = null;
         public delegate IEnumerator OnAlert(string message, float duration);
-        public delegate void StateChangedEvent(WeaponState state);
-        public delegate void PercentageEvent(float percentage);
 
         // Components
         private Animator _weaponHolderAnimator = null;
@@ -157,7 +162,7 @@ namespace Infection.Combat
             {
                 weaponItem.FillUpAmmo();
             }
-            EventOnAmmoChange?.Invoke();
+            OnAmmoChange?.Invoke();
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _camera.fieldOfView;
@@ -165,15 +170,15 @@ namespace Infection.Combat
             // Spawn the weapon model and play ready weapon animation
             UpdateAnimatorOverride();
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
-            CmdReadyAnimation();
-            EventOnWeaponChange?.Invoke();
+            StartCoroutine(ReadyAnimation());
+            OnWeaponChange?.Invoke();
             UpdateWeaponModel();
         }
 
         public override void OnStartServer()
         {
             base.OnStartServer();
-            CmdUpdateRemoteWeaponModel();
+            UpdateRemoteWeaponModel();
         }
 
         private void Update()
@@ -183,10 +188,10 @@ namespace Infection.Combat
                 return;
             }
 
-            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition != null)
             {
                 // Zoom in based on aiming percentage
-                float zoomed = _baseFieldOfView / CurrentWeapon.weaponDefinition.aimZoomMultiplier;
+                float zoomed = _baseFieldOfView / CurrentWeapon.WeaponDefinition.AimZoomMultiplier;
                 _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
             }
 
@@ -199,19 +204,20 @@ namespace Infection.Combat
 
         private void OnEnable()
         {
-            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
+            OnWeaponChange += CmdUpdateAnimatorWeaponType;
         }
 
         private void OnDisable()
         {
-            EventOnWeaponChange -= CmdUpdateAnimatorWeaponType;
+            OnWeaponChange -= CmdUpdateAnimatorWeaponType;
         }
 
         /// <summary>
         /// Equip a new weapon in an empty slot. If there are no empty slots, replace currently equipped weapon.
         /// </summary>
         /// <param name="newWeapon">New weapon to equip</param>
-        public WeaponItem EquipWeapon(WeaponItem newWeapon)
+        [Command]
+        public WeaponItem CmdEquipWeapon(WeaponItem newWeapon)
         {
             // Player has no weapons
             // TODO: Find solution for edge case where player has other weapons but current weapon is null
@@ -220,11 +226,11 @@ namespace Infection.Combat
             }
 
             WeaponItem oldWeapon = null;
-            if (CurrentWeapon == null || CurrentWeapon.weaponDefinition == null)
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
-                CmdEquipWeapon(newWeapon, _currentWeaponIndex);
+                heldWeapons[_currentWeaponIndex] = newWeapon;
                 UpdateWeaponModel();
-                CmdUpdateRemoteWeaponModel();
+                UpdateRemoteWeaponModel();
                 UpdateAnimatorOverride();
             }
             else
@@ -234,28 +240,22 @@ namespace Infection.Combat
                 if (emptySlot > -1)
                 {
                     // Equip the new weapon and switch to it
-                    CmdEquipWeapon(newWeapon, emptySlot);
+                    heldWeapons[emptySlot] = newWeapon;
                     CycleWeapons();
                 }
                 else
                 {
                     // No more space in inventory, replace current weapon with new one
                     oldWeapon = ReplaceWeapon(_currentWeaponIndex, newWeapon);
-                    Debug.Log("Replaced " + oldWeapon.weaponDefinition.weaponName + " with " + newWeapon.weaponDefinition.weaponName);
+                    Debug.Log("Replaced " + oldWeapon.WeaponDefinition.WeaponName + " with " + newWeapon.WeaponDefinition.WeaponName);
                 }
             }
 
             // Update listeners
-            EventOnWeaponChange?.Invoke();
-            EventOnAmmoChange?.Invoke();
+            OnWeaponChange?.Invoke();
+            OnAmmoChange?.Invoke();
 
             return oldWeapon;
-        }
-
-        [Command]
-        private void CmdEquipWeapon(WeaponItem newWeapon, int slotIndex)
-        {
-            heldWeapons[slotIndex] = newWeapon;
         }
 
         /// <summary>
@@ -269,11 +269,11 @@ namespace Infection.Combat
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
             UpdateWeaponModel();
-            CmdUpdateRemoteWeaponModel();
+            UpdateRemoteWeaponModel();
             UpdateAnimatorOverride();
 
             // Update listeners
-            EventOnWeaponChange?.Invoke();
+            OnWeaponChange?.Invoke();
 
             return oldWeapon;
         }
@@ -296,15 +296,15 @@ namespace Infection.Combat
             }
 
             // Must have ammo in the magazine to fire
-            if (CurrentWeapon.magazine > 0)
+            if (CurrentWeapon.Magazine > 0)
             {
                 // Firing burst type weapon
-                if (CurrentWeapon.weaponDefinition.triggerType == TriggerType.Burst)
+                if (CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Burst)
                 {
                     bool animationStarted = false;
                     // Only fire enough rounds provided sufficient magazine
                     int burst = 3;
-                    for (int i = 0; i < burst && CurrentWeapon.magazine > 0; i++)
+                    for (int i = 0; i < burst && CurrentWeapon.Magazine > 0; i++)
                     {
                         // Fire the weapon
                         CurrentState = WeaponState.Firing;
@@ -317,15 +317,15 @@ namespace Infection.Combat
                             _weaponHolderAnimator.SetTrigger("Fire");
                             animationStarted = true;
                             // Animation plays 3 times faster for burst weapons
-                            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.weaponDefinition.fireRate / 3f);
+                            _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate / 3f);
                         }
 
                         // Wait a third of the fire rate between each shot in the burst
-                        yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.fireRate / 3.0f);
+                        yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate / 3.0f);
                     }
 
                     // Wait three times as long between bursts
-                    yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.fireRate * 3.0f);
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate * 3.0f);
                 }
                 else
                 {
@@ -337,23 +337,23 @@ namespace Infection.Combat
 
                     // Fire animation
                     _weaponHolderAnimator.SetTrigger("Fire");
-                    _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.weaponDefinition.fireRate);
+                    _weaponHolderAnimator.SetFloat("FireRate", 1.0f / CurrentWeapon.WeaponDefinition.FireRate);
 
-                    yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.fireRate);
+                    yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.FireRate);
                 }
             }
 
             CurrentState = WeaponState.Idle;
 
             // Out of ammo
-            if (CurrentWeapon.magazine <= 0)
+            if (CurrentWeapon.Magazine <= 0)
             {
-                if (CurrentWeapon.reserves == 0)
+                if (CurrentWeapon.Reserves == 0)
                 {
                     Debug.Log("Out of ammo!");
-                    StartCoroutine(EventOnAlert?.Invoke("Out of ammo", 2f));
+                    StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 2f));
                     // Switch to a different weapon if it exists and if it still has ammo left
-                    int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.magazine + w.reserves > 0);
+                    int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.Magazine + w.Reserves > 0);
                     if (nextWeapon > -1)
                     {
                         StartCoroutine(SwitchWeapon(nextWeapon));
@@ -382,19 +382,19 @@ namespace Infection.Combat
             yield return new WaitUntil(() => CurrentState == WeaponState.Idle);
 
             // No more ammo
-            if (CurrentWeapon.reserves == 0)
+            if (CurrentWeapon.Reserves == 0)
             {
                 Debug.Log("No more ammo in reserves!");
-                StartCoroutine(EventOnAlert?.Invoke("Out of ammo", 1f));
+                StartCoroutine(OnAlertEvent?.Invoke("Out of ammo", 1f));
                 _reloadInterrupt = false;
                 yield break;
             }
 
             // Weapon already fully reloaded
-            if (CurrentWeapon.magazine >= CurrentWeapon.weaponDefinition.clipSize)
+            if (CurrentWeapon.Magazine >= CurrentWeapon.WeaponDefinition.ClipSize)
             {
                 Debug.Log("Magazine fully loaded, no need to reload.");
-                StartCoroutine(EventOnAlert?.Invoke("Magazine full", 1f));
+                StartCoroutine(OnAlertEvent?.Invoke("Magazine full", 1f));
                 _reloadInterrupt = false;
                 yield break;
             }
@@ -407,16 +407,16 @@ namespace Infection.Combat
             // ReloadSpeed is a parameter in the animator. It's the speed multiplier.
             // The reload animation is 1 second total so we multiply the speed of the animation by 1 / ReloadTime
             _weaponHolderAnimator.SetTrigger("Reload");
-            _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.weaponDefinition.reloadTime);
+            _weaponHolderAnimator.SetFloat("ReloadSpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReloadTime);
             //playerAnimator.Animator.SetTrigger("Reload_t");
 
-            yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.reloadTime);
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReloadTime);
 
             // Fill up magazine with ammo from reserves
             CurrentWeapon.ReloadMagazine();
 
             // Update listeners
-            EventOnAmmoChange?.Invoke();
+            OnAmmoChange?.Invoke();
 
             CurrentState = WeaponState.Idle;
         }
@@ -438,20 +438,20 @@ namespace Infection.Combat
             CurrentState = WeaponState.Switching;
 
             // Play holster animation
-            CmdHolsterAnimation();
+            yield return StartCoroutine(HolsterAnimation());
 
             // Change the weapon
             _currentWeaponIndex = index;
             UpdateWeaponModel();
-            CmdUpdateRemoteWeaponModel();
+            UpdateRemoteWeaponModel();
             UpdateAnimatorOverride();
 
             // Update listeners
-            EventOnAmmoChange?.Invoke();
-            EventOnWeaponChange?.Invoke();
+            OnAmmoChange?.Invoke();
+            OnWeaponChange?.Invoke();
 
             // Play ready animation
-            CmdReadyAnimation();
+            yield return StartCoroutine(ReadyAnimation());
 
             CurrentState = WeaponState.Idle;
         }
@@ -474,7 +474,7 @@ namespace Infection.Combat
         {
             // Unzoom while reloading or switching, otherwise zoom normally
             float aim = CurrentState == WeaponState.Reloading || CurrentState == WeaponState.Switching ? 0f : axis;
-            AimingPercentage = Mathf.Clamp01(Mathf.MoveTowards(AimingPercentage, aim, 1f / CurrentWeapon.weaponDefinition.aimTime * Time.deltaTime));
+            AimingPercentage = Mathf.Clamp01(Mathf.MoveTowards(AimingPercentage, aim, 1f / CurrentWeapon.WeaponDefinition.AimTime * Time.deltaTime));
 
             if (_weaponHolderAnimator.isActiveAndEnabled)
             {
@@ -492,7 +492,7 @@ namespace Infection.Combat
         {
             Vector3 influence = CalculateAccuracyInfluence();
 
-            switch (CurrentWeapon.weaponDefinition.weaponType)
+            switch (CurrentWeapon.WeaponDefinition.WeaponType)
             {
                 case WeaponType.Raycast:
                     // Create a ray from camera transform using an influence vector created from accuracy to rotate ray.
@@ -520,8 +520,8 @@ namespace Infection.Combat
                         }
                         else
                         {
-                            GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(particles);
+                             GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                             NetworkServer.Spawn(particles);
                         }
 
                         // Disabled for now while I test networking.
@@ -556,16 +556,16 @@ namespace Infection.Combat
                     break;
             }
 
-            if (!CurrentWeapon.weaponDefinition.silencer)
+            if (!CurrentWeapon.WeaponDefinition.Silencer)
             {
                 // Show muzzle flash for split second
                 StartCoroutine(FlashMuzzle(influence));
             }
 
             // Apply recoil
-            InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.weaponDefinition.recoilMultiplier);
+            InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.WeaponDefinition.RecoilMultiplier);
             // Camera recoil
-            float recoil = CurrentWeapon.weaponDefinition.recoilMultiplier + 1f;
+            float recoil = CurrentWeapon.WeaponDefinition.RecoilMultiplier + 1f;
             //Player.localPlayer.verticalLook += -recoil;
             //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
@@ -573,7 +573,7 @@ namespace Infection.Combat
             CurrentWeapon.ConsumeMagazine(1);
 
             // Update listeners
-            EventOnAmmoChange?.Invoke();
+            OnAmmoChange?.Invoke();
         }
 
         [ClientRpc]
@@ -592,7 +592,7 @@ namespace Infection.Combat
                 weaponItem.FillUpAmmo();
             }
 
-            EventOnAmmoChange?.Invoke();
+            OnAmmoChange?.Invoke();
         }
 
         /// <summary>
@@ -609,9 +609,9 @@ namespace Infection.Combat
 
             _currentWeaponIndex = 0;
             UpdateWeaponModel();
-            CmdUpdateRemoteWeaponModel();
-            EventOnWeaponChange?.Invoke();
-            EventOnAmmoChange?.Invoke();
+            UpdateRemoteWeaponModel();
+            OnWeaponChange?.Invoke();
+            OnAmmoChange?.Invoke();
 
             return weapons;
         }
@@ -626,8 +626,8 @@ namespace Infection.Combat
             Transform cameraTransform = _camera.transform;
 
             // Accuracy reduction when not aiming
-            float reduction = CurrentWeapon.weaponDefinition.accuracy * accuracyReduction * (1f - AimingPercentage);
-            float accuracy = CurrentWeapon.weaponDefinition.accuracy - reduction;
+            float reduction = CurrentWeapon.WeaponDefinition.Accuracy * accuracyReduction * (1f - AimingPercentage);
+            float accuracy = CurrentWeapon.WeaponDefinition.Accuracy - reduction;
 
             // Divide by 4 to reduce the max angle from 180 degrees to 45 degrees
             return (cameraTransform.right * Random.Range(-1f + accuracy, 1f - accuracy) + cameraTransform.up * Random.Range(-1f + accuracy, 1f - accuracy)) / 4f;
@@ -671,10 +671,10 @@ namespace Infection.Combat
                 Destroy(child.gameObject);
             }
 
-            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.modelPrefab != null)
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.ModelPrefab != null)
             {
                 // Spawn weapon model
-                GameObject weaponModel = Instantiate(CurrentWeapon.weaponDefinition.modelPrefab, weaponHolder);
+                GameObject weaponModel = Instantiate(CurrentWeapon.WeaponDefinition.ModelPrefab, weaponHolder);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
@@ -684,7 +684,7 @@ namespace Infection.Combat
         }
 
         [Command]
-        private void CmdUpdateRemoteWeaponModel()
+        private void UpdateRemoteWeaponModel()
         {
             // Reset remote muzzle transform
             remoteMuzzle = null;
@@ -697,9 +697,9 @@ namespace Infection.Combat
 
             if (CurrentWeapon != null)
             {
-                if (CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.remoteModelPrefab != null)
+                if (CurrentWeapon.WeaponDefinition != null && CurrentWeapon.WeaponDefinition.RemoteModelPrefab != null)
                 {
-                    GameObject remoteModel = Instantiate(CurrentWeapon.weaponDefinition.remoteModelPrefab, rightHand);
+                    GameObject remoteModel = Instantiate(CurrentWeapon.WeaponDefinition.RemoteModelPrefab, rightHand);
                     remoteMuzzle = remoteModel.transform.Find("Muzzle");
                     NetworkServer.Spawn(remoteModel);
                     remoteModel.SetActive(!isLocalPlayer);
@@ -716,7 +716,7 @@ namespace Infection.Combat
         [ClientRpc]
         private void RpcOnUpdateAnimatorWeaponType()
         {
-            if (CurrentWeapon == null || CurrentWeapon.weaponDefinition == null)
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
                 //playerAnimator.Animator.SetInteger("WeaponType_int", 0);
                 //playerAnimator.Animator.SetBool("FullAuto_b", false);
@@ -730,12 +730,12 @@ namespace Infection.Combat
         private void UpdateAnimatorOverride()
         {
             // Update animator override or reset to default animator controller
-            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)
+            if (CurrentWeapon != null && CurrentWeapon.WeaponDefinition != null)
             {
                 var overrideController = _weaponHolderAnimator.runtimeAnimatorController as AnimatorOverrideController;
-                if (CurrentWeapon.weaponDefinition.animatorOverride != null)
+                if (CurrentWeapon.WeaponDefinition.AnimatorOverride != null)
                 {
-                    _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.weaponDefinition.animatorOverride;
+                    _weaponHolderAnimator.runtimeAnimatorController = CurrentWeapon.WeaponDefinition.AnimatorOverride;
                 }
                 else if (overrideController != null)
                 {
@@ -748,60 +748,50 @@ namespace Infection.Combat
         /// Play the weapon holster animation for the duration of the holster time defined in the weapon definition.
         /// </summary>
         /// <returns>Holster animation</returns>
+        [Command]
         private IEnumerator HolsterAnimation()
         {
-            if (CurrentWeapon == null || CurrentWeapon.weaponDefinition == null)
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
                 yield return null;
             }
 
             // Start playing animation for holster time
-            _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.weaponDefinition.holsterTime);
+            _weaponHolderAnimator.SetFloat("HolsterSpeed", 1.0f / CurrentWeapon.WeaponDefinition.HolsterTime);
             _weaponHolderAnimator.SetBool("Holster", true);
 
             // Wait for animation to finish
-            yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.holsterTime);
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.HolsterTime);
 
             // Reset animator parameters
             _weaponHolderAnimator.SetBool("Holster", false);
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
         }
 
-        [Command]
-        private void CmdHolsterAnimation()
-        {
-            StartCoroutine(HolsterAnimation());
-        }
-
         /// <summary>
         /// Play the weapon ready animation for the duration of the ready time defined in the weapon definition.
         /// </summary>
         /// <returns>Ready animation</returns>
+        [Command]
         private IEnumerator ReadyAnimation()
         {
-            if (CurrentWeapon == null || CurrentWeapon.weaponDefinition == null)
+            if (CurrentWeapon == null || CurrentWeapon.WeaponDefinition == null)
             {
                 yield break;
             }
 
             CurrentState = WeaponState.Switching;
             // Start playing animation for ready time
-            _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.weaponDefinition.readyTime);
+            _weaponHolderAnimator.SetFloat("ReadySpeed", 1.0f / CurrentWeapon.WeaponDefinition.ReadyTime);
             _weaponHolderAnimator.SetBool("Ready", true);
 
             // Wait for animation to finish
-            yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.readyTime);
+            yield return new WaitForSeconds(CurrentWeapon.WeaponDefinition.ReadyTime);
 
             // Reset animator parameters
             _weaponHolderAnimator.SetBool("Ready", false);
             _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
             CurrentState = WeaponState.Idle;
-        }
-
-        [Command]
-        private void CmdReadyAnimation()
-        {
-            StartCoroutine(ReadyAnimation());
         }
 
         public class StateChangedEventArgs : EventArgs

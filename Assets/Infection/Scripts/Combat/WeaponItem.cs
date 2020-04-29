@@ -6,9 +6,13 @@ namespace Infection.Combat
     [Serializable]
     public class WeaponItem
     {
-        public WeaponDefinition weaponDefinition;
-        public int magazine;
-        public int reserves;
+        [SerializeField] private WeaponDefinition weaponDefinition;
+        [SerializeField] private int magazine;
+        [SerializeField] private int reserves;
+
+        public WeaponDefinition WeaponDefinition => weaponDefinition;
+        public int Magazine => magazine;
+        public int Reserves => reserves;
 
         public WeaponItem()
         {
@@ -27,20 +31,20 @@ namespace Infection.Combat
         public int ConsumeMagazine(int ammoConsumed = 1)
         {
             magazine = Math.Max(0, magazine - ammoConsumed);
-            return Math.Min(ammoConsumed, magazine);
+            return Math.Min(ammoConsumed, Magazine);
         }
 
         public void ReloadMagazine()
         {
             // Weapon definition defined as infinite reserves
-            if (weaponDefinition.maxReserves < 0)
+            if (WeaponDefinition.MaxReserves < 0)
             {
-                magazine = weaponDefinition.clipSize;
+                magazine = WeaponDefinition.ClipSize;
                 return;
             }
 
             // Cannot reload more ammo than how much is in reserves
-            int ammoToAdd = Math.Min(weaponDefinition.clipSize - magazine, reserves);
+            int ammoToAdd = Math.Min(WeaponDefinition.ClipSize - Magazine, Reserves);
             magazine += ammoToAdd;
             reserves -= ammoToAdd;
         }
@@ -50,12 +54,12 @@ namespace Infection.Combat
         /// </summary>
         public void FillUpAmmo()
         {
-            if (weaponDefinition == null)
+            if (WeaponDefinition == null)
             {
                 return;
             }
-            magazine = weaponDefinition.clipSize;
-            reserves = weaponDefinition.maxReserves;
+            magazine = WeaponDefinition.ClipSize;
+            reserves = WeaponDefinition.MaxReserves;
         }
     }
 }
