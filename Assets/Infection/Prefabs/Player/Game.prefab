@@ -453,6 +453,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  player: {fileID: 7389033405124876050}
+  weapon: {fileID: 3480084654845358697}
 --- !u!114 &1296156372020382071
 MonoBehaviour:
   m_ObjectHideFlags: 0
