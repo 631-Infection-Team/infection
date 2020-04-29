@@ -67,26 +67,26 @@ namespace Infection
             UpdateWeaponNameDisplay();
             UpdateCrosshair();
 
-            playerWeapon.OnAmmoChange += UpdateWeaponAmmoDisplay;
-            playerWeapon.OnWeaponChange += UpdateWeaponNameDisplay;
-            playerWeapon.OnWeaponChange += UpdateCrosshair;
-            playerWeapon.OnStateChange += HandleStateChanged;
-            playerWeapon.OnAimingChange += UpdateCrosshairOpacity;
-            playerWeapon.OnRecoil += ExpandCrosshair;
-            playerWeapon.OnAlertEvent += UpdateAlertMessage;
+            playerWeapon.EventOnAmmoChange += UpdateWeaponAmmoDisplay;
+            playerWeapon.EventOnWeaponChange += UpdateWeaponNameDisplay;
+            playerWeapon.EventOnWeaponChange += UpdateCrosshair;
+            playerWeapon.EventOnStateChange += HandleStateChanged;
+            playerWeapon.EventOnAimingChange += UpdateCrosshairOpacity;
+            playerWeapon.EventOnRecoil += ExpandCrosshair;
+            playerWeapon.EventOnAlert += UpdateAlertMessage;
 
             playerPickupBehavior.OnLookAt += UpdateInteractionMessage;
         }
 
         private void OnDisable()
         {
-            playerWeapon.OnAmmoChange -= UpdateWeaponAmmoDisplay;
-            playerWeapon.OnWeaponChange -= UpdateWeaponNameDisplay;
-            playerWeapon.OnWeaponChange -= UpdateCrosshair;
-            playerWeapon.OnStateChange -= HandleStateChanged;
-            playerWeapon.OnAimingChange -= UpdateCrosshairOpacity;
-            playerWeapon.OnRecoil -= ExpandCrosshair;
-            playerWeapon.OnAlertEvent -= UpdateAlertMessage;
+            playerWeapon.EventOnAmmoChange -= UpdateWeaponAmmoDisplay;
+            playerWeapon.EventOnWeaponChange -= UpdateWeaponNameDisplay;
+            playerWeapon.EventOnWeaponChange -= UpdateCrosshair;
+            playerWeapon.EventOnStateChange -= HandleStateChanged;
+            playerWeapon.EventOnAimingChange -= UpdateCrosshairOpacity;
+            playerWeapon.EventOnRecoil -= ExpandCrosshair;
+            playerWeapon.EventOnAlert -= UpdateAlertMessage;
 
             playerPickupBehavior.OnLookAt -= UpdateInteractionMessage;
         }
@@ -151,7 +151,7 @@ namespace Infection
                 return;
             }
 
-            magazineDisplay.text = $"{playerWeapon.CurrentWeapon.Magazine}";
+            magazineDisplay.text = $"{playerWeapon.CurrentWeapon.magazine}";
 
             // Magazine animation
             if (_magazineAnim.isPlaying)
@@ -160,20 +160,20 @@ namespace Infection
             }
             _magazineAnim.Play();
 
-            if (playerWeapon.CurrentWeapon.Reserves < 0)
+            if (playerWeapon.CurrentWeapon.reserves < 0)
             {
                 // Show infinite ammo
                 reservesDisplay.text = "∞";
                 return;
             }
-            reservesDisplay.text = $"{playerWeapon.CurrentWeapon.Reserves}";
+            reservesDisplay.text = $"{playerWeapon.CurrentWeapon.reserves}";
         }
 
         private void UpdateWeaponNameDisplay()
         {
             if (playerWeapon.CurrentWeapon != null)
             {
-                weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.WeaponDefinition.WeaponName}";
+                weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.weaponDefinition.weaponName}";
             }
             else
             {
@@ -185,7 +185,7 @@ namespace Infection
         {
             if (playerWeapon.CurrentWeapon != null)
             {
-                crosshair.sprite = playerWeapon.CurrentWeapon.WeaponDefinition.Crosshair;
+                crosshair.sprite = playerWeapon.CurrentWeapon.weaponDefinition.crosshair;
             }
             else
             {
@@ -193,24 +193,24 @@ namespace Infection
             }
         }
 
-        private void UpdateCrosshairOpacity(object sender, Weapon.PercentageEventArgs e)
+        private void UpdateCrosshairOpacity(float percentage)
         {
             var color = crosshair.color;
-            color = new Color(color.r, color.g, color.b, Mathf.Lerp(_originalCrosshairOpacity, 0f, e.Percentage));
+            color = new Color(color.r, color.g, color.b, Mathf.Lerp(_originalCrosshairOpacity, 0f, percentage));
             crosshair.color = color;
         }
 
-        private void ExpandCrosshair(object sender, Weapon.PercentageEventArgs e)
+        private void ExpandCrosshair(float percentage)
         {
-            crosshair.transform.localScale = Vector3.Lerp(_originalCrosshairSize, _originalCrosshairSize * 2, e.Percentage);
+            crosshair.transform.localScale = Vector3.Lerp(_originalCrosshairSize, _originalCrosshairSize * 2, percentage);
         }
 
-        private void HandleStateChanged(object sender, Weapon.StateChangedEventArgs e)
+        private void HandleStateChanged(Weapon.WeaponState state)
         {
             // Blank message for idle and firing
             string statusMessage = "";
             // Update status message display to reflect weapon state
-            switch (e.State)
+            switch (state)
             {
                 case Weapon.WeaponState.Reloading:
                     statusMessage = "Reloading";
