@@ -254,12 +254,10 @@ GameObject:
   - component: {fileID: 7389033405124876050}
   - component: {fileID: 8342093755469769022}
   - component: {fileID: 2691179136575869348}
-  - component: {fileID: 3907589563055034011}
   - component: {fileID: 5019651321688557597}
-  - component: {fileID: 3480084654845358697}
-  - component: {fileID: 3349098978463968018}
   - component: {fileID: 1296156372020382071}
   - component: {fileID: 7033048890740614763}
+  - component: {fileID: 5977745342468267528}
   m_Layer: 0
   m_Name: Game
   m_TagString: Player
@@ -391,20 +389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &3907589563055034011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4455965949840066444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 102f406e7e8d9b1438c2dcb7c4fd4041, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &5019651321688557597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,57 +403,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &3480084654845358697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4455965949840066444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  heldWeapons:
-  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
-    magazine: 0
-    reserves: 0
-  - weaponDefinition: {fileID: 0}
-    magazine: 0
-    reserves: 0
-  raycastRange: 100
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 8705
-  accuracyReduction: 0.2
-  bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
-  bulletTrailVfx: {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7,
-    type: 3}
-  weaponHolder: {fileID: 2881526258939828251}
-  muzzle: {fileID: 0}
-  remoteMuzzle: {fileID: 0}
-  muzzleFlash: {fileID: 0}
-  rightHand: {fileID: 5820765258618028589}
-  playerAnimator: {fileID: 5019651321688557597}
---- !u!114 &3349098978463968018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4455965949840066444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6be0a1f94847a5a7c2ed8807f1a357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  player: {fileID: 7389033405124876050}
-  weapon: {fileID: 3480084654845358697}
 --- !u!114 &1296156372020382071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,6 +436,40 @@ MonoBehaviour:
   minimapMarker: {fileID: 259598049888505127}
   playerMarker: {fileID: 2100000, guid: 1927cd16cec26a643aebdb52bdeba978, type: 2}
   enemyMarker: {fileID: 2100000, guid: 249ca9533f377b9458d5a2d9b226337a, type: 2}
+--- !u!114 &5977745342468267528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4455965949840066444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e21c00d205c67f4b8245f2242b619c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  startingWeapons:
+  - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
+    magazine: 0
+    reserves: 0
+  - weaponDefinition: {fileID: 11400000, guid: d19292a0f6d11b14db6845c307e43412, type: 2}
+    magazine: 0
+    reserves: 0
+  raycastRange: 1000
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 1
+  accuracyReduction: 0.2
+  bulletImpactVfx: {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
+  bulletTrailVfx: {fileID: 4520645958872433483, guid: 5e6d80d5ef3b7a1419ef2d64459eb0d7,
+    type: 3}
+  weaponHolder: {fileID: 2881526258939828251}
+  muzzle: {fileID: 0}
+  remoteMuzzle: {fileID: 0}
+  muzzleFlash: {fileID: 0}
+  rightHand: {fileID: 5820765258618028589}
 --- !u!1 &5863538978636365972
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,7 +605,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 112439
+    m_Bits: 111415
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1247,15 +1214,15 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 5097000c9e692bd439cecf4537125fbd, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 433545daff80fe347a73cc1fd76ebeee, type: 3}
---- !u!1 &6719484090044396882 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 135638, guid: 433545daff80fe347a73cc1fd76ebeee,
-    type: 3}
-  m_PrefabInstance: {fileID: 6719484090044523652}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6719484090044176302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 455466, guid: 433545daff80fe347a73cc1fd76ebeee,
+    type: 3}
+  m_PrefabInstance: {fileID: 6719484090044523652}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6719484090044396882 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 135638, guid: 433545daff80fe347a73cc1fd76ebeee,
     type: 3}
   m_PrefabInstance: {fileID: 6719484090044523652}
   m_PrefabAsset: {fileID: 0}

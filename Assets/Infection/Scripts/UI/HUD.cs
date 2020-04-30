@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Infection
+namespace Infection.UI
 {
     public class HUD : MonoBehaviour
     {
@@ -16,7 +16,7 @@ namespace Infection
         [SerializeField] private Image crosshair = null;
         [SerializeField] private Sprite defaultCrosshair = null;
         [SerializeField] private GameObject playerPanel = null;
-        [SerializeField] private GameObject deadPanel = null;
+        // [SerializeField] private GameObject deadPanel = null;
         [SerializeField] private GameObject pausePanel = null;
         [SerializeField] private TextMeshProUGUI healthValueDisplay = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;
