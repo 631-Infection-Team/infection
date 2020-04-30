@@ -86,7 +86,7 @@ namespace Infection
         /// <para>See OnRoomServerCreateGamePlayer to customize the player object for the initial GamePlay scene.</para>
         /// </summary>
         /// <param name="conn">The connection the player object is for.</param>
-        public virtual void OnRoomServerAddPlayer(NetworkConnection conn)
+        new public virtual void OnRoomServerAddPlayer(NetworkConnection conn)
         {
             base.OnServerAddPlayer(conn);
         }
@@ -119,12 +119,14 @@ namespace Infection
         /// <summary>
         /// This is a hook to allow custom behaviour when the game client enters the room.
         /// </summary>
-        public override void OnRoomClientEnter() { }
+        public override void OnRoomClientEnter() {
+        }
 
         /// <summary>
         /// This is a hook to allow custom behaviour when the game client exits the room.
         /// </summary>
-        public override void OnRoomClientExit() { }
+        public override void OnRoomClientExit() {
+        }
 
         /// <summary>
         /// This is called on the client when it connects to server.

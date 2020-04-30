@@ -16,7 +16,7 @@ namespace Infection.UI
         [SerializeField] private Image crosshair = null;
         [SerializeField] private Sprite defaultCrosshair = null;
         [SerializeField] private GameObject playerPanel = null;
-        [SerializeField] private GameObject deadPanel = null;
+        // [SerializeField] private GameObject deadPanel = null;
         [SerializeField] private GameObject pausePanel = null;
         [SerializeField] private TextMeshProUGUI healthValueDisplay = null;
         [SerializeField] private TextMeshProUGUI statusMessageDisplay = null;

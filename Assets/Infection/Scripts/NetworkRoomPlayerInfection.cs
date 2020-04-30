@@ -19,9 +19,6 @@ namespace Infection
 {
     public class NetworkRoomPlayerInfection : NetworkRoomPlayer
     {
-        public GameObject uiRoomPlayerPrefab = null;
-        public GameObject uiScrollContent = null;
-
         #region Room Client Callbacks
 
         /// <summary>
@@ -58,15 +55,6 @@ namespace Infection
         public override void OnGUI()
         {
             base.OnGUI();
-
-            NetworkRoomManager room = NetworkManager.singleton as NetworkRoomManager;
-
-            if (room)
-            {
-                if (SceneManager.GetActiveScene().name != room.RoomScene) return;
-
-                Debug.Log(index + 1);
-            }
         }
 
         #endregion
