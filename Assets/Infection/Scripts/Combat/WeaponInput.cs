@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using System.Collections;
+using Mirror;
 using UnityEngine;
 
 namespace Infection.Combat
@@ -35,7 +36,7 @@ namespace Infection.Combat
                         // Currently you can hold down Fire to fire burst mode weapons
                         if (Input.GetAxis("Fire") > 0f)
                         {
-                            weapon.StartCoroutine(weapon.FireWeapon());
+                            StartCoroutine(weapon.FireWeapon());
                         }
                         break;
 
@@ -46,7 +47,7 @@ namespace Infection.Combat
                             if (!_fireDown)
                             {
                                 _fireDown = true;
-                                weapon.StartCoroutine(weapon.FireWeapon());
+                                StartCoroutine(weapon.FireWeapon());
                             }
                         }
                         break;
@@ -55,7 +56,7 @@ namespace Infection.Combat
                 // Reload weapon
                 if (Input.GetButtonDown("Reload"))
                 {
-                    weapon.StartCoroutine(weapon.ReloadWeapon());
+                    StartCoroutine(weapon.ReloadWeapon());
                 }
 
                 // Aiming down the sights, in-between is possible with gamepad trigger
@@ -79,12 +80,12 @@ namespace Infection.Combat
                 else if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     // Switch to first weapon
-                    weapon.StartCoroutine(weapon.SwitchWeapon(0));
+                    StartCoroutine(weapon.SwitchWeapon(0));
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
                     // Switch to second weapon
-                    weapon.StartCoroutine(weapon.SwitchWeapon(1));
+                    StartCoroutine(weapon.SwitchWeapon(1));
                 }
             }
         }
