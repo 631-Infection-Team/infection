@@ -41,8 +41,8 @@ namespace Infection.Combat
         [SerializeField, Tooltip("Used for rendering on remote players")]
         private Transform rightHand = null;
 
-        [Header("Player")]
-        [SerializeField] private PlayerAnimator playerAnimator = null;
+        // [Header("Player")]
+        // [SerializeField] private PlayerAnimator playerAnimator = null;
 
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
