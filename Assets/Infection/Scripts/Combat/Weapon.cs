@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using Mirror;
-using UnityEngine.Networking.PlayerConnection;
-using EventHandler = FMODUnity.EventHandler;
 using Random = UnityEngine.Random;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Infection.Combat
 {
+    [RequireComponent(typeof(Player))]
+    [RequireComponent(typeof(PlayerCamera))]
     public class Weapon : NetworkBehaviour
     {
         public enum WeaponState
@@ -23,26 +20,24 @@ namespace Infection.Combat
         }
 
         [Header("Weapon")]
-        [SerializeField] private WeaponItem[] heldWeapons = new WeaponItem[2];
-        [SerializeField] private float raycastRange = 100f;
-        [SerializeField] private LayerMask raycastMask = 0;
-        [SerializeField, Tooltip("Percentage reduction when not aiming, based on 45 degree cone spread from camera")]
-        private float accuracyReduction = 0.2f;
+        public WeaponItem[] startingWeapons = new WeaponItem[2];
+        public SyncListWeaponItem heldWeapons = new SyncListWeaponItem();
+        public float raycastRange = 1000f;
+        public LayerMask raycastMask = 0;
+        [Tooltip("Percentage reduction when not aiming, based on 45 degree cone spread from camera")]
+        public float accuracyReduction = 0.2f;
 
         [Header("Graphics")]
-        [SerializeField] private GameObject bulletImpactVfx = null;
-        [SerializeField] private GameObject bulletTrailVfx = null;
+        public GameObject bulletImpactVfx = null;
+        public GameObject bulletTrailVfx = null;
 
         [Header("Transforms for weapon model")]
-        [SerializeField] private Transform weaponHolder = null;
-        [SerializeField] private Transform muzzle = null;
-        [SerializeField] private Transform remoteMuzzle = null;
-        [SerializeField] private Transform muzzleFlash = null;
-        [SerializeField, Tooltip("Used for rendering on remote players")]
-        private Transform rightHand = null;
-
-        // [Header("Player")]
-        // [SerializeField] private PlayerAnimator playerAnimator = null;
+        public Transform weaponHolder = null;
+        public Transform muzzle = null;
+        public Transform remoteMuzzle = null;
+        public Transform muzzleFlash = null;
+        [Tooltip("Used for rendering on remote players")]
+        public Transform rightHand = null;
 
         /// <summary>
         /// Current state of the weapon. This can be idle, firing, reloading, or switching.
@@ -64,7 +59,7 @@ namespace Infection.Combat
         {
             get
             {
-                if (heldWeapons.Length > 0)
+                if (heldWeapons.Count > 0)
                 {
                     return heldWeapons[_currentWeaponIndex];
                 }
@@ -106,13 +101,14 @@ namespace Infection.Combat
         /// <summary>
         /// The player cannot hold additional weapons as their held weapons array is full.
         /// </summary>
-        public bool IsFullOfWeapons => !Array.Exists(heldWeapons, w => w == null);
+        public bool IsFullOfWeapons => heldWeapons.All(w => w != null);
 
         /// <summary>
         /// The player has other weapons that is not the currently equipped weapon.
         /// </summary>
-        public bool HasMoreWeapons => Array.Exists(heldWeapons, w => w != null && w != CurrentWeapon && w.weaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.weaponDefinition != null));
+        public bool HasMoreWeapons => heldWeapons.Any(w => w != null && w != CurrentWeapon && w.weaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.weaponDefinition != null));
 
+        #region Events
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
         [SyncEvent] public event Action EventOnAmmoChange = null;
         [SyncEvent] public event Action EventOnWeaponChange = null;
@@ -123,35 +119,31 @@ namespace Infection.Combat
         public delegate IEnumerator OnAlert(string message, float duration);
         public delegate void StateChangedEvent(WeaponState state);
         public delegate void PercentageEvent(float percentage);
+        #endregion
 
+        #region Private Fields
         // Components
         private Animator _weaponHolderAnimator = null;
         private Camera _camera = null;
 
-        // Properties
+        // Private fields
         private int _currentWeaponIndex = 0;
         private WeaponState _currentState = WeaponState.Idle;
         private float _aimingPercentage = 0f;
         private float _instabilityPercentage;
         private float _baseFieldOfView = 0f;
         private bool _reloadInterrupt = false;
+        private bool _fireDown = false;
+        #endregion
 
         private void Awake()
         {
-            raycastMask = LayerMask.GetMask("Default");
             _camera = GetComponent<Player>().camera;
-            //_playerAnimator = GetComponent<Player>().animator;
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
         private IEnumerator Start()
         {
-            // This is only to remind you that if this weapon script is attached to a player, it also needs weapon input.
-            if (GetComponent<WeaponInput>() == null)
-            {
-                Debug.LogError("Weapon component does not work on its own and may require WeaponInput if used for the player.");
-            }
-
             // Fill up all held weapons to max ammo
             foreach (WeaponItem weaponItem in heldWeapons)
             {
@@ -170,41 +162,85 @@ namespace Infection.Combat
             UpdateWeaponModel();
         }
 
-        public override void OnStartServer()
+        public void Update()
         {
-            base.OnStartServer();
-            CmdUpdateRemoteWeaponModel();
-        }
+            if (!isLocalPlayer) return;
 
-        private void Update()
-        {
-            if (!isLocalPlayer)
+            // Reset fire when trigger is released
+            if (Input.GetAxis("Fire") <= 0f)
             {
-                return;
+                _fireDown = false;
             }
 
-            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)
+            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition)
             {
-                // Zoom in based on aiming percentage
-                float zoomed = _baseFieldOfView / CurrentWeapon.weaponDefinition.aimZoomMultiplier;
-                _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+                switch (CurrentWeapon.weaponDefinition.triggerType)
+                {
+                    case TriggerType.Auto:
+                    // Automatic fire is the same as burst
+                    case TriggerType.Burst:
+                        // Currently you can hold down Fire to fire burst mode weapons
+                        if (Input.GetAxis("Fire") > 0f)
+                        {
+                            StartCoroutine(FireWeapon());
+                        }
+                        break;
+
+                    case TriggerType.Manual:
+                        // Manual fire
+                        if (Input.GetAxis("Fire") > 0f)
+                        {
+                            if (!_fireDown)
+                            {
+                                _fireDown = true;
+                                StartCoroutine(FireWeapon());
+                            }
+                        }
+                        break;
+                }
+
+                // Reload weapon
+                if (Input.GetButtonDown("Reload"))
+                {
+                    StartCoroutine(ReloadWeapon());
+                }
+
+                // Aiming down the sights, in-between is possible with gamepad trigger
+                SetAim(Input.GetAxis("Aim"));
             }
 
-            // Gradually reduce instability percentage while weapon is calming down
-            if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
+            if (HasMoreWeapons)
             {
-                InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
+                // Scroll up XOR Gamepad Button 3
+                if (Input.GetAxis("Mouse ScrollWheel") > 0f ^ Input.GetButtonDown("Switch"))
+                {
+                    // Switch to the next weapon
+                    CycleWeapons();
+                }
+                // Scroll down
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+                {
+                    // Switch to the previous weapon
+                    CycleWeapons(-1);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    // Switch to first weapon
+                    StartCoroutine(SwitchWeapon(0));
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    // Switch to second weapon
+                    StartCoroutine(SwitchWeapon(1));
+                }
             }
         }
 
-        private void OnEnable()
+        public override void OnStartClient()
         {
-            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
-        }
-
-        private void OnDisable()
-        {
-            EventOnWeaponChange -= CmdUpdateAnimatorWeaponType;
+            base.OnStartClient();
+            EquipWeapon(startingWeapons[0]);
+            EquipWeapon(startingWeapons[1]);
         }
 
         /// <summary>
@@ -230,7 +266,7 @@ namespace Infection.Combat
             else
             {
                 // Player has an empty slot in inventory
-                int emptySlot = Array.FindIndex(heldWeapons, w => w == null);
+                int emptySlot = heldWeapons.FindIndex(w => w == null);
                 if (emptySlot > -1)
                 {
                     // Equip the new weapon and switch to it
@@ -278,17 +314,8 @@ namespace Infection.Combat
             return oldWeapon;
         }
 
-        /// <summary>
-        /// Fire the currently equipped weapon.
-        /// </summary>
-        /// <returns>Firing state</returns>
         public IEnumerator FireWeapon()
         {
-            if (!isLocalPlayer)
-            {
-                yield break;
-            }
-
             // Cannot fire weapon when state is not idle or when reload action interrupts fire
             if (CurrentState != WeaponState.Idle || _reloadInterrupt)
             {
@@ -353,7 +380,8 @@ namespace Infection.Combat
                     Debug.Log("Out of ammo!");
                     StartCoroutine(EventOnAlert?.Invoke("Out of ammo", 2f));
                     // Switch to a different weapon if it exists and if it still has ammo left
-                    int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.magazine + w.reserves > 0);
+                    // int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.magazine + w.reserves > 0);
+                    int nextWeapon = heldWeapons.FindIndex(w => w != null && w.magazine + w.reserves > 0);
                     if (nextWeapon > -1)
                     {
                         StartCoroutine(SwitchWeapon(nextWeapon));
@@ -364,6 +392,92 @@ namespace Infection.Combat
 
                 StartCoroutine(ReloadWeapon());
             }
+        }
+
+        [Command]
+        void CmdFire()
+        {
+            Vector3 influence = CalculateAccuracyInfluence();
+
+            switch (CurrentWeapon.weaponDefinition.weaponType)
+            {
+                case WeaponType.Raycast:
+                    // We need to calculate the raycast on the server side, because we cannot send gameobjects over the network.
+                    Transform cameraTransform = _camera.transform;
+                    // Generate direction with slight random rotation using accuracy
+                    Vector3 direction = cameraTransform.forward + influence;
+                    // Create ray using camera position and direction
+                    Ray ray = new Ray(cameraTransform.position, direction);
+                    // Raycast using LayerMask
+                    bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
+
+
+                    // Create bullet trail regardless if raycast hit and quickly destroy it
+                    GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
+                    LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
+                    lineRenderer.SetPosition(0, muzzle.position);
+
+                    if (raycast)
+                    {
+                        //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                        //Debug.Log("Server recognized that the object was hit: " + hit.transform.gameObject.name);
+
+                        Player victim = hit.transform.gameObject.GetComponent<Player>();
+
+                        if (victim)
+                        {
+                            // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
+                            victim.TakeDamage(10, GetComponent<NetworkIdentity>().netId);
+                        }
+                        else
+                        {
+                            GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(particles);
+                        }
+
+                        lineRenderer.SetPosition(1, hit.point);
+                    }
+                    else
+                    {
+                        lineRenderer.SetPosition(1, ray.direction * 10000f);
+                    }
+
+                    NetworkServer.Spawn(trail);
+                    Destroy(trail, Time.deltaTime);
+
+                    break;
+
+                case WeaponType.Projectile:
+                    // TODO: Implement projectile weapon firing
+                    break;
+            }
+
+            RpcOnFire();
+
+            if (!CurrentWeapon.weaponDefinition.silencer)
+            {
+                // Show muzzle flash for split second
+                StartCoroutine(FlashMuzzle(influence));
+            }
+
+            // Apply recoil
+            InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.weaponDefinition.recoilMultiplier);
+            // Camera recoil
+            float recoil = CurrentWeapon.weaponDefinition.recoilMultiplier + 1f;
+            //Player.localPlayer.verticalLook += -recoil;
+            //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
+
+            // Subtract ammo
+            CurrentWeapon.ConsumeMagazine(1);
+
+            // Update listeners
+            EventOnAmmoChange?.Invoke();
+        }
+
+        [ClientRpc]
+        void RpcOnFire()
+        {
+            // Call a method on the PlayerAnimator.cs here. (Set trigger shoot?)
         }
 
         /// <summary>
@@ -462,7 +576,7 @@ namespace Infection.Combat
         /// </summary>
         public void CycleWeapons(int direction = 1)
         {
-            int index = (((_currentWeaponIndex + direction) % heldWeapons.Length) + heldWeapons.Length) % heldWeapons.Length;
+            int index = (((_currentWeaponIndex + direction) % heldWeapons.Count) + heldWeapons.Count) % heldWeapons.Count;
             StartCoroutine(SwitchWeapon(index));
         }
 
@@ -484,104 +598,6 @@ namespace Infection.Combat
         }
 
         /// <summary>
-        /// Fire the weapon. Waiting for weapon state is not handled here.
-        /// This method is only used to raycast and consume ammo.
-        /// </summary>
-        [Command]
-        public void CmdFire()
-        {
-            if (!NetworkServer.active) return;
-            Vector3 influence = CalculateAccuracyInfluence();
-
-            switch (CurrentWeapon.weaponDefinition.weaponType)
-            {
-                case WeaponType.Raycast:
-                    // Create a ray from camera transform using an influence vector created from accuracy to rotate ray.
-                    // Cache camera transform for repeated access
-                    Transform cameraTransform = _camera.transform;
-                    // Generate direction with slight random rotation using accuracy
-                    Vector3 direction = cameraTransform.forward + influence;
-                    // Create ray using camera position and direction
-                    Ray ray = new Ray(cameraTransform.position, direction);
-
-                    // Raycast using LayerMask
-                    bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
-
-                    // Determine objects hit
-                    if (raycast)
-                    {
-                        Player victim = hit.transform.gameObject.GetComponent<Player>();
-
-                        // Create bullet trail regardless if raycast hit and quickly destroy it if it does not collide
-                        GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
-                        LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
-                        lineRenderer.SetPosition(0, muzzle.position);
-
-                        if (raycast)
-                        {
-                            lineRenderer.SetPosition(1, hit.point);
-                        }
-                        else
-                        {
-                            lineRenderer.SetPosition(1, ray.direction * 10000f);
-                        }
-
-                        NetworkServer.Spawn(trail);
-                        Destroy(trail, Time.deltaTime);
-
-                        if (victim)
-                        {
-                            //Player localplayer = GetComponent<Player>();
-                            //localplayer.DealDamageTo(targetPlayer, CurrentWeapon.WeaponDefinition.Damage);
-                            // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
-                            victim.TakeDamage(10, GetComponent<NetworkIdentity>().netId);
-                        }
-                        else
-                        {
-                            GameObject particles = Instantiate(bulletImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
-                            NetworkServer.Spawn(particles);
-                        }
-
-                        // Disabled for now while I test networking.
-                        // Debug.Log(CurrentWeapon.WeaponDefinition.WeaponName + " hit target " + hit.transform.name);
-                        // Debug.DrawLine(muzzle.position, hit.point, Color.red, 0.5f);
-                    }
-
-                    RpcOnFire();
-                    break;
-
-                case WeaponType.Projectile:
-                    // TODO: Implement projectile weapon firing
-                    break;
-            }
-
-            if (!CurrentWeapon.weaponDefinition.silencer)
-            {
-                // Show muzzle flash for split second
-                StartCoroutine(FlashMuzzle(influence));
-            }
-
-            // Apply recoil
-            InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.weaponDefinition.recoilMultiplier);
-            // Camera recoil
-            float recoil = CurrentWeapon.weaponDefinition.recoilMultiplier + 1f;
-            //Player.localPlayer.verticalLook += -recoil;
-            //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
-
-            // Subtract ammo
-            CurrentWeapon.ConsumeMagazine(1);
-
-            // Update listeners
-            EventOnAmmoChange?.Invoke();
-        }
-
-        [ClientRpc]
-        public void RpcOnFire()
-        {
-            // This is called on every client whenever a weapon is fired.
-        }
-
-        /// <summary>
         /// Fill up all weapons to max ammo and reserves.
         /// </summary>
         public void RefillAmmo()
@@ -598,10 +614,10 @@ namespace Infection.Combat
         /// Sets all weapon items in heldWeapons to null. Resets currently equipped weapon index to 0.
         /// </summary>
         /// <returns>Array of weapons that were removed</returns>
-        public WeaponItem[] UnequipAllWeapons()
+        public SyncListWeaponItem UnequipAllWeapons()
         {
-            WeaponItem[] weapons = heldWeapons;
-            for (int i = 0; i < heldWeapons.Length; i++)
+            var weapons = heldWeapons;
+            for (int i = 0; i < heldWeapons.Count; i++)
             {
                 heldWeapons[i] = null;
             }

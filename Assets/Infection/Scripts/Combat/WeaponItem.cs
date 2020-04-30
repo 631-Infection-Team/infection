@@ -1,5 +1,6 @@
 ﻿using System;
-using UnityEngine;
+using System.Collections.Generic;
+using Mirror;
 
 namespace Infection.Combat
 {
@@ -15,6 +16,13 @@ namespace Infection.Combat
             weaponDefinition = null;
             magazine = 0;
             reserves = 0;
+        }
+
+        public WeaponItem(WeaponItem other)
+        {
+            weaponDefinition = other.weaponDefinition;
+            magazine = other.magazine;
+            reserves = other.reserves;
         }
 
         public WeaponItem(WeaponDefinition weaponDefinition, int magazine, int reserves)
@@ -57,5 +65,11 @@ namespace Infection.Combat
             magazine = weaponDefinition.clipSize;
             reserves = weaponDefinition.maxReserves;
         }
+    }
+
+    [Serializable]
+    public class SyncListWeaponItem : SyncList<WeaponItem>
+    {
+        public SyncListWeaponItem() : base(new List<WeaponItem>()) {}
     }
 }
