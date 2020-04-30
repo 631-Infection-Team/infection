@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Infection.Combat
 {
-    [RequireComponent(typeof(Weapon))]
     public class WeaponInput : NetworkBehaviour
     {
         // Components
@@ -36,7 +35,7 @@ namespace Infection.Combat
                         // Currently you can hold down Fire to fire burst mode weapons
                         if (Input.GetAxis("Fire") > 0f)
                         {
-                            StartCoroutine(weapon.FireWeapon());
+                            weapon.StartCoroutine(weapon.FireWeapon());
                         }
                         break;
 
@@ -47,7 +46,7 @@ namespace Infection.Combat
                             if (!_fireDown)
                             {
                                 _fireDown = true;
-                                StartCoroutine(weapon.FireWeapon());
+                                weapon.StartCoroutine(weapon.FireWeapon());
                             }
                         }
                         break;
@@ -56,7 +55,7 @@ namespace Infection.Combat
                 // Reload weapon
                 if (Input.GetButtonDown("Reload"))
                 {
-                    StartCoroutine(weapon.ReloadWeapon());
+                    weapon.StartCoroutine(weapon.ReloadWeapon());
                 }
 
                 // Aiming down the sights, in-between is possible with gamepad trigger
@@ -80,12 +79,12 @@ namespace Infection.Combat
                 else if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     // Switch to first weapon
-                    StartCoroutine(weapon.SwitchWeapon(0));
+                    weapon.StartCoroutine(weapon.SwitchWeapon(0));
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
                     // Switch to second weapon
-                    StartCoroutine(weapon.SwitchWeapon(1));
+                    weapon.StartCoroutine(weapon.SwitchWeapon(1));
                 }
             }
         }
