@@ -239,8 +239,8 @@ namespace Infection.Combat
         public override void OnStartClient()
         {
             base.OnStartClient();
-            EquipWeapon(startingWeapons[0]);
-            EquipWeapon(startingWeapons[1]);
+            heldWeapons.Add(startingWeapons[0]);
+            heldWeapons.Add(startingWeapons[1]);
         }
 
         /// <summary>
