@@ -6773,8 +6773,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   runInBackground: 1
   startOnHeadless: 1
-  serverTickRate: 30
   showDebugMessages: 0
+  serverTickRate: 30
   offlineScene: 
   onlineScene: 
   transport: {fileID: 1147482998}
@@ -6810,10 +6810,10 @@ MonoBehaviour:
   minPlayers: 1
   roomPlayerPrefab: {fileID: 3891729447050999126, guid: 44c566a97cbacee4fa5b2fe7cf482ce4,
     type: 3}
-  RoomScene: 01_Menu
-  GameplayScene: 02_Prototype
-  roomSlots: []
+  RoomScene: Assets/Infection/Scenes/01_Menu.unity
+  GameplayScene: Assets/Infection/Scenes/04_Downtown.unity
   allPlayersReady: 0
+  roomSlots: []
 --- !u!4 &1147483000
 Transform:
   m_ObjectHideFlags: 0
