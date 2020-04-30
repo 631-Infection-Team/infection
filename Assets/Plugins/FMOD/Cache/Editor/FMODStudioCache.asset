@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
@@ -461,3 +462,8 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1532
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:deba678b83ac2dea11529406607bf58e703c7fda4ce999c4d93d565efadfa8e1
+size 12578
+>>>>>>> george

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Plugins/Editor.meta
 guid: 0f5a9937140af2049b7b30760fde1786
+=======
+guid: 8839469375a269f4faf94fc1ea2ee1fe
+>>>>>>> george:Assets/FMOD/Main/Metadata/mac.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

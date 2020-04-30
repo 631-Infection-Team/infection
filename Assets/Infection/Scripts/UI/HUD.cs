@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Infection
+namespace Infection.UI
 {
     public class HUD : MonoBehaviour
     {

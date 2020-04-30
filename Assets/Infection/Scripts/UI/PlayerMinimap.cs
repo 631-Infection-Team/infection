@@ -1,7 +1,7 @@
 ﻿using Mirror;
 using UnityEngine;
 
-namespace _UI
+namespace Infection.UI
 {
     public class PlayerMinimap : NetworkBehaviour
     {
@@ -15,9 +15,7 @@ namespace _UI
             base.OnStartClient();
 
             minimapMarker.GetComponent<MeshRenderer>().material = isLocalPlayer ? playerMarker : enemyMarker;
-
-            // This needs to be turned on for all players, not only local player
-            minimapMarker.SetActive(true);
+            minimapMarker.SetActive(true); // This needs to be turned on for all players, not only local player
         }
     }
 }
