@@ -20,6 +20,7 @@ using Mirror;
 
 namespace Infection
 {
+    [DisallowMultipleComponent]
     public class NetworkRoomManagerInfection : NetworkRoomManager
     {
         #region Server Callbacks
@@ -43,13 +44,17 @@ namespace Infection
         /// This is called on the server when a new client connects to the server.
         /// </summary>
         /// <param name="conn">The new connection.</param>
-        public override void OnRoomServerConnect(NetworkConnection conn) { }
+        public override void OnRoomServerConnect(NetworkConnection conn) {
+
+        }
 
         /// <summary>
         /// This is called on the server when a client disconnects.
         /// </summary>
         /// <param name="conn">The connection that disconnected.</param>
-        public override void OnRoomServerDisconnect(NetworkConnection conn) { }
+        public override void OnRoomServerDisconnect(NetworkConnection conn) {
+
+        }
 
         /// <summary>
         /// This is called on the server when a networked scene finishes loading.
@@ -98,6 +103,7 @@ namespace Infection
         /// <param name="roomPlayer">The room player object.</param>
         /// <param name="gamePlayer">The game player object.</param>
         /// <returns>False to not allow this player to replace the room player.</returns>
+        [System.Obsolete]
         public override bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
         {
             return base.OnRoomServerSceneLoadedForPlayer(roomPlayer, gamePlayer);
