@@ -23,13 +23,6 @@ namespace Infection
     [DisallowMultipleComponent]
     public class NetworkRoomManagerInfection : NetworkRoomManager
     {
-        public MatchManager matchManager = null;
-
-        private void Awake()
-        {
-            matchManager = GetComponent<MatchManager>();
-        }
-
         #region Server Callbacks
 
         /// <summary>
