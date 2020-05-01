@@ -147,7 +147,7 @@ namespace Infection.Combat
             // Fill up all held weapons to max ammo
             foreach (WeaponItem weaponItem in heldWeapons)
             {
-                weaponItem.FillUpAmmo();
+                weaponItem.CmdFillUpAmmo();
             }
             EventOnAmmoChange?.Invoke();
 
@@ -236,11 +236,70 @@ namespace Infection.Combat
             }
         }
 
+        public void LateUpdate()
+        {
+            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)
+            {
+                // Zoom in based on aiming percentage
+                float zoomed = _baseFieldOfView / CurrentWeapon.weaponDefinition.aimZoomMultiplier;
+                _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            }
+
+            // Gradually reduce instability percentage while weapon is calming down
+            if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
+            {
+                InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
+            }
+        }
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+            CmdUpdateRemoteWeaponModel();
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
+            heldWeapons.Callback += OnWeaponsUpdated;
             heldWeapons.Add(startingWeapons[0]);
             heldWeapons.Add(startingWeapons[1]);
+        }
+
+        private void OnEnable()
+        {
+            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
+        }
+
+        private void OnDisable()
+        {
+            EventOnWeaponChange -= CmdUpdateAnimatorWeaponType;
+        }
+
+        private void OnWeaponsUpdated(SyncListWeaponItem.Operation op, int index, WeaponItem oldItem, WeaponItem newItem)
+        {
+            switch (op)
+            {
+                case SyncListWeaponItem.Operation.OP_ADD:
+                    // index is where it got added in the list
+                    // item is the new item
+                    break;
+                case SyncListWeaponItem.Operation.OP_CLEAR:
+                    // list got cleared
+                    break;
+                case SyncListWeaponItem.Operation.OP_INSERT:
+                    // index is where it got added in the list
+                    // item is the new item
+                    break;
+                case SyncListWeaponItem.Operation.OP_REMOVEAT:
+                    // index is where it got removed in the list
+                    // item is the item that was removed
+                    break;
+                case SyncListWeaponItem.Operation.OP_SET:
+                    // index is the index of the item that was updated
+                    // item is the previous item
+                    break;
+            }
         }
 
         /// <summary>
@@ -468,7 +527,7 @@ namespace Infection.Combat
             //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
             // Subtract ammo
-            CurrentWeapon.ConsumeMagazine(1);
+            CurrentWeapon.CmdConsumeMagazine(1);
 
             // Update listeners
             EventOnAmmoChange?.Invoke();
@@ -527,7 +586,7 @@ namespace Infection.Combat
             yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.reloadTime);
 
             // Fill up magazine with ammo from reserves
-            CurrentWeapon.ReloadMagazine();
+            CurrentWeapon.CmdReloadMagazine();
 
             // Update listeners
             EventOnAmmoChange?.Invoke();
@@ -604,7 +663,7 @@ namespace Infection.Combat
         {
             foreach (WeaponItem weaponItem in heldWeapons)
             {
-                weaponItem.FillUpAmmo();
+                weaponItem.CmdFillUpAmmo();
             }
 
             EventOnAmmoChange?.Invoke();
