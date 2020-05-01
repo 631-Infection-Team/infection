@@ -162,6 +162,12 @@ namespace Infection.Combat
             UpdateWeaponModel();
         }
 
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+            CmdUpdateRemoteWeaponModel();
+        }
+
         public void Update()
         {
             if (!isLocalPlayer) return;
@@ -236,11 +242,37 @@ namespace Infection.Combat
             }
         }
 
+        public void LateUpdate()
+        {
+            if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)
+            {
+                // Zoom in based on aiming percentage
+                float zoomed = _baseFieldOfView / CurrentWeapon.weaponDefinition.aimZoomMultiplier;
+                _camera.fieldOfView = Mathf.Lerp(_baseFieldOfView, zoomed, _aimingPercentage);
+            }
+
+            // Gradually reduce instability percentage while weapon is calming down
+            if (InstabilityPercentage > 0f && CurrentState != WeaponState.Firing)
+            {
+                InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
+            }
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
             heldWeapons.Add(startingWeapons[0]);
             heldWeapons.Add(startingWeapons[1]);
+        }
+
+        private void OnEnable()
+        {
+            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
+        }
+
+        private void OnDisable()
+        {
+            EventOnWeaponChange -= CmdUpdateAnimatorWeaponType;
         }
 
         /// <summary>
