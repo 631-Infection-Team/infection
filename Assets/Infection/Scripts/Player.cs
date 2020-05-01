@@ -40,6 +40,14 @@ namespace Infection
             Cursor.visible = false;
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            string netID = GetComponent<NetworkIdentity>().netId.ToString();
+            MatchManager.RegisterPlayer(netID, this);
+        }
+
         public void Start()
         {
             SetDefaults();
@@ -53,10 +61,14 @@ namespace Infection
 
         public void OnDestroy()
         {
-            if (!isLocalPlayer) return;
+            string netID = GetComponent<NetworkIdentity>().netId.ToString();
+            MatchManager.UnRegisterPlayer(netID);
 
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (isLocalPlayer)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
 
         public void Heal(int amount = 100)
