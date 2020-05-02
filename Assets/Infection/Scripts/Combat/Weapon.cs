@@ -169,8 +169,8 @@ namespace Infection.Combat
             EventOnAmmoChange?.Invoke();
         }
 
-        [ClientRpc]
-        private void RpcEventOnWeaponChange()
+        [Command]
+        private void CmdEventOnWeaponChange()
         {
             EventOnWeaponChange?.Invoke();
         }
@@ -275,7 +275,6 @@ namespace Infection.Combat
             CmdInitWeapons();
             CmdEventOnAmmoChange();
             CmdUpdateWeaponModel();
-            CmdUpdateRemoteWeaponModel();
         }
 
         public override void OnStartClient()
@@ -289,7 +288,8 @@ namespace Infection.Combat
         {
             heldWeapons.Add(startingWeapons[0]);
             heldWeapons.Add(startingWeapons[1]);
-            RpcEventOnWeaponChange();
+            CmdEventOnWeaponChange();
+            CmdUpdateRemoteWeaponModel();
         }
 
         private void OnWeaponsUpdated(SyncListWeaponItem.Operation op, int index, WeaponItem oldItem, WeaponItem newItem)
@@ -357,7 +357,7 @@ namespace Infection.Combat
             }
 
             // Update listeners
-            RpcEventOnWeaponChange();
+            CmdEventOnWeaponChange();
             CmdEventOnAmmoChange();
 
             return oldWeapon;
@@ -384,7 +384,7 @@ namespace Infection.Combat
             CmdUpdateAnimatorOverride();
 
             // Update listeners
-            RpcEventOnWeaponChange();
+            CmdEventOnWeaponChange();
             CmdEventOnAmmoChange();
 
             return oldWeapon;
@@ -635,7 +635,7 @@ namespace Infection.Combat
             CmdUpdateAnimatorOverride();
 
             // Update listeners
-            RpcEventOnWeaponChange();
+            CmdEventOnWeaponChange();
             CmdEventOnAmmoChange();
 
             // Play ready animation
@@ -699,7 +699,7 @@ namespace Infection.Combat
             _currentWeaponIndex = 0;
             CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            RpcEventOnWeaponChange();
+            CmdEventOnWeaponChange();
             CmdEventOnAmmoChange();
 
             return weapons;
@@ -765,7 +765,7 @@ namespace Infection.Combat
             {
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.weaponDefinition.modelPrefab, weaponHolder);
-                Debug.Log(weaponModel);
+                NetworkServer.Spawn(weaponModel, gameObject);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
@@ -775,6 +775,12 @@ namespace Infection.Combat
 
         [Command]
         private void CmdUpdateRemoteWeaponModel()
+        {
+            RpcUpdateRemoteWeaponModel();
+        }
+
+        [ClientRpc]
+        private void RpcUpdateRemoteWeaponModel()
         {
             // Reset remote muzzle transform
             remoteMuzzle = null;
@@ -791,8 +797,8 @@ namespace Infection.Combat
                 {
                     GameObject remoteModel = Instantiate(CurrentWeapon.weaponDefinition.remoteModelPrefab, rightHand);
                     remoteMuzzle = remoteModel.transform.Find("Muzzle");
-                    NetworkServer.Spawn(remoteModel);
                     remoteModel.SetActive(!isLocalPlayer);
+                    NetworkServer.Spawn(remoteModel);
                 }
             }
         }
