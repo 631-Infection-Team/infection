@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:222ad6f0dd73dd610ee98d5be0d9c2d803d08e8cd65a04520a92b1fc8da572b6
-size 595
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Infection/Scenes/01_Menu.unity
+    guid: b28869308a31ae049aebb046dd279148
+  - enabled: 1
+    path: Assets/Infection/Scenes/02_Prototype.unity
+    guid: 4886df0a34535d022b11f3e473c2574b
+  - enabled: 1
+    path: Assets/Infection/Scenes/03_TestLevel.unity
+    guid: d4e6e69de5079754b9637674aed75a70
+  - enabled: 1
+    path: Assets/Infection/Scenes/04_Downtown.unity
+    guid: c8f7ed6f0ad11904a9d6ecea2ef573b4
+  m_configObjects: {}

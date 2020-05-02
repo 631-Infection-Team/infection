@@ -144,22 +144,28 @@ namespace Infection.Combat
 
         private IEnumerator Start()
         {
+            if (!isLocalPlayer)
+            {
+                yield break;
+            }
+
             // Fill up all held weapons to max ammo
             foreach (WeaponItem weaponItem in heldWeapons)
             {
                 weaponItem.CmdFillUpAmmo();
             }
-            EventOnAmmoChange?.Invoke();
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _camera.fieldOfView;
 
             // Spawn the weapon model and play ready weapon animation
-            UpdateAnimatorOverride();
-            yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
-            CmdReadyAnimation();
-            EventOnWeaponChange?.Invoke();
-            UpdateWeaponModel();
+            CmdUpdateAnimatorOverride();
+        }
+
+        [Command]
+        private void CmdEventOnAmmoChange()
+        {
+            EventOnAmmoChange?.Invoke();
         }
 
         public void Update()
@@ -255,6 +261,13 @@ namespace Infection.Combat
         public override void OnStartServer()
         {
             base.OnStartServer();
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            CmdInitWeapons();
+            CmdEventOnAmmoChange();
+            CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
         }
 
@@ -262,18 +275,18 @@ namespace Infection.Combat
         {
             base.OnStartClient();
             heldWeapons.Callback += OnWeaponsUpdated;
-            heldWeapons.Add(startingWeapons[0]);
-            heldWeapons.Add(startingWeapons[1]);
-        }
-
-        private void OnEnable()
-        {
             EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
         }
 
-        private void OnDisable()
+        [Command]
+        private void CmdInitWeapons()
         {
-            EventOnWeaponChange -= CmdUpdateAnimatorWeaponType;
+            heldWeapons.Add(startingWeapons[0]);
+            heldWeapons.Add(startingWeapons[1]);
+            if (isLocalPlayer)
+            {
+                EventOnWeaponChange?.Invoke();
+            }
         }
 
         private void OnWeaponsUpdated(SyncListWeaponItem.Operation op, int index, WeaponItem oldItem, WeaponItem newItem)
@@ -318,9 +331,9 @@ namespace Infection.Combat
             if (CurrentWeapon == null || CurrentWeapon.weaponDefinition == null)
             {
                 CmdEquipWeapon(newWeapon, _currentWeaponIndex);
-                UpdateWeaponModel();
+                CmdUpdateWeaponModel();
                 CmdUpdateRemoteWeaponModel();
-                UpdateAnimatorOverride();
+                CmdUpdateAnimatorOverride();
             }
             else
             {
@@ -341,8 +354,11 @@ namespace Infection.Combat
             }
 
             // Update listeners
-            EventOnWeaponChange?.Invoke();
-            EventOnAmmoChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                EventOnWeaponChange?.Invoke();
+                EventOnAmmoChange?.Invoke();
+            }
 
             return oldWeapon;
         }
@@ -363,12 +379,16 @@ namespace Infection.Combat
         {
             WeaponItem oldWeapon = CurrentWeapon;
             CurrentWeapon = newWeapon;
-            UpdateWeaponModel();
+            CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            UpdateAnimatorOverride();
+            CmdUpdateAnimatorOverride();
 
             // Update listeners
-            EventOnWeaponChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                EventOnWeaponChange?.Invoke();
+                EventOnAmmoChange?.Invoke();
+            }
 
             return oldWeapon;
         }
@@ -526,11 +546,13 @@ namespace Infection.Combat
             //Player.localPlayer.verticalLook += -recoil;
             //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
-            // Subtract ammo
-            CurrentWeapon.CmdConsumeMagazine(1);
-
-            // Update listeners
-            EventOnAmmoChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                // Subtract ammo
+                CurrentWeapon.CmdConsumeMagazine(1);
+                // Update listeners
+                EventOnAmmoChange?.Invoke();
+            }
         }
 
         [ClientRpc]
@@ -585,11 +607,13 @@ namespace Infection.Combat
 
             yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.reloadTime);
 
-            // Fill up magazine with ammo from reserves
-            CurrentWeapon.CmdReloadMagazine();
-
-            // Update listeners
-            EventOnAmmoChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                // Fill up magazine with ammo from reserves
+                CurrentWeapon.CmdReloadMagazine();
+                // Update listeners
+                EventOnAmmoChange?.Invoke();
+            }
 
             CurrentState = WeaponState.Idle;
         }
@@ -615,13 +639,16 @@ namespace Infection.Combat
 
             // Change the weapon
             _currentWeaponIndex = index;
-            UpdateWeaponModel();
+            CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            UpdateAnimatorOverride();
+            CmdUpdateAnimatorOverride();
 
             // Update listeners
-            EventOnAmmoChange?.Invoke();
-            EventOnWeaponChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                EventOnWeaponChange?.Invoke();
+                EventOnAmmoChange?.Invoke();
+            }
 
             // Play ready animation
             CmdReadyAnimation();
@@ -666,7 +693,10 @@ namespace Infection.Combat
                 weaponItem.CmdFillUpAmmo();
             }
 
-            EventOnAmmoChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                EventOnAmmoChange?.Invoke();
+            }
         }
 
         /// <summary>
@@ -682,10 +712,13 @@ namespace Infection.Combat
             }
 
             _currentWeaponIndex = 0;
-            UpdateWeaponModel();
+            CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            EventOnWeaponChange?.Invoke();
-            EventOnAmmoChange?.Invoke();
+            if (isLocalPlayer)
+            {
+                EventOnWeaponChange?.Invoke();
+                EventOnAmmoChange?.Invoke();
+            }
 
             return weapons;
         }
@@ -733,7 +766,8 @@ namespace Infection.Combat
         /// This process destroys all child game objects from the weapon holder and instantiates a new object
         /// from the model prefab in the weapon definition.
         /// </summary>
-        private void UpdateWeaponModel()
+        [Command]
+        private void CmdUpdateWeaponModel()
         {
             // Reset muzzle transform
             muzzle = null;
@@ -801,7 +835,8 @@ namespace Infection.Combat
             //playerAnimator.Animator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
         }
 
-        private void UpdateAnimatorOverride()
+        [Command]
+        private void CmdUpdateAnimatorOverride()
         {
             // Update animator override or reset to default animator controller
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)

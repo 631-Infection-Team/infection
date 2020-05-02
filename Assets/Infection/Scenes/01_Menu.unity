@@ -2000,7 +2000,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Downtown
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 648172e5235e69249a53b9a91ec9538e, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 21437879078496282, guid: 648172e5235e69249a53b9a91ec9538e,
     type: 2}
   m_fontSharedMaterials: []
@@ -2162,7 +2162,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Work In Progress
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 648172e5235e69249a53b9a91ec9538e, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 21437879078496282, guid: 648172e5235e69249a53b9a91ec9538e,
     type: 2}
   m_fontSharedMaterials: []
@@ -6336,7 +6336,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Start
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5738a5125c2fc2f4fb5f3521b5e1f1c7, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 21890153014070854, guid: 5738a5125c2fc2f4fb5f3521b5e1f1c7,
     type: 2}
   m_fontSharedMaterials: []
@@ -6814,7 +6814,6 @@ MonoBehaviour:
   GameplayScene: Assets/Infection/Scenes/04_Downtown.unity
   allPlayersReady: 0
   roomSlots: []
-  matchManager: {fileID: 0}
 --- !u!4 &1147483000
 Transform:
   m_ObjectHideFlags: 0
@@ -7491,6 +7490,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1147482999}
+        m_MethodName: StartClient
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1242466716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7942,9 +7952,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Infection
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5738a5125c2fc2f4fb5f3521b5e1f1c7, type: 2}
-  m_sharedMaterial: {fileID: 21890153014070854, guid: 5738a5125c2fc2f4fb5f3521b5e1f1c7,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7969,7 +7978,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 63.4
+  m_fontSize: 68.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -18276,7 +18285,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Work In Progress
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 648172e5235e69249a53b9a91ec9538e, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 21437879078496282, guid: 648172e5235e69249a53b9a91ec9538e,
     type: 2}
   m_fontSharedMaterials: []
