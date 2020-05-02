@@ -6,7 +6,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1666362126948374191}
+  m_GameObject: {fileID: 4003759720037779808}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
@@ -122,9 +122,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114573302475125984, guid: 1656f86e140e00b4ca104ade475a384c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1656f86e140e00b4ca104ade475a384c, type: 3}
---- !u!1 &1666362126948374191 stripped
+--- !u!1 &4003759720037779808 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2355432934434053570, guid: 1656f86e140e00b4ca104ade475a384c,
     type: 3}
