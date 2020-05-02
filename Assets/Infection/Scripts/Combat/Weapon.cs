@@ -149,7 +149,6 @@ namespace Infection.Combat
             {
                 weaponItem.CmdFillUpAmmo();
             }
-            EventOnAmmoChange?.Invoke();
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
             _baseFieldOfView = _camera.fieldOfView;
@@ -158,8 +157,12 @@ namespace Infection.Combat
             UpdateAnimatorOverride();
             yield return new WaitUntil(() => _weaponHolderAnimator.isActiveAndEnabled);
             CmdReadyAnimation();
-            EventOnWeaponChange?.Invoke();
-            UpdateWeaponModel();
+        }
+
+        [Command]
+        private void CmdEventOnAmmoChange()
+        {
+            EventOnAmmoChange?.Invoke();
         }
 
         public void Update()
@@ -258,12 +261,25 @@ namespace Infection.Combat
             CmdUpdateRemoteWeaponModel();
         }
 
+        public override void OnStartLocalPlayer()
+        {
+            CmdInitWeapons();
+            CmdEventOnAmmoChange();
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
             heldWeapons.Callback += OnWeaponsUpdated;
+        }
+
+        [Command]
+        private void CmdInitWeapons()
+        {
             heldWeapons.Add(startingWeapons[0]);
             heldWeapons.Add(startingWeapons[1]);
+            EventOnWeaponChange?.Invoke();
+            UpdateWeaponModel();
         }
 
         private void OnEnable()
