@@ -273,8 +273,10 @@ namespace Infection.Combat
         public override void OnStartLocalPlayer()
         {
             CmdInitWeapons();
-            CmdEventOnAmmoChange();
             CmdUpdateWeaponModel();
+            CmdUpdateRemoteWeaponModel();
+            CmdEventOnWeaponChange();
+            CmdEventOnAmmoChange();
         }
 
         public override void OnStartClient()
@@ -288,8 +290,6 @@ namespace Infection.Combat
         {
             heldWeapons.Add(startingWeapons[0]);
             heldWeapons.Add(startingWeapons[1]);
-            CmdEventOnWeaponChange();
-            CmdUpdateRemoteWeaponModel();
         }
 
         private void OnWeaponsUpdated(SyncListWeaponItem.Operation op, int index, WeaponItem oldItem, WeaponItem newItem)
@@ -751,6 +751,17 @@ namespace Infection.Combat
         [Command]
         private void CmdUpdateWeaponModel()
         {
+            RpcUpdateWeaponModel();
+        }
+
+        [ClientRpc]
+        private void RpcUpdateWeaponModel()
+        {
+            StartCoroutine(UpdateWeaponModel());
+        }
+
+        private IEnumerator UpdateWeaponModel()
+        {
             // Reset muzzle transform
             muzzle = null;
             muzzleFlash = null;
@@ -759,13 +770,13 @@ namespace Infection.Combat
             foreach (Transform child in weaponHolder)
             {
                 Destroy(child.gameObject);
+                yield return null;
             }
 
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.modelPrefab != null)
             {
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.weaponDefinition.modelPrefab, weaponHolder);
-                NetworkServer.Spawn(weaponModel, gameObject);
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
