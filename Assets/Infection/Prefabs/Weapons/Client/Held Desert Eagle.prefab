@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 2499121606902681732}
   - component: {fileID: 2499121606902031820}
   - component: {fileID: 2470858729358407150}
-  - component: {fileID: 114950900236817874}
+  - component: {fileID: 114310353458523068}
   m_Layer: 10
   m_Name: Held Desert Eagle
   m_TagString: Untagged
@@ -176,7 +176,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43344415613612800, guid: 2d4414b272476f04282c2f5fca22d425, type: 2}
---- !u!114 &114950900236817874
+--- !u!114 &114310353458523068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

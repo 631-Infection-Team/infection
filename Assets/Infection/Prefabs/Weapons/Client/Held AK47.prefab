@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 2455399664351409562}
   - component: {fileID: 2455399664352006330}
   - component: {fileID: 2519733118990573870}
-  - component: {fileID: 114613992122788730}
+  - component: {fileID: 114716745831507588}
   m_Layer: 10
   m_Name: Held AK47
   m_TagString: Untagged
@@ -330,7 +330,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43073776427769362, guid: f5f033eea14124e4981abc4c803d4c11, type: 2}
---- !u!114 &114613992122788730
+--- !u!114 &114716745831507588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

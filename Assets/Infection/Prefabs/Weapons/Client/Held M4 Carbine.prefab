@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 8880830736071977724}
   - component: {fileID: 8880830736071386124}
   - component: {fileID: 8924446338086223498}
-  - component: {fileID: 114941171484756814}
+  - component: {fileID: 114569842709535256}
   m_Layer: 10
   m_Name: Held M4 Carbine
   m_TagString: Untagged
@@ -253,7 +253,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43997370303106750, guid: 014879ec0ffe3bf41a080e1f96962121, type: 2}
---- !u!114 &114941171484756814
+--- !u!114 &114569842709535256
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

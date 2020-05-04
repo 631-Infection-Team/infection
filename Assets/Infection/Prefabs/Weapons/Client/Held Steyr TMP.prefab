@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 6474119150310806332}
   - component: {fileID: 6474119150309739468}
   - component: {fileID: 6429964151648819940}
-  - component: {fileID: 114465322267727248}
+  - component: {fileID: 114747089799136030}
   m_Layer: 10
   m_Name: Held Steyr TMP
   m_TagString: Untagged
@@ -253,7 +253,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43396921705582096, guid: 395116b73df8ca84d8dfbaa33dde842e, type: 2}
---- !u!114 &114465322267727248
+--- !u!114 &114747089799136030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

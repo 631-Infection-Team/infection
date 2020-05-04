@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 6593981258483018868}
   - component: {fileID: 6593981258481624386}
   - component: {fileID: 6586237110372185968}
-  - component: {fileID: 114119773766583620}
+  - component: {fileID: 114459496020358446}
   m_Layer: 10
   m_Name: Held Winchester
   m_TagString: Untagged
@@ -177,7 +177,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43417013922123360, guid: 08bdb633286489948857f0ef25fb33e9, type: 2}
---- !u!114 &114119773766583620
+--- !u!114 &114459496020358446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

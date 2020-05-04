@@ -751,17 +751,6 @@ namespace Infection.Combat
         [Command]
         private void CmdUpdateWeaponModel()
         {
-            RpcUpdateWeaponModel();
-        }
-
-        [ClientRpc]
-        private void RpcUpdateWeaponModel()
-        {
-            StartCoroutine(UpdateWeaponModel());
-        }
-
-        private IEnumerator UpdateWeaponModel()
-        {
             // Reset muzzle transform
             muzzle = null;
             muzzleFlash = null;
@@ -770,18 +759,29 @@ namespace Infection.Combat
             foreach (Transform child in weaponHolder)
             {
                 Destroy(child.gameObject);
-                yield return null;
             }
 
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.modelPrefab != null)
             {
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.weaponDefinition.modelPrefab, weaponHolder);
+                var pos = weaponModel.transform.localPosition;
+                var rot = weaponModel.transform.localRotation;
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
                 weaponModel.SetActive(isLocalPlayer);
+                NetworkServer.Spawn(weaponModel, connectionToClient);
+                RpcUpdateWeaponModel(weaponModel, pos, rot);
             }
+        }
+
+        [ClientRpc]
+        private void RpcUpdateWeaponModel(GameObject weaponModel, Vector3 pos, Quaternion rot)
+        {
+            weaponModel.transform.SetParent(weaponHolder);
+            weaponModel.transform.localPosition = pos;
+            weaponModel.transform.localRotation = rot;
         }
 
         [Command]
