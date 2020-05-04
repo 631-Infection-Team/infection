@@ -273,8 +273,10 @@ namespace Infection.Combat
         public override void OnStartLocalPlayer()
         {
             CmdInitWeapons();
-            CmdEventOnAmmoChange();
             CmdUpdateWeaponModel();
+            CmdUpdateRemoteWeaponModel();
+            CmdEventOnWeaponChange();
+            CmdEventOnAmmoChange();
         }
 
         public override void OnStartClient()
@@ -288,8 +290,6 @@ namespace Infection.Combat
         {
             heldWeapons.Add(startingWeapons[0]);
             heldWeapons.Add(startingWeapons[1]);
-            CmdEventOnWeaponChange();
-            CmdUpdateRemoteWeaponModel();
         }
 
         private void OnWeaponsUpdated(SyncListWeaponItem.Operation op, int index, WeaponItem oldItem, WeaponItem newItem)
@@ -765,12 +765,23 @@ namespace Infection.Combat
             {
                 // Spawn weapon model
                 GameObject weaponModel = Instantiate(CurrentWeapon.weaponDefinition.modelPrefab, weaponHolder);
-                NetworkServer.Spawn(weaponModel, gameObject);
+                var pos = weaponModel.transform.localPosition;
+                var rot = weaponModel.transform.localRotation;
                 // Set muzzle transform. The child object must be called Muzzle
                 muzzle = weaponModel.transform.Find("Muzzle");
                 muzzleFlash = muzzle.transform.GetChild(0);
                 weaponModel.SetActive(isLocalPlayer);
+                NetworkServer.Spawn(weaponModel, connectionToClient);
+                RpcUpdateWeaponModel(weaponModel, pos, rot);
             }
+        }
+
+        [ClientRpc]
+        private void RpcUpdateWeaponModel(GameObject weaponModel, Vector3 pos, Quaternion rot)
+        {
+            weaponModel.transform.SetParent(weaponHolder);
+            weaponModel.transform.localPosition = pos;
+            weaponModel.transform.localRotation = rot;
         }
 
         [Command]

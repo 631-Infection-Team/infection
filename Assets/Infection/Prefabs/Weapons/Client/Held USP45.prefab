@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 2355432934430776098}
   - component: {fileID: 2355432934432271922}
   - component: {fileID: 2329722815543130820}
-  - component: {fileID: 114573302475125984}
+  - component: {fileID: 114726093314601684}
   m_Layer: 10
   m_Name: Held USP45
   m_TagString: Untagged
@@ -253,7 +253,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43705462666232420, guid: bcbc1254163165045b45fbc2847ea887, type: 2}
---- !u!114 &114573302475125984
+--- !u!114 &114726093314601684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
