@@ -2,7 +2,6 @@
 using System.Collections;
 using Infection.Combat;
 using Infection.Interaction;
-using Mirror;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +27,7 @@ namespace Infection.UI
         [SerializeField] private TextMeshProUGUI timerDisplay = null;
         [SerializeField] private TextMeshProUGUI roundDisplay = null;
         [SerializeField] private Slider healthSliderDisplay = null;
+        [SerializeField] private Player player = null;
         [SerializeField] private Weapon playerWeapon = null;
         [SerializeField] private PickupBehavior playerPickupBehavior = null;
 
@@ -50,6 +50,12 @@ namespace Infection.UI
         {
             _originalCrosshairOpacity = crosshair.color.a;
             _originalCrosshairSize = crosshair.transform.localScale;
+        }
+
+        private void Update()
+        {
+            healthSliderDisplay.value = player.health;
+            healthValueDisplay.text = player.health.ToString();
         }
 
         private void OnEnable()

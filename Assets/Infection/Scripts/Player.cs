@@ -19,6 +19,7 @@ namespace Infection
         public GameObject graphics;
         public GameObject survivorGraphics;
         public GameObject zombieGraphics;
+        public GameObject hud;
 
         [Header("Health")]
         [SyncVar] public int health = 100;
@@ -35,6 +36,7 @@ namespace Infection
             cameraContainer.SetActive(true);
             graphics.SetActive(false);
             zombieGraphics.SetActive(false);
+            hud.SetActive(true);
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
