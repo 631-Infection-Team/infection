@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using System;
+using Mirror;
 using UnityEngine;
 
 namespace Infection.Combat
@@ -15,6 +16,8 @@ namespace Infection.Combat
         public Sprite crosshair = null;
         public float timeBetweenAttacks = 0.3f;
 
+        [SyncEvent] public event Action EventOnEnable = null;
+
         private Collider[] hits = new Collider[8];
         private Animator _weaponHolderAnimator = null;
 
@@ -29,6 +32,7 @@ namespace Infection.Combat
         {
             _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
             CmdUpdateWeaponModel();
+            CmdEventOnEnable();
         }
 
         public void Update()
@@ -63,7 +67,7 @@ namespace Infection.Combat
                     }
 
                     Player victim = hit.transform.gameObject.GetComponent<Player>();
-                    if (victim && victim.team == Player.Team.SURVIVOR)
+                    if (victim && victim.gameObject != gameObject && victim.team == Player.Team.SURVIVOR)
                     {
                         Debug.Log("Infected weapon hit: " + victim);
                         // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
@@ -115,6 +119,12 @@ namespace Infection.Combat
             weaponModel.transform.SetParent(weaponHolder);
             weaponModel.transform.localPosition = pos;
             weaponModel.transform.localRotation = rot;
+        }
+
+        [Command]
+        private void CmdEventOnEnable()
+        {
+            EventOnEnable?.Invoke();
         }
     }
 }
