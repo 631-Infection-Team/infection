@@ -727,7 +727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2007795114949911352}
   - component: {fileID: 2798177927798197383}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Melee attack trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
