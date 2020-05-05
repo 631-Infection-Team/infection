@@ -503,7 +503,7 @@ namespace Infection.Combat
                         if (victim)
                         {
                             // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
-                            victim.TakeDamage(10, GetComponent<NetworkIdentity>().netId);
+                            victim.TakeDamage(CurrentWeapon.weaponDefinition.damage, GetComponent<NetworkIdentity>().netId);
                         }
                         else
                         {

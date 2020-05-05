@@ -2,7 +2,6 @@
 using System.Collections;
 using Infection.Combat;
 using Infection.Interaction;
-using Mirror;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +27,9 @@ namespace Infection.UI
         [SerializeField] private TextMeshProUGUI timerDisplay = null;
         [SerializeField] private TextMeshProUGUI roundDisplay = null;
         [SerializeField] private Slider healthSliderDisplay = null;
+        [SerializeField] private Player player = null;
         [SerializeField] private Weapon playerWeapon = null;
+        [SerializeField] private InfectedWeapon infectedWeapon = null;
         [SerializeField] private PickupBehavior playerPickupBehavior = null;
 
         private float _originalCrosshairOpacity = 0f;
@@ -50,6 +51,12 @@ namespace Infection.UI
         {
             _originalCrosshairOpacity = crosshair.color.a;
             _originalCrosshairSize = crosshair.transform.localScale;
+        }
+
+        private void Update()
+        {
+            healthSliderDisplay.value = player.health;
+            healthValueDisplay.text = player.health.ToString();
         }
 
         private void OnEnable()
@@ -74,6 +81,9 @@ namespace Infection.UI
             playerWeapon.EventOnAimingChange += UpdateCrosshairOpacity;
             playerWeapon.EventOnRecoil += ExpandCrosshair;
             playerWeapon.EventOnAlert += UpdateAlertMessage;
+            infectedWeapon.EventOnEnable += UpdateCrosshair;
+            infectedWeapon.EventOnEnable += UpdateWeaponNameDisplay;
+            infectedWeapon.EventOnEnable += UpdateWeaponAmmoDisplay;
 
             playerPickupBehavior.OnLookAt += UpdateInteractionMessage;
         }
@@ -87,6 +97,9 @@ namespace Infection.UI
             playerWeapon.EventOnAimingChange -= UpdateCrosshairOpacity;
             playerWeapon.EventOnRecoil -= ExpandCrosshair;
             playerWeapon.EventOnAlert -= UpdateAlertMessage;
+            infectedWeapon.EventOnEnable -= UpdateCrosshair;
+            infectedWeapon.EventOnEnable -= UpdateWeaponNameDisplay;
+            infectedWeapon.EventOnEnable -= UpdateWeaponAmmoDisplay;
 
             playerPickupBehavior.OnLookAt -= UpdateInteractionMessage;
         }
@@ -144,7 +157,7 @@ namespace Infection.UI
         private void UpdateWeaponAmmoDisplay()
         {
             // No weapon
-            if (playerWeapon.CurrentWeapon == null)
+            if (playerWeapon.CurrentWeapon == null || infectedWeapon.isActiveAndEnabled)
             {
                 magazineDisplay.text = "-";
                 reservesDisplay.text = "";
@@ -171,6 +184,12 @@ namespace Infection.UI
 
         private void UpdateWeaponNameDisplay()
         {
+            if (infectedWeapon.isActiveAndEnabled)
+            {
+                weaponNameDisplay.text = "INFECTED";
+                return;
+            }
+
             if (playerWeapon.CurrentWeapon != null)
             {
                 weaponNameDisplay.text = $"{playerWeapon.CurrentWeapon.weaponDefinition.weaponName}";
@@ -183,6 +202,12 @@ namespace Infection.UI
 
         private void UpdateCrosshair()
         {
+            if (infectedWeapon.isActiveAndEnabled)
+            {
+                crosshair.sprite = infectedWeapon.crosshair;
+                return;
+            }
+
             if (playerWeapon.CurrentWeapon != null)
             {
                 crosshair.sprite = playerWeapon.CurrentWeapon.weaponDefinition.crosshair;
