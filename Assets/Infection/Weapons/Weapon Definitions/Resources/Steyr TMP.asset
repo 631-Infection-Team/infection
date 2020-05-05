@@ -17,7 +17,7 @@ MonoBehaviour:
   triggerType: 1
   weaponType: 0
   silencer: 0
-  damage: 6
+  damage: 8
   fireRate: 0.09
   accuracy: 0.94
   recoilMultiplier: 0.1

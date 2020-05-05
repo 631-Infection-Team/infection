@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cf29a0e59a24190a38c2bf1438fc39d, type: 3}
-  m_Name: Anaconda
+  m_Name: USP45
   m_EditorClassIdentifier: 
-  weaponName: Anaconda
+  weaponName: USP45
   weaponClass: {fileID: 11400000, guid: 86a6568dea7898941ab036b5a263b05e, type: 2}
   triggerType: 2
   weaponType: 0
   silencer: 0
-  damage: 10
-  fireRate: 0.23
-  accuracy: 0.92
-  recoilMultiplier: 0.11
-  verticalRecoilIntensity: 0.75
-  aimZoomMultiplier: 1.15
-  pickupPrefab: {fileID: 1086475418494793589, guid: 66cb68680c63eb84fbbc9dcc1083f3ba,
+  damage: 8
+  fireRate: 0.11
+  accuracy: 0.95
+  recoilMultiplier: 0.1
+  verticalRecoilIntensity: 0
+  aimZoomMultiplier: 1.1
+  pickupPrefab: {fileID: 3893175649572387255, guid: b5c3b56f3c3d6664eb910b67a3bff3e3,
     type: 3}
-  reloadTime: 2.5
-  readyTime: 0.25
-  holsterTime: 0.35
-  aimTime: 0.1
-  clipSize: 6
-  maxReserves: 24
+  reloadTime: 2.3
+  readyTime: 0.2
+  holsterTime: 0.3
+  aimTime: 0.06
+  clipSize: 15
+  maxReserves: -1
   crosshair: {fileID: 21300000, guid: 8f6900ca085225a4d86f1144627c2819, type: 3}
-  modelPrefab: {fileID: 1195155853074680861, guid: 2a7e9bafe27ff764a8b7c7978fcb2a8f,
+  modelPrefab: {fileID: 2355432934434053570, guid: 1656f86e140e00b4ca104ade475a384c,
     type: 3}
-  remoteModelPrefab: {fileID: 9146349052490218924, guid: c0c8583f1710bd742889e466ac3d4bb4,
+  remoteModelPrefab: {fileID: 4003759720037779808, guid: b1eddb41ab58bc14db6b97afb2832bf2,
     type: 3}
-  animatorOverride: {fileID: 0}
+  animatorOverride: {fileID: 22100000, guid: 4d31c03c5195a2641a3662c6159c9e11, type: 2}
