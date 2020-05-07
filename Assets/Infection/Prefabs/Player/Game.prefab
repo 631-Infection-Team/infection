@@ -351,6 +351,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  weapon: {fileID: 5977745342468267528}
+  infectedWeapon: {fileID: 4135500581986911067}
   camera: {fileID: 6973509603710880883}
   cameraContainer: {fileID: 4354098009639538554}
   graphics: {fileID: 2786773495500801542}
