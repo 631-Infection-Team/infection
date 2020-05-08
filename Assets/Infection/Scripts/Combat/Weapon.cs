@@ -759,6 +759,7 @@ namespace Infection.Combat
             foreach (Transform child in weaponHolder)
             {
                 Destroy(child.gameObject);
+                NetworkServer.Destroy(child.gameObject);
             }
 
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.modelPrefab != null)
@@ -787,18 +788,13 @@ namespace Infection.Combat
         [Command]
         private void CmdUpdateRemoteWeaponModel()
         {
-            RpcUpdateRemoteWeaponModel();
-        }
-
-        [ClientRpc]
-        private void RpcUpdateRemoteWeaponModel()
-        {
             // Reset remote muzzle transform
             remoteMuzzle = null;
 
             // Destroy all children
             foreach (Transform child in rightHand)
             {
+                Destroy(child.gameObject);
                 NetworkServer.Destroy(child.gameObject);
             }
 
@@ -807,11 +803,22 @@ namespace Infection.Combat
                 if (CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.remoteModelPrefab != null)
                 {
                     GameObject remoteModel = Instantiate(CurrentWeapon.weaponDefinition.remoteModelPrefab, rightHand);
+                    var pos = remoteModel.transform.localPosition;
+                    var rot = remoteModel.transform.localRotation;
                     remoteMuzzle = remoteModel.transform.Find("Muzzle");
                     remoteModel.SetActive(!isLocalPlayer);
-                    NetworkServer.Spawn(remoteModel);
+                    NetworkServer.Spawn(remoteModel, connectionToClient);
+                    RpcUpdateRemoteWeaponModel(remoteModel, pos, rot);
                 }
             }
+        }
+
+        [ClientRpc]
+        private void RpcUpdateRemoteWeaponModel(GameObject remoteModel, Vector3 pos, Quaternion rot)
+        {
+            remoteModel.transform.SetParent(rightHand);
+            remoteModel.transform.localPosition = pos;
+            remoteModel.transform.localRotation = rot;
         }
 
         [Command]

@@ -30,9 +30,12 @@ namespace Infection.Combat
 
         private void OnEnable()
         {
-            _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
-            CmdUpdateWeaponModel();
-            CmdEventOnEnable();
+            if (isLocalPlayer)
+            {
+                _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
+                CmdUpdateWeaponModel();
+                CmdEventOnEnable();
+            }
         }
 
         public void Update()
