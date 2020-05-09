@@ -101,7 +101,7 @@ namespace Infection.Combat
             // Destroy all children
             foreach (Transform child in weaponHolder)
             {
-                Destroy(child.gameObject);
+                NetworkServer.Destroy(child.gameObject);
             }
 
             if (clawPrefab != null)

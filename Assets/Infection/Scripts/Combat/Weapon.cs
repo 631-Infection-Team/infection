@@ -282,7 +282,7 @@ namespace Infection.Combat
         public override void OnStartClient()
         {
             base.OnStartClient();
-            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
+            EventOnWeaponChange += UpdateAnimatorWeaponType;
         }
 
         [Command]
@@ -546,7 +546,7 @@ namespace Infection.Combat
             // Subtract ammo
             CurrentWeapon.CmdConsumeMagazine(1);
             // Update listeners
-            CmdEventOnAmmoChange();
+            EventOnAmmoChange?.Invoke();
         }
 
         [ClientRpc]
@@ -688,8 +688,13 @@ namespace Infection.Combat
         /// Sets all weapon items in heldWeapons to null. Resets currently equipped weapon index to 0.
         /// </summary>
         /// <returns>Array of weapons that were removed</returns>
-        public SyncListWeaponItem UnequipAllWeapons()
+        public void UnequipAllWeapons()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             var weapons = heldWeapons;
             for (int i = 0; i < heldWeapons.Count; i++)
             {
@@ -701,8 +706,6 @@ namespace Infection.Combat
             CmdUpdateRemoteWeaponModel();
             CmdEventOnWeaponChange();
             CmdEventOnAmmoChange();
-
-            return weapons;
         }
 
         /// <summary>
@@ -821,8 +824,7 @@ namespace Infection.Combat
             remoteModel.transform.localRotation = rot;
         }
 
-        [Command]
-        public void CmdUpdateAnimatorWeaponType()
+        public void UpdateAnimatorWeaponType()
         {
             RpcOnUpdateAnimatorWeaponType();
         }
