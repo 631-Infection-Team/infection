@@ -377,6 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  footSteps: event:/Player/SFX/Footsteps
   player: {fileID: 7389033405124876050}
   characterController: {fileID: 1575668633003622740}
   isGrounded: 0

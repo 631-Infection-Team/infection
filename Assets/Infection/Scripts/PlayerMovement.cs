@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using FMODUnity;
 
 namespace Infection
 {
+    
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Player))]
     [RequireComponent(typeof(CharacterController))]
     public class PlayerMovement : NetworkBehaviour
     {
+        [BankRef]
+        public string footSteps;
+
         [Header("Components")]
         public Player player;
         public CharacterController characterController;
@@ -21,6 +26,7 @@ namespace Infection
         private float lastGrounded;
         private float velocityAtJump;
         private float verticalVelocity;
+        private float footTimer = 0.0f;
         private Vector3 moveDirection;
 
         [ServerCallback]
@@ -43,6 +49,7 @@ namespace Infection
 
             InputHandler();
             GravityHandler();
+            FootyNoise();
         }
 
         [Client]
@@ -88,6 +95,22 @@ namespace Infection
             moveDirection = transform.TransformDirection(moveDirection);
 
             characterController.Move(moveDirection);
+        }
+
+        [Client]
+        private void FootyNoise() 
+        {
+            float inputHorizontal = Input.GetAxis("Horizontal");
+            float inputVertical = Input.GetAxis("Vertical");
+            footTimer += Time.deltaTime;    
+
+            if(characterController.isGrounded && footTimer > 0.5f && !player.isDead){
+                if(inputHorizontal > 0 || inputVertical > 0){
+                    Debug.Log("The foot noise comith");
+                    FMODUnity.RuntimeManager.PlayOneShot(footSteps);
+                    footTimer = 0.0f;
+                }
+            }
         }
 
         [Client]
