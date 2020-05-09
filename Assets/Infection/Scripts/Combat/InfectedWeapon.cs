@@ -79,12 +79,19 @@ namespace Infection.Combat
                 }
             }
 
-            RpcOnAttack();
+            if (isLocalPlayer)
+            {
+                RpcOnAttack();
+            }
         }
 
         [ClientRpc]
         void RpcOnAttack()
         {
+            if (!_weaponHolderAnimator.isActiveAndEnabled)
+            {
+                return;
+            }
             // Call a method on the PlayerAnimator.cs here. (Set trigger shoot?)
             _weaponHolderAnimator.SetTrigger("Fire");
             _weaponHolderAnimator.SetFloat("FireRate", 1.0f / timeBetweenAttacks);
