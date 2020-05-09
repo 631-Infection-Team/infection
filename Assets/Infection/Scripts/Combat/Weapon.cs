@@ -282,7 +282,7 @@ namespace Infection.Combat
         public override void OnStartClient()
         {
             base.OnStartClient();
-            EventOnWeaponChange += CmdUpdateAnimatorWeaponType;
+            EventOnWeaponChange += UpdateAnimatorWeaponType;
         }
 
         [Command]
@@ -546,7 +546,7 @@ namespace Infection.Combat
             // Subtract ammo
             CurrentWeapon.CmdConsumeMagazine(1);
             // Update listeners
-            CmdEventOnAmmoChange();
+            EventOnAmmoChange?.Invoke();
         }
 
         [ClientRpc]
@@ -688,8 +688,13 @@ namespace Infection.Combat
         /// Sets all weapon items in heldWeapons to null. Resets currently equipped weapon index to 0.
         /// </summary>
         /// <returns>Array of weapons that were removed</returns>
-        public SyncListWeaponItem UnequipAllWeapons()
+        public void UnequipAllWeapons()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             var weapons = heldWeapons;
             for (int i = 0; i < heldWeapons.Count; i++)
             {
@@ -701,8 +706,6 @@ namespace Infection.Combat
             CmdUpdateRemoteWeaponModel();
             CmdEventOnWeaponChange();
             CmdEventOnAmmoChange();
-
-            return weapons;
         }
 
         /// <summary>
@@ -759,6 +762,7 @@ namespace Infection.Combat
             foreach (Transform child in weaponHolder)
             {
                 Destroy(child.gameObject);
+                NetworkServer.Destroy(child.gameObject);
             }
 
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.modelPrefab != null)
@@ -787,18 +791,13 @@ namespace Infection.Combat
         [Command]
         private void CmdUpdateRemoteWeaponModel()
         {
-            RpcUpdateRemoteWeaponModel();
-        }
-
-        [ClientRpc]
-        private void RpcUpdateRemoteWeaponModel()
-        {
             // Reset remote muzzle transform
             remoteMuzzle = null;
 
             // Destroy all children
             foreach (Transform child in rightHand)
             {
+                Destroy(child.gameObject);
                 NetworkServer.Destroy(child.gameObject);
             }
 
@@ -807,15 +806,25 @@ namespace Infection.Combat
                 if (CurrentWeapon.weaponDefinition != null && CurrentWeapon.weaponDefinition.remoteModelPrefab != null)
                 {
                     GameObject remoteModel = Instantiate(CurrentWeapon.weaponDefinition.remoteModelPrefab, rightHand);
+                    var pos = remoteModel.transform.localPosition;
+                    var rot = remoteModel.transform.localRotation;
                     remoteMuzzle = remoteModel.transform.Find("Muzzle");
                     remoteModel.SetActive(!isLocalPlayer);
-                    NetworkServer.Spawn(remoteModel);
+                    NetworkServer.Spawn(remoteModel, connectionToClient);
+                    RpcUpdateRemoteWeaponModel(remoteModel, pos, rot);
                 }
             }
         }
 
-        [Command]
-        public void CmdUpdateAnimatorWeaponType()
+        [ClientRpc]
+        private void RpcUpdateRemoteWeaponModel(GameObject remoteModel, Vector3 pos, Quaternion rot)
+        {
+            remoteModel.transform.SetParent(rightHand);
+            remoteModel.transform.localPosition = pos;
+            remoteModel.transform.localRotation = rot;
+        }
+
+        public void UpdateAnimatorWeaponType()
         {
             RpcOnUpdateAnimatorWeaponType();
         }

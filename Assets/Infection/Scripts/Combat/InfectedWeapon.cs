@@ -30,9 +30,12 @@ namespace Infection.Combat
 
         private void OnEnable()
         {
-            _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
-            CmdUpdateWeaponModel();
-            CmdEventOnEnable();
+            if (isLocalPlayer)
+            {
+                _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
+                CmdUpdateWeaponModel();
+                CmdEventOnEnable();
+            }
         }
 
         public void Update()
@@ -76,12 +79,19 @@ namespace Infection.Combat
                 }
             }
 
-            RpcOnAttack();
+            if (isLocalPlayer)
+            {
+                RpcOnAttack();
+            }
         }
 
         [ClientRpc]
         void RpcOnAttack()
         {
+            if (!_weaponHolderAnimator.isActiveAndEnabled)
+            {
+                return;
+            }
             // Call a method on the PlayerAnimator.cs here. (Set trigger shoot?)
             _weaponHolderAnimator.SetTrigger("Fire");
             _weaponHolderAnimator.SetFloat("FireRate", 1.0f / timeBetweenAttacks);
@@ -98,7 +108,7 @@ namespace Infection.Combat
             // Destroy all children
             foreach (Transform child in weaponHolder)
             {
-                Destroy(child.gameObject);
+                NetworkServer.Destroy(child.gameObject);
             }
 
             if (clawPrefab != null)
