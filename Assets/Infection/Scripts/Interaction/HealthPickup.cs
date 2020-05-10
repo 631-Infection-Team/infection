@@ -1,11 +1,10 @@
 ﻿using Mirror;
-using UnityEngine;
 
 namespace Infection.Interaction
 {
     public class HealthPickup : ItemPickup
     {
-        [SerializeField] private int healAmount = 40;
+        public int healAmount = 40;
 
         public override string ItemName => $"{healAmount} Health";
 

@@ -6,7 +6,7 @@ namespace Infection.Interaction
 {
     public class WeaponPickup : ItemPickup
     {
-        [SerializeField] private WeaponItem weaponItem = null;
+        public WeaponItem weaponItem = null;
 
         public override string ItemName => weaponItem.weaponDefinition.weaponName;
 
@@ -48,6 +48,7 @@ namespace Infection.Interaction
                 }
 
                 NetworkServer.Destroy(gameObject);
+                Destroy(gameObject);
             }
         }
     }

@@ -1,8 +1,10 @@
-﻿using Mirror;
+﻿using System;
+using Mirror;
 using UnityEngine;
 
 namespace Infection.Interaction
 {
+    [Serializable]
     public abstract class ItemPickup : NetworkBehaviour, IPickup
     {
         [SerializeField] private Material highlightMaterial = null;
