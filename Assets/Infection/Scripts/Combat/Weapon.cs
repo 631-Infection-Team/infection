@@ -528,13 +528,7 @@ namespace Infection.Combat
                     break;
             }
 
-            RpcOnFire();
-
-            if (!CurrentWeapon.weaponDefinition.silencer)
-            {
-                // Show muzzle flash for split second
-                StartCoroutine(FlashMuzzle(influence));
-            }
+            RpcOnFire(influence);
 
             // Apply recoil
             InstabilityPercentage = Mathf.Min(1f, InstabilityPercentage + CurrentWeapon.weaponDefinition.recoilMultiplier);
@@ -550,9 +544,15 @@ namespace Infection.Combat
         }
 
         [ClientRpc]
-        void RpcOnFire()
+        void RpcOnFire(Vector3 influence)
         {
             // Call a method on the PlayerAnimator.cs here. (Set trigger shoot?)
+
+            if (!CurrentWeapon.weaponDefinition.silencer)
+            {
+                // Show muzzle flash for split second
+                StartCoroutine(FlashMuzzle(influence));
+            }
         }
 
         /// <summary>
@@ -735,6 +735,11 @@ namespace Infection.Combat
         /// <returns>Muzzle flash effect</returns>
         private IEnumerator FlashMuzzle(Vector3 influence)
         {
+            if (muzzleFlash == null)
+            {
+                yield break;
+            }
+
             // Set random scale and rotation for muzzle flash object
             Vector3 randomScale = new Vector3(Random.Range(0.3f, 1f), Random.Range(0.3f, 1f), Random.Range(0.3f, 1f));
             Vector3 randomRotation = new Vector3(0f, 0f, Random.Range(0f, 360f)) + influence;
@@ -786,9 +791,17 @@ namespace Infection.Combat
         [ClientRpc]
         private void RpcUpdateWeaponModel(GameObject weaponModel, Vector3 pos, Quaternion rot)
         {
+            // Reset muzzle transform
+            muzzle = null;
+            muzzleFlash = null;
+
             weaponModel.transform.SetParent(weaponHolder);
             weaponModel.transform.localPosition = pos;
             weaponModel.transform.localRotation = rot;
+
+            // Set muzzle transform. The child object must be called Muzzle
+            muzzle = weaponModel.transform.Find("Muzzle");
+            muzzleFlash = muzzle.transform.GetChild(0);
         }
 
         [Command]
