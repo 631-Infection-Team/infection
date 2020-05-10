@@ -48,7 +48,6 @@ namespace Infection.Interaction
                 }
 
                 NetworkServer.Destroy(gameObject);
-                Destroy(gameObject);
             }
         }
     }
