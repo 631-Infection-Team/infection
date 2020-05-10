@@ -7,9 +7,9 @@ namespace Infection.Combat
     [Serializable]
     public class WeaponItem
     {
-        [SyncVar] public WeaponDefinition weaponDefinition;
-        [SyncVar] public int magazine;
-        [SyncVar] public int reserves;
+        public WeaponDefinition weaponDefinition;
+        public int magazine;
+        public int reserves;
 
         public WeaponItem()
         {
@@ -32,15 +32,13 @@ namespace Infection.Combat
             this.reserves = reserves;
         }
 
-        [Command]
-        public int CmdConsumeMagazine(int ammoConsumed = 1)
+        public int ConsumeMagazine(int ammoConsumed = 1)
         {
             magazine = Math.Max(0, magazine - ammoConsumed);
             return Math.Min(ammoConsumed, magazine);
         }
 
-        [Command]
-        public void CmdReloadMagazine()
+        public void ReloadMagazine()
         {
             // Weapon definition defined as infinite reserves
             if (weaponDefinition.maxReserves < 0)
@@ -58,8 +56,7 @@ namespace Infection.Combat
         /// <summary>
         /// Fill up magazine to max clip size and reserves to max reserves.
         /// </summary>
-        [Command]
-        public void CmdFillUpAmmo()
+        public void FillUpAmmo()
         {
             if (weaponDefinition == null)
             {
@@ -73,6 +70,5 @@ namespace Infection.Combat
     [Serializable]
     public class SyncListWeaponItem : SyncList<WeaponItem>
     {
-        public SyncListWeaponItem() : base(new List<WeaponItem>()) {}
     }
 }

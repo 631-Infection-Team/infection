@@ -153,7 +153,7 @@ namespace Infection.Combat
             // Fill up all held weapons to max ammo
             foreach (WeaponItem weaponItem in heldWeapons)
             {
-                weaponItem.CmdFillUpAmmo();
+                weaponItem.FillUpAmmo();
             }
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
@@ -520,7 +520,6 @@ namespace Infection.Combat
 
                     NetworkServer.Spawn(trail);
                     Destroy(trail, Time.deltaTime);
-
                     break;
 
                 case WeaponType.Projectile:
@@ -538,7 +537,7 @@ namespace Infection.Combat
             //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
             // Subtract ammo
-            CurrentWeapon.CmdConsumeMagazine(1);
+            CurrentWeapon.ConsumeMagazine(1);
             // Update listeners
             EventOnAmmoChange?.Invoke();
         }
@@ -602,7 +601,7 @@ namespace Infection.Combat
             yield return new WaitForSeconds(CurrentWeapon.weaponDefinition.reloadTime);
 
             // Fill up magazine with ammo from reserves
-            CurrentWeapon.CmdReloadMagazine();
+            CurrentWeapon.ReloadMagazine();
             // Update listeners
             CmdEventOnAmmoChange();
 
@@ -678,7 +677,7 @@ namespace Infection.Combat
         {
             foreach (WeaponItem weaponItem in heldWeapons)
             {
-                weaponItem.CmdFillUpAmmo();
+                weaponItem.FillUpAmmo();
             }
 
             CmdEventOnAmmoChange();
