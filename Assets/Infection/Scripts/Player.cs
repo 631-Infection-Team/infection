@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
-using System.Collections;
+using Infection.Combat;
 
 namespace Infection
 {
@@ -14,11 +14,14 @@ namespace Infection
         public enum Team { SURVIVOR, INFECTED }
 
         [Header("Components")]
+        public Weapon weapon;
+        public InfectedWeapon infectedWeapon;
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
         public GameObject survivorGraphics;
         public GameObject zombieGraphics;
+        public GameObject hud;
 
         [Header("Health")]
         [SyncVar] public int health = 100;
@@ -35,9 +38,18 @@ namespace Infection
             cameraContainer.SetActive(true);
             graphics.SetActive(false);
             zombieGraphics.SetActive(false);
+            hud.SetActive(true);
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            string netID = GetComponent<NetworkIdentity>().netId.ToString();
+            MatchManager.RegisterPlayer(netID, this);
         }
 
         public void Start()
@@ -53,10 +65,14 @@ namespace Infection
 
         public void OnDestroy()
         {
-            if (!isLocalPlayer) return;
+            string netID = GetComponent<NetworkIdentity>().netId.ToString();
+            MatchManager.UnRegisterPlayer(netID);
 
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (isLocalPlayer)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
 
         public void Heal(int amount = 100)
@@ -79,6 +95,7 @@ namespace Infection
         public void Infect()
         {
             team = Team.INFECTED;
+            weapon.UnequipAllWeapons();
 
             RpcOnInfected();
         }
@@ -136,6 +153,8 @@ namespace Infection
         {
             zombieGraphics.SetActive(true);
             survivorGraphics.SetActive(false);
+            weapon.enabled = false;
+            infectedWeapon.enabled = true;
         }
     }
 }

@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Infected Claw
+  m_Controller: {fileID: 9100000, guid: 0e8a2e2eb2dad754d9039d781982fcf0, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 06c5a5300d0ec044e8e78f70eb27d252, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c8fa9ead5aaee9c46b7eaf6ade141f39, type: 2}

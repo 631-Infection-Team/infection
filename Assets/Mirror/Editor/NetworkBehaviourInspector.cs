@@ -6,12 +6,43 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector.Editor;
+#endif
+
 namespace Mirror
 {
     [CustomEditor(typeof(NetworkBehaviour), true)]
     [CanEditMultipleObjects]
+#if ODIN_INSPECTOR
+    public class NetworkBehaviourInspector : OdinEditor
+#else
     public class NetworkBehaviourInspector : Editor
+#endif
     {
+
+#if ODIN_INSPECTOR
+        [DrawerPriority(DrawerPriorityLevel.WrapperPriority)]
+        private class SyncVarDrawer<T> : OdinAttributeDrawer<SyncVarAttribute, T>
+        {
+            protected override bool CanDrawAttributeValueProperty(InspectorProperty property)
+            {
+                // Only draw for direct roots of the inspected object
+                return property.ParentValueProperty == null;
+            }
+
+            protected override void DrawPropertyLayout(GUIContent label)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginVertical();
+                CallNextDrawer(label);
+                EditorGUILayout.EndVertical();
+                GUILayout.Label(syncVarIndicatorContent, EditorStyles.miniLabel, GUILayout.Width(EditorStyles.miniLabel.CalcSize(syncVarIndicatorContent).x));
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+#endif
+
         bool initialized;
         protected List<string> syncVarNames = new List<string>();
         bool syncsAnything;
@@ -53,8 +84,14 @@ namespace Mirror
             return false;
         }
 
+#if ODIN_INSPECTOR
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+#else
         void OnEnable()
         {
+#endif
             initialized = false;
         }
 
@@ -97,6 +134,12 @@ namespace Mirror
                 Init(targetScript);
             }
 
+#if ODIN_INSPECTOR
+            base.Tree.DrawMonoScriptObjectField = !HideScriptField;
+
+            // Draw the default properties with Odin; SyncVarDrawer<T> will take care of making SyncVar's look right, instead of the code below.
+            DrawDefaultInspector();
+#else
             EditorGUI.BeginChangeCheck();
             serializedObject.Update();
 
@@ -141,6 +184,7 @@ namespace Mirror
             }
             serializedObject.ApplyModifiedProperties();
             EditorGUI.EndChangeCheck();
+#endif // ODIN_INSPECTOR
 
             // find SyncLists.. they are not properties.
             int syncListIndex = 0;
@@ -178,8 +222,6 @@ namespace Mirror
                 NetworkBehaviour networkBehaviour = target as NetworkBehaviour;
                 if (networkBehaviour != null)
                 {
-                    EditorGUILayout.LabelField("Sync Settings", EditorStyles.boldLabel);
-
                     // syncMode
                     serializedObject.FindProperty("syncMode").enumValueIndex = (int)(SyncMode)
                         EditorGUILayout.EnumPopup("Network Sync Mode", networkBehaviour.syncMode);
@@ -197,4 +239,4 @@ namespace Mirror
             }
         }
     }
-} //namespace
+}

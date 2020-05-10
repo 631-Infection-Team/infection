@@ -32,7 +32,7 @@ namespace Infection.Combat
         public bool silencer = false;
 
         [Header("Firing")]
-        public float damage = 8.0f;
+        public int damage = 8;
         [Tooltip("Time between shots in seconds, lower is faster"), Range(0.001f, 4.0f)]
         public float fireRate = 0.1f;
         [Tooltip("Percentage of how accurate each shot fired will hit its mark"), Range(0f, 1f)]

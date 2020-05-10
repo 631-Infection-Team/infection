@@ -243,6 +243,7 @@ GameObject:
   - component: {fileID: 2455399664351409562}
   - component: {fileID: 2455399664352006330}
   - component: {fileID: 2519733118990573870}
+  - component: {fileID: 114716745831507588}
   m_Layer: 10
   m_Name: Held AK47
   m_TagString: Untagged
@@ -329,6 +330,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43073776427769362, guid: f5f033eea14124e4981abc4c803d4c11, type: 2}
+--- !u!114 &114716745831507588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455399664354486728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
 --- !u!1 &2455399664354492218
 GameObject:
   m_ObjectHideFlags: 0

@@ -397,6 +397,7 @@ GameObject:
   - component: {fileID: 1195155853071548415}
   - component: {fileID: 1195155853072602693}
   - component: {fileID: 1185437045893187377}
+  - component: {fileID: 114961317908100196}
   m_Layer: 10
   m_Name: Held Anaconda
   m_TagString: Untagged
@@ -483,6 +484,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 43106304497549146, guid: 1c25374e2b03af7438e38215aa3bc29b, type: 2}
+--- !u!114 &114961317908100196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195155853074680861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
 --- !u!1001 &1195155854331146517
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,20 +1,28 @@
 ﻿using System;
-using UnityEngine;
+using System.Collections.Generic;
+using Mirror;
 
 namespace Infection.Combat
 {
     [Serializable]
     public class WeaponItem
     {
-        public WeaponDefinition weaponDefinition;
-        public int magazine;
-        public int reserves;
+        [SyncVar] public WeaponDefinition weaponDefinition;
+        [SyncVar] public int magazine;
+        [SyncVar] public int reserves;
 
         public WeaponItem()
         {
             weaponDefinition = null;
             magazine = 0;
             reserves = 0;
+        }
+
+        public WeaponItem(WeaponItem other)
+        {
+            weaponDefinition = other.weaponDefinition;
+            magazine = other.magazine;
+            reserves = other.reserves;
         }
 
         public WeaponItem(WeaponDefinition weaponDefinition, int magazine, int reserves)
@@ -24,13 +32,15 @@ namespace Infection.Combat
             this.reserves = reserves;
         }
 
-        public int ConsumeMagazine(int ammoConsumed = 1)
+        [Command]
+        public int CmdConsumeMagazine(int ammoConsumed = 1)
         {
             magazine = Math.Max(0, magazine - ammoConsumed);
             return Math.Min(ammoConsumed, magazine);
         }
 
-        public void ReloadMagazine()
+        [Command]
+        public void CmdReloadMagazine()
         {
             // Weapon definition defined as infinite reserves
             if (weaponDefinition.maxReserves < 0)
@@ -48,7 +58,8 @@ namespace Infection.Combat
         /// <summary>
         /// Fill up magazine to max clip size and reserves to max reserves.
         /// </summary>
-        public void FillUpAmmo()
+        [Command]
+        public void CmdFillUpAmmo()
         {
             if (weaponDefinition == null)
             {
@@ -57,5 +68,11 @@ namespace Infection.Combat
             magazine = weaponDefinition.clipSize;
             reserves = weaponDefinition.maxReserves;
         }
+    }
+
+    [Serializable]
+    public class SyncListWeaponItem : SyncList<WeaponItem>
+    {
+        public SyncListWeaponItem() : base(new List<WeaponItem>()) {}
     }
 }

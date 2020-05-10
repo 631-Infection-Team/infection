@@ -8,13 +8,13 @@ namespace Infection
     {
         public static void WriteWeaponClass(this NetworkWriter writer, WeaponClass weaponClass)
         {
-            // no need to serialize the data, just the name of the armor
+            // no need to serialize the data, just the name
             writer.WriteString(weaponClass.name);
         }
 
         public static WeaponClass ReadWeaponClass(this NetworkReader reader)
         {
-            // load the same armor by name.  The data will come from the asset in Resources folder
+            // load by name.  The data will come from the asset in Resources folder
             return Resources.Load<WeaponClass>(reader.ReadString());
         }
     }

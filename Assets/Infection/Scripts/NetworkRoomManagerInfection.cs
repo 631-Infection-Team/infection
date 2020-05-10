@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
+using TMPro;
 
 /*
 	Documentation: https://mirror-networking.com/docs/Components/NetworkRoomManager.html
@@ -16,12 +17,20 @@ using Mirror;
 /// It requires that the NetworkRoomPlayer component be on the room player objects.
 /// NetworkRoomManager is derived from NetworkManager, and so it implements many of the virtual functions provided by the NetworkManager class.
 /// </summary>
-/// 
+///
 
 namespace Infection
 {
+    [DisallowMultipleComponent]
     public class NetworkRoomManagerInfection : NetworkRoomManager
     {
+        public TMP_InputField ipField = null;
+
+        private void Update()
+        {
+            networkAddress = ipField.text != "" ? ipField.text : "localhost";
+        }
+
         #region Server Callbacks
 
         /// <summary>
@@ -43,13 +52,17 @@ namespace Infection
         /// This is called on the server when a new client connects to the server.
         /// </summary>
         /// <param name="conn">The new connection.</param>
-        public override void OnRoomServerConnect(NetworkConnection conn) { }
+        public override void OnRoomServerConnect(NetworkConnection conn) {
+
+        }
 
         /// <summary>
         /// This is called on the server when a client disconnects.
         /// </summary>
         /// <param name="conn">The connection that disconnected.</param>
-        public override void OnRoomServerDisconnect(NetworkConnection conn) { }
+        public override void OnRoomServerDisconnect(NetworkConnection conn) {
+
+        }
 
         /// <summary>
         /// This is called on the server when a networked scene finishes loading.
@@ -86,7 +99,7 @@ namespace Infection
         /// <para>See OnRoomServerCreateGamePlayer to customize the player object for the initial GamePlay scene.</para>
         /// </summary>
         /// <param name="conn">The connection the player object is for.</param>
-        public virtual void OnRoomServerAddPlayer(NetworkConnection conn)
+        new public virtual void OnRoomServerAddPlayer(NetworkConnection conn)
         {
             base.OnServerAddPlayer(conn);
         }
@@ -98,6 +111,7 @@ namespace Infection
         /// <param name="roomPlayer">The room player object.</param>
         /// <param name="gamePlayer">The game player object.</param>
         /// <returns>False to not allow this player to replace the room player.</returns>
+        [System.Obsolete]
         public override bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
         {
             return base.OnRoomServerSceneLoadedForPlayer(roomPlayer, gamePlayer);
@@ -119,12 +133,14 @@ namespace Infection
         /// <summary>
         /// This is a hook to allow custom behaviour when the game client enters the room.
         /// </summary>
-        public override void OnRoomClientEnter() { }
+        public override void OnRoomClientEnter() {
+        }
 
         /// <summary>
         /// This is a hook to allow custom behaviour when the game client exits the room.
         /// </summary>
-        public override void OnRoomClientExit() { }
+        public override void OnRoomClientExit() {
+        }
 
         /// <summary>
         /// This is called on the client when it connects to server.
