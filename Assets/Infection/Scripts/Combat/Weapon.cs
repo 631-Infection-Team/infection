@@ -64,14 +64,11 @@ namespace Infection.Combat
                 {
                     return _heldWeapons[_currentWeaponIndex];
                 }
-                else
-                {
-                    return null;
-                }
 
+                return null;
             }
 
-            private set => _heldWeapons[_currentWeaponIndex] = value;
+            private set => CmdEquipWeapon(value, _currentWeaponIndex);
         }
 
         /// <summary>

@@ -1,10 +1,10 @@
-﻿using Infection.Combat;
+﻿using Mirror;
 using UnityEngine;
 
 namespace Infection.Interaction
 {
     [RequireComponent(typeof(Player))]
-    public class PickupBehavior : MonoBehaviour
+    public class PickupBehavior : NetworkBehaviour
     {
         [SerializeField] private float pickupRange = 4f;
         [SerializeField] private LayerMask pickupMask = new LayerMask();
