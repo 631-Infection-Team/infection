@@ -695,11 +695,14 @@ namespace Infection.Combat
                 return;
             }
 
-            var weapons = heldWeapons;
-            for (int i = 0; i < heldWeapons.Count; i++)
-            {
-                heldWeapons[i] = null;
-            }
+            // for (int i = 0; i < heldWeapons.Count; i++)
+            // {
+            //     heldWeapons[i].weaponDefinition = null;
+            //     heldWeapons[i].magazine = 0;
+            //     heldWeapons[i].reserves = 0;
+            //     heldWeapons[i] = null;
+            // }
+            heldWeapons.Clear();
 
             _currentWeaponIndex = 0;
             CmdUpdateWeaponModel();

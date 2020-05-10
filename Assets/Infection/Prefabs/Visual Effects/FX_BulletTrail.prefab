@@ -66,7 +66,6 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
-  compressRotation: 1
 --- !u!120 &120054369089947956
 LineRenderer:
   m_ObjectHideFlags: 0
