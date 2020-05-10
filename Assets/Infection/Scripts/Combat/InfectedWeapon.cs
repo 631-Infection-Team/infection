@@ -79,10 +79,7 @@ namespace Infection.Combat
                 }
             }
 
-            if (isLocalPlayer)
-            {
-                RpcOnAttack();
-            }
+            RpcOnAttack();
         }
 
         [ClientRpc]
