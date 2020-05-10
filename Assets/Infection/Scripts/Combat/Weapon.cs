@@ -19,9 +19,10 @@ namespace Infection.Combat
             Switching
         }
 
+        private readonly SyncListWeaponItem _heldWeapons = new SyncListWeaponItem();
+
         [Header("Weapon")]
         public WeaponItem[] startingWeapons = new WeaponItem[2];
-        public SyncListWeaponItem heldWeapons = new SyncListWeaponItem();
         public float raycastRange = 1000f;
         public LayerMask raycastMask = 0;
         [Tooltip("Percentage reduction when not aiming, based on 45 degree cone spread from camera")]
@@ -59,9 +60,9 @@ namespace Infection.Combat
         {
             get
             {
-                if (heldWeapons.Count > 0)
+                if (_heldWeapons.Count > 0)
                 {
-                    return heldWeapons[_currentWeaponIndex];
+                    return _heldWeapons[_currentWeaponIndex];
                 }
                 else
                 {
@@ -70,7 +71,7 @@ namespace Infection.Combat
 
             }
 
-            private set => heldWeapons[_currentWeaponIndex] = value;
+            private set => _heldWeapons[_currentWeaponIndex] = value;
         }
 
         /// <summary>
@@ -101,12 +102,12 @@ namespace Infection.Combat
         /// <summary>
         /// The player cannot hold additional weapons as their held weapons array is full.
         /// </summary>
-        public bool IsFullOfWeapons => heldWeapons.All(w => w != null);
+        public bool IsFullOfWeapons => _heldWeapons.All(w => w != null);
 
         /// <summary>
         /// The player has other weapons that is not the currently equipped weapon.
         /// </summary>
-        public bool HasMoreWeapons => heldWeapons.Any(w => w != null && w != CurrentWeapon && w.weaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.weaponDefinition != null));
+        public bool HasMoreWeapons => _heldWeapons.Any(w => w != null && w != CurrentWeapon && w.weaponDefinition != null && (CurrentWeapon != null || CurrentWeapon.weaponDefinition != null));
 
         #region Events
         // Events. Listeners added through code. The HUD script listens to these events to update the weapon display.
@@ -144,16 +145,10 @@ namespace Infection.Combat
 
         private IEnumerator Start()
         {
-            heldWeapons.Callback += OnWeaponsUpdated;
+            _heldWeapons.Callback += OnWeaponsUpdated;
             if (!isLocalPlayer)
             {
                 yield break;
-            }
-
-            // Fill up all held weapons to max ammo
-            foreach (WeaponItem weaponItem in heldWeapons)
-            {
-                weaponItem.FillUpAmmo();
             }
 
             // Store starting field of view to unzoom the camera when transitioning from aiming to not aiming
@@ -288,8 +283,14 @@ namespace Infection.Combat
         [Command]
         private void CmdInitWeapons()
         {
-            heldWeapons.Add(startingWeapons[0]);
-            heldWeapons.Add(startingWeapons[1]);
+            _heldWeapons.Add(new WeaponItem(startingWeapons[0].weaponDefinition));
+            _heldWeapons.Add(new WeaponItem(startingWeapons[1].weaponDefinition));
+
+            // Fill up all held weapons to max ammo
+            foreach (WeaponItem weaponItem in _heldWeapons)
+            {
+                weaponItem.FillUpAmmo();
+            }
         }
 
         private void OnWeaponsUpdated(SyncListWeaponItem.Operation op, int index, WeaponItem oldItem, WeaponItem newItem)
@@ -341,7 +342,7 @@ namespace Infection.Combat
             else
             {
                 // Player has an empty slot in inventory
-                int emptySlot = heldWeapons.FindIndex(w => w == null);
+                int emptySlot = _heldWeapons.FindIndex(w => w == null);
                 if (emptySlot > -1)
                 {
                     // Equip the new weapon and switch to it
@@ -366,7 +367,7 @@ namespace Infection.Combat
         [Command]
         private void CmdEquipWeapon(WeaponItem newWeapon, int slotIndex)
         {
-            heldWeapons[slotIndex] = newWeapon;
+            _heldWeapons[slotIndex] = newWeapon;
         }
 
         /// <summary>
@@ -457,7 +458,7 @@ namespace Infection.Combat
                     StartCoroutine(EventOnAlert?.Invoke("Out of ammo", 2f));
                     // Switch to a different weapon if it exists and if it still has ammo left
                     // int nextWeapon = Array.FindIndex(heldWeapons, w => w != null && w.magazine + w.reserves > 0);
-                    int nextWeapon = heldWeapons.FindIndex(w => w != null && w.magazine + w.reserves > 0);
+                    int nextWeapon = _heldWeapons.FindIndex(w => w != null && w.magazine + w.reserves > 0);
                     if (nextWeapon > -1)
                     {
                         StartCoroutine(SwitchWeapon(nextWeapon));
@@ -649,7 +650,7 @@ namespace Infection.Combat
         /// </summary>
         public void CycleWeapons(int direction = 1)
         {
-            int index = (((_currentWeaponIndex + direction) % heldWeapons.Count) + heldWeapons.Count) % heldWeapons.Count;
+            int index = (((_currentWeaponIndex + direction) % _heldWeapons.Count) + _heldWeapons.Count) % _heldWeapons.Count;
             StartCoroutine(SwitchWeapon(index));
         }
 
@@ -675,7 +676,7 @@ namespace Infection.Combat
         /// </summary>
         public void RefillAmmo()
         {
-            foreach (WeaponItem weaponItem in heldWeapons)
+            foreach (WeaponItem weaponItem in _heldWeapons)
             {
                 weaponItem.FillUpAmmo();
             }
@@ -701,7 +702,7 @@ namespace Infection.Combat
             //     heldWeapons[i].reserves = 0;
             //     heldWeapons[i] = null;
             // }
-            heldWeapons.Clear();
+            _heldWeapons.Clear();
 
             _currentWeaponIndex = 0;
             CmdUpdateWeaponModel();

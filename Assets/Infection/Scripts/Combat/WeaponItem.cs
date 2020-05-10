@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Mirror;
 
 namespace Infection.Combat
@@ -23,6 +22,13 @@ namespace Infection.Combat
             weaponDefinition = other.weaponDefinition;
             magazine = other.magazine;
             reserves = other.reserves;
+        }
+
+        public WeaponItem(WeaponDefinition weaponDefinition)
+        {
+            this.weaponDefinition = weaponDefinition;
+            magazine = 0;
+            reserves = 0;
         }
 
         public WeaponItem(WeaponDefinition weaponDefinition, int magazine, int reserves)
