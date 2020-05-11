@@ -8,7 +8,7 @@ namespace Infection.Interaction
 
         public override string ItemName => $"{healAmount} Health";
 
-        protected override void OnGrantPickup(PickupBehavior pickupBehavior)
+        public override void GrantPickup(PickupBehavior pickupBehavior)
         {
             Player player = pickupBehavior.gameObject.GetComponent<Player>();
             if (player != null) player.Heal(healAmount);

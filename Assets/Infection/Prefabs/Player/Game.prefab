@@ -301,6 +301,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   m_AssetId: 
+  hasSpawned: 0
 --- !u!114 &2510185035872360789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,6 +354,7 @@ MonoBehaviour:
   syncInterval: 0.1
   weapon: {fileID: 5977745342468267528}
   infectedWeapon: {fileID: 4135500581986911067}
+  pickupBehavior: {fileID: 1296156372020382071}
   camera: {fileID: 6973509603710880883}
   cameraContainer: {fileID: 4354098009639538554}
   graphics: {fileID: 2786773495500801542}
@@ -421,6 +423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3163fb1eb2f94dc7b554c5cacf5e89a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   pickupRange: 4
   pickupMask:
     serializedVersion: 2

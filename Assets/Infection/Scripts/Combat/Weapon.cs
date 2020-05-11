@@ -152,7 +152,7 @@ namespace Infection.Combat
             _baseFieldOfView = _camera.fieldOfView;
 
             // Spawn the weapon model and play ready weapon animation
-            CmdUpdateAnimatorOverride();
+            CmdUpdateWeaponModel();
         }
 
         [Command]
@@ -334,7 +334,6 @@ namespace Infection.Combat
                 CmdEquipWeapon(newWeapon, _currentWeaponIndex);
                 CmdUpdateWeaponModel();
                 CmdUpdateRemoteWeaponModel();
-                CmdUpdateAnimatorOverride();
             }
             else
             {
@@ -379,7 +378,6 @@ namespace Infection.Combat
             CurrentWeapon = newWeapon;
             CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            CmdUpdateAnimatorOverride();
 
             // Update listeners
             CmdEventOnWeaponChange();
@@ -629,7 +627,6 @@ namespace Infection.Combat
             _currentWeaponIndex = index;
             CmdUpdateWeaponModel();
             CmdUpdateRemoteWeaponModel();
-            CmdUpdateAnimatorOverride();
 
             // Update listeners
             CmdEventOnWeaponChange();
@@ -782,6 +779,7 @@ namespace Infection.Combat
                 weaponModel.SetActive(isLocalPlayer);
                 NetworkServer.Spawn(weaponModel, connectionToClient);
                 RpcUpdateWeaponModel(weaponModel, pos, rot);
+                RpcUpdateAnimatorOverride();
             }
         }
 
@@ -856,8 +854,8 @@ namespace Infection.Combat
             //playerAnimator.Animator.SetBool("FullAuto_b", CurrentWeapon.WeaponDefinition.TriggerType == TriggerType.Auto);
         }
 
-        [Command]
-        private void CmdUpdateAnimatorOverride()
+        [ClientRpc]
+        private void RpcUpdateAnimatorOverride()
         {
             // Update animator override or reset to default animator controller
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)

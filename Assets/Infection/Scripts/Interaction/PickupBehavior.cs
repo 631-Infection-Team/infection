@@ -49,7 +49,7 @@ namespace Infection.Interaction
                 {
                     if (pickup != null)
                     {
-                        CmdPickupItem(pickup);
+                        PickupItem(pickup);
                         ResetTarget();
                     }
                 }
@@ -64,8 +64,8 @@ namespace Infection.Interaction
             }
         }
 
-        [Command]
-        private void CmdPickupItem(ItemPickup pickup)
+        // [Command]
+        private void PickupItem(ItemPickup pickup)
         {
             pickup.GrantPickup(this);
         }

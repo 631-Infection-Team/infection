@@ -16,7 +16,7 @@ namespace Infection.Interaction
             set => weaponItem = value;
         }
 
-        protected override void OnGrantPickup(PickupBehavior pickupBehavior)
+        public override void GrantPickup(PickupBehavior pickupBehavior)
         {
             if (WeaponItem == null)
             {

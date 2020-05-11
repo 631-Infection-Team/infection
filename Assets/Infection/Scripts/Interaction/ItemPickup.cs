@@ -29,12 +29,6 @@ namespace Infection.Interaction
 
         public abstract string ItemName { get; }
 
-        protected abstract void OnGrantPickup(PickupBehavior pickupBehavior);
-
-        public void GrantPickup(PickupBehavior pickupBehavior)
-        {
-            OnGrantPickup(pickupBehavior);
-            Debug.Log("Picked up item: " + ItemName);
-        }
+        public abstract void GrantPickup(PickupBehavior pickupBehavior);
     }
 }
