@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 19801442}
   - component: {fileID: 19963216}
   - component: {fileID: 4049677481922629977}
-  m_Layer: 15
+  m_Layer: 0
   m_Name: FX_BulletImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,6 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
-  compressRotation: 1
 --- !u!198 &19801442
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4662,7 +4661,7 @@ GameObject:
   - component: {fileID: 7935426065061861043}
   - component: {fileID: 528171607801669333}
   - component: {fileID: 857001380157433655}
-  m_Layer: 15
+  m_Layer: 0
   m_Name: FX_BulletImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}

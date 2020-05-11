@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
+using TMPro;
 
 /*
 	Documentation: https://mirror-networking.com/docs/Components/NetworkRoomManager.html
@@ -16,13 +17,20 @@ using Mirror;
 /// It requires that the NetworkRoomPlayer component be on the room player objects.
 /// NetworkRoomManager is derived from NetworkManager, and so it implements many of the virtual functions provided by the NetworkManager class.
 /// </summary>
-/// 
+///
 
 namespace Infection
 {
     [DisallowMultipleComponent]
     public class NetworkRoomManagerInfection : NetworkRoomManager
     {
+        public TMP_InputField ipField = null;
+
+        private void Update()
+        {
+            networkAddress = ipField.text != "" ? ipField.text : "localhost";
+        }
+
         #region Server Callbacks
 
         /// <summary>

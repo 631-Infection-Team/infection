@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
-using System.Collections;
+using Infection.Combat;
 
 namespace Infection
 {
@@ -14,6 +14,8 @@ namespace Infection
         public enum Team { SURVIVOR, INFECTED }
 
         [Header("Components")]
+        public Weapon weapon;
+        public InfectedWeapon infectedWeapon;
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
@@ -93,6 +95,7 @@ namespace Infection
         public void Infect()
         {
             team = Team.INFECTED;
+            weapon.UnequipAllWeapons();
 
             RpcOnInfected();
         }
@@ -150,6 +153,8 @@ namespace Infection
         {
             zombieGraphics.SetActive(true);
             survivorGraphics.SetActive(false);
+            weapon.enabled = false;
+            infectedWeapon.enabled = true;
         }
     }
 }
