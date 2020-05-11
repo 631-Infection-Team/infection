@@ -483,7 +483,6 @@ namespace Infection.Combat
                     // Raycast using LayerMask
                     bool raycast = Physics.Raycast(ray, out var hit, raycastRange, raycastMask);
 
-
                     // Create bullet trail regardless if raycast hit and quickly destroy it
                     GameObject trail = Instantiate(bulletTrailVfx, muzzle.position, Quaternion.LookRotation(ray.direction));
                     LineRenderer lineRenderer = trail.GetComponent<LineRenderer>();
