@@ -7067,7 +7067,9 @@ MonoBehaviour:
   port: 25565
   NoDelay: 1
   serverMaxMessageSize: 16384
+  serverMaxReceivesPerTick: 10000
   clientMaxMessageSize: 16384
+  clientMaxReceivesPerTick: 1000
 --- !u!114 &1147482999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7090,11 +7092,13 @@ MonoBehaviour:
   transport: {fileID: 1147482998}
   networkAddress: localhost
   maxConnections: 4
+  disconnectInactiveConnections: 0
+  disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 4455965949840066444, guid: 63daeaf1cf8a1934faa122b9a73e82db,
     type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
   - {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc, type: 3}
