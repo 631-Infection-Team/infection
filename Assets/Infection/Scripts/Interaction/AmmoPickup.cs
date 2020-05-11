@@ -9,7 +9,7 @@ namespace Infection.Interaction
     {
         public override string ItemName => "Ammo";
 
-        protected override void OnGrantPickup(PickupBehavior pickupBehavior)
+        public override void GrantPickup(PickupBehavior pickupBehavior)
         {
             Weapon weapon = pickupBehavior.gameObject.GetComponent<Weapon>();
             if (weapon == null)

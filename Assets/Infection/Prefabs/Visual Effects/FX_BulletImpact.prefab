@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 19801442}
   - component: {fileID: 19963216}
   - component: {fileID: 4049677481922629977}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: FX_BulletImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,6 +51,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   m_AssetId: 
+  hasSpawned: 0
 --- !u!114 &2985215213875443187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4661,7 +4662,7 @@ GameObject:
   - component: {fileID: 7935426065061861043}
   - component: {fileID: 528171607801669333}
   - component: {fileID: 857001380157433655}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: FX_BulletImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}

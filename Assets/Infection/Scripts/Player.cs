@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Mirror;
 using Infection.Combat;
+using Infection.Interaction;
 
 namespace Infection
 {
@@ -16,6 +17,7 @@ namespace Infection
         [Header("Components")]
         public Weapon weapon;
         public InfectedWeapon infectedWeapon;
+        public PickupBehavior pickupBehavior;
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
@@ -140,9 +142,9 @@ namespace Infection
         {
             GetComponent<CharacterController>().enabled = true;
 
-            Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
+            // Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
+            // transform.position = spawnPoint.position;
+            // transform.rotation = spawnPoint.rotation;
 
             GetComponent<PlayerMovement>().enabled = true;
             GetComponent<PlayerAnimator>().enabled = true;
@@ -155,6 +157,7 @@ namespace Infection
             survivorGraphics.SetActive(false);
             weapon.enabled = false;
             infectedWeapon.enabled = true;
+            pickupBehavior.enabled = false;
         }
     }
 }

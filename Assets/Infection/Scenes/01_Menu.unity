@@ -7067,7 +7067,9 @@ MonoBehaviour:
   port: 25565
   NoDelay: 1
   serverMaxMessageSize: 16384
+  serverMaxReceivesPerTick: 10000
   clientMaxMessageSize: 16384
+  clientMaxReceivesPerTick: 1000
 --- !u!114 &1147482999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7090,11 +7092,13 @@ MonoBehaviour:
   transport: {fileID: 1147482998}
   networkAddress: localhost
   maxConnections: 4
+  disconnectInactiveConnections: 0
+  disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 4455965949840066444, guid: 63daeaf1cf8a1934faa122b9a73e82db,
     type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 191114, guid: a49602e80dea9824083197de293512a9, type: 3}
   - {fileID: 5301287119161316647, guid: 22f7f9ad674cb3940ab26d302f01f4dc, type: 3}
@@ -7123,6 +7127,7 @@ MonoBehaviour:
   - {fileID: 2355432934434053570, guid: 1656f86e140e00b4ca104ade475a384c, type: 3}
   - {fileID: 6593981258479751036, guid: 67f1f305dd9320c499bbfcfb6abae654, type: 3}
   - {fileID: 1828930683662654547, guid: 6bbc795512380f54680bf8f5cb544896, type: 3}
+  - {fileID: 1688062697202860751, guid: 431313035ac01c54aa52f7c8a82ddcbd, type: 3}
   showRoomGUI: 1
   minPlayers: 1
   roomPlayerPrefab: {fileID: 3891729447050999126, guid: 44c566a97cbacee4fa5b2fe7cf482ce4,

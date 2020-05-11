@@ -64,7 +64,8 @@ namespace Infection.Interaction
             }
         }
 
-        private void PickupItem(IPickup pickup)
+        // [Command]
+        private void PickupItem(ItemPickup pickup)
         {
             pickup.GrantPickup(this);
         }
