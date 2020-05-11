@@ -142,9 +142,9 @@ namespace Infection
         {
             GetComponent<CharacterController>().enabled = true;
 
-            Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
+            // Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
+            // transform.position = spawnPoint.position;
+            // transform.rotation = spawnPoint.rotation;
 
             GetComponent<PlayerMovement>().enabled = true;
             GetComponent<PlayerAnimator>().enabled = true;

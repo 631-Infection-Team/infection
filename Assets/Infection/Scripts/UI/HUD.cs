@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Infection.Combat;
 using Infection.Interaction;
+using Mirror;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Infection.UI
 {
-    public class HUD : MonoBehaviour
+    public class HUD : NetworkBehaviour
     {
         public bool isPaused;
 
@@ -102,6 +102,16 @@ namespace Infection.UI
             infectedWeapon.EventOnEnable -= UpdateWeaponAmmoDisplay;
 
             playerPickupBehavior.OnLookAt -= UpdateInteractionMessage;
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            base.OnStartLocalPlayer();
+
+            // Set weapon info at start
+            UpdateWeaponAmmoDisplay();
+            UpdateWeaponNameDisplay();
+            UpdateCrosshair();
         }
 
         public void SetPaused(bool state)

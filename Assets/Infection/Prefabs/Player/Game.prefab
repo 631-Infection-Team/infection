@@ -464,9 +464,6 @@ MonoBehaviour:
   - weaponDefinition: {fileID: 11400000, guid: f1859a61f5c250849aa6b0c68d00afaf, type: 2}
     magazine: 15
     reserves: -1
-  - weaponDefinition: {fileID: 11400000, guid: d19292a0f6d11b14db6845c307e43412, type: 2}
-    magazine: 7
-    reserves: 28
   raycastRange: 1000
   raycastMask:
     serializedVersion: 2

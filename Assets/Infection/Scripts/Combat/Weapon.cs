@@ -22,7 +22,7 @@ namespace Infection.Combat
         private readonly SyncListWeaponItem _heldWeapons = new SyncListWeaponItem();
 
         [Header("Weapon")]
-        public WeaponItem[] startingWeapons = new WeaponItem[2];
+        public WeaponItem[] startingWeapons = new WeaponItem[1];
         public float raycastRange = 1000f;
         public LayerMask raycastMask = 0;
         [Tooltip("Percentage reduction when not aiming, based on 45 degree cone spread from camera")]
@@ -125,8 +125,8 @@ namespace Infection.Combat
         private Camera _camera = null;
 
         // Private fields
-        private int _currentWeaponIndex = 0;
-        private WeaponState _currentState = WeaponState.Idle;
+        [SyncVar] private int _currentWeaponIndex = 0;
+        [SyncVar] private WeaponState _currentState = WeaponState.Idle;
         private float _aimingPercentage = 0f;
         private float _instabilityPercentage;
         private float _baseFieldOfView = 0f;
@@ -142,7 +142,6 @@ namespace Infection.Combat
 
         private IEnumerator Start()
         {
-            _heldWeapons.Callback += OnWeaponsUpdated;
             if (!isLocalPlayer)
             {
                 yield break;
@@ -153,6 +152,7 @@ namespace Infection.Combat
 
             // Spawn the weapon model and play ready weapon animation
             CmdUpdateWeaponModel();
+            _heldWeapons.Callback += OnWeaponsUpdated;
         }
 
         [Command]
@@ -214,31 +214,31 @@ namespace Infection.Combat
                 SetAim(Input.GetAxis("Aim"));
             }
 
-            if (HasMoreWeapons)
-            {
-                // Scroll up XOR Gamepad Button 3
-                if (Input.GetAxis("Mouse ScrollWheel") > 0f ^ Input.GetButtonDown("Switch"))
-                {
-                    // Switch to the next weapon
-                    CycleWeapons();
-                }
-                // Scroll down
-                else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
-                {
-                    // Switch to the previous weapon
-                    CycleWeapons(-1);
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    // Switch to first weapon
-                    StartCoroutine(SwitchWeapon(0));
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    // Switch to second weapon
-                    StartCoroutine(SwitchWeapon(1));
-                }
-            }
+            // if (HasMoreWeapons)
+            // {
+            //     // Scroll up XOR Gamepad Button 3
+            //     if (Input.GetAxis("Mouse ScrollWheel") > 0f ^ Input.GetButtonDown("Switch"))
+            //     {
+            //         // Switch to the next weapon
+            //         CycleWeapons();
+            //     }
+            //     // Scroll down
+            //     else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+            //     {
+            //         // Switch to the previous weapon
+            //         CycleWeapons(-1);
+            //     }
+            //     else if (Input.GetKeyDown(KeyCode.Alpha1))
+            //     {
+            //         // Switch to first weapon
+            //         StartCoroutine(SwitchWeapon(0));
+            //     }
+            //     else if (Input.GetKeyDown(KeyCode.Alpha2))
+            //     {
+            //         // Switch to second weapon
+            //         StartCoroutine(SwitchWeapon(1));
+            //     }
+            // }
         }
 
         public void LateUpdate()
@@ -280,8 +280,10 @@ namespace Infection.Combat
         [Command]
         private void CmdInitWeapons()
         {
-            _heldWeapons.Add(new WeaponItem(startingWeapons[0].weaponDefinition));
-            _heldWeapons.Add(new WeaponItem(startingWeapons[1].weaponDefinition));
+            foreach (var weaponItem in startingWeapons)
+            {
+                _heldWeapons.Add(new WeaponItem(weaponItem.weaponDefinition));
+            }
 
             // Fill up all held weapons to max ammo
             foreach (WeaponItem weaponItem in _heldWeapons)
@@ -297,21 +299,22 @@ namespace Infection.Combat
                 case SyncListWeaponItem.Operation.OP_ADD:
                     // index is where it got added in the list
                     // item is the new item
-                    break;
                 case SyncListWeaponItem.Operation.OP_CLEAR:
                     // list got cleared
-                    break;
                 case SyncListWeaponItem.Operation.OP_INSERT:
                     // index is where it got added in the list
                     // item is the new item
-                    break;
                 case SyncListWeaponItem.Operation.OP_REMOVEAT:
                     // index is where it got removed in the list
                     // item is the item that was removed
-                    break;
                 case SyncListWeaponItem.Operation.OP_SET:
                     // index is the index of the item that was updated
                     // item is the previous item
+                default:
+                    CmdUpdateWeaponModel();
+                    CmdUpdateRemoteWeaponModel();
+                    CmdEventOnWeaponChange();
+                    CmdEventOnAmmoChange();
                     break;
             }
         }
@@ -620,7 +623,7 @@ namespace Infection.Combat
             CurrentState = WeaponState.Switching;
 
             // Play holster animation
-            CmdHolsterAnimation();
+            yield return HolsterAnimation();
 
             // Change the weapon
             _currentWeaponIndex = index;
@@ -632,7 +635,7 @@ namespace Infection.Combat
             CmdEventOnAmmoChange();
 
             // Play ready animation
-            CmdReadyAnimation();
+            yield return ReadyAnimation();
 
             CurrentState = WeaponState.Idle;
         }
@@ -695,7 +698,7 @@ namespace Infection.Combat
             //     heldWeapons[i].reserves = 0;
             //     heldWeapons[i] = null;
             // }
-            _heldWeapons.Clear();
+            // _heldWeapons.Clear();
 
             _currentWeaponIndex = 0;
             CmdUpdateWeaponModel();
@@ -762,7 +765,6 @@ namespace Infection.Combat
             // Destroy all children
             foreach (Transform child in weaponHolder)
             {
-                Destroy(child.gameObject);
                 NetworkServer.Destroy(child.gameObject);
             }
 
@@ -785,17 +787,20 @@ namespace Infection.Combat
         [ClientRpc]
         private void RpcUpdateWeaponModel(GameObject weaponModel, Vector3 pos, Quaternion rot)
         {
-            // Reset muzzle transform
-            muzzle = null;
-            muzzleFlash = null;
+            if (weaponModel != null && weaponHolder != null)
+            {
+                // Reset muzzle transform
+                muzzle = null;
+                muzzleFlash = null;
 
-            weaponModel.transform.SetParent(weaponHolder);
-            weaponModel.transform.localPosition = pos;
-            weaponModel.transform.localRotation = rot;
+                weaponModel.transform.SetParent(weaponHolder);
+                weaponModel.transform.localPosition = pos;
+                weaponModel.transform.localRotation = rot;
 
-            // Set muzzle transform. The child object must be called Muzzle
-            muzzle = weaponModel.transform.Find("Muzzle");
-            muzzleFlash = muzzle.transform.GetChild(0);
+                // Set muzzle transform. The child object must be called Muzzle
+                muzzle = weaponModel.transform.Find("Muzzle");
+                muzzleFlash = muzzle.transform.GetChild(0);
+            }
         }
 
         [Command]
@@ -807,7 +812,6 @@ namespace Infection.Combat
             // Destroy all children
             foreach (Transform child in rightHand)
             {
-                Destroy(child.gameObject);
                 NetworkServer.Destroy(child.gameObject);
             }
 
@@ -829,9 +833,12 @@ namespace Infection.Combat
         [ClientRpc]
         private void RpcUpdateRemoteWeaponModel(GameObject remoteModel, Vector3 pos, Quaternion rot)
         {
-            remoteModel.transform.SetParent(rightHand);
-            remoteModel.transform.localPosition = pos;
-            remoteModel.transform.localRotation = rot;
+            if (remoteModel != null && rightHand != null)
+            {
+                remoteModel.transform.SetParent(rightHand);
+                remoteModel.transform.localPosition = pos;
+                remoteModel.transform.localRotation = rot;
+            }
         }
 
         public void UpdateAnimatorWeaponType()
@@ -855,6 +862,11 @@ namespace Infection.Combat
 
         [ClientRpc]
         private void RpcUpdateAnimatorOverride()
+        {
+            UpdateAnimatorOverride();
+        }
+
+        private void UpdateAnimatorOverride()
         {
             // Update animator override or reset to default animator controller
             if (CurrentWeapon != null && CurrentWeapon.weaponDefinition != null)
@@ -894,12 +906,6 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetFloat("HolsterSpeed", 0f);
         }
 
-        [Command]
-        private void CmdHolsterAnimation()
-        {
-            StartCoroutine(HolsterAnimation());
-        }
-
         /// <summary>
         /// Play the weapon ready animation for the duration of the ready time defined in the weapon definition.
         /// </summary>
@@ -923,12 +929,6 @@ namespace Infection.Combat
             _weaponHolderAnimator.SetBool("Ready", false);
             _weaponHolderAnimator.SetFloat("ReadySpeed", 0f);
             CurrentState = WeaponState.Idle;
-        }
-
-        [Command]
-        private void CmdReadyAnimation()
-        {
-            StartCoroutine(ReadyAnimation());
         }
 
         public class StateChangedEventArgs : EventArgs
