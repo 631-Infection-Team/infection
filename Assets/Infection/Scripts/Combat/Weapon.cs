@@ -30,6 +30,7 @@ namespace Infection.Combat
 
         [Header("Graphics")]
         public GameObject bulletImpactVfx = null;
+        public GameObject bloodImpactVfx = null;
         public GameObject bulletTrailVfx = null;
 
         [Header("Transforms for weapon model")]
@@ -58,16 +59,7 @@ namespace Infection.Combat
         /// </summary>
         public WeaponItem CurrentWeapon
         {
-            get
-            {
-                if (_heldWeapons.Count > 0)
-                {
-                    return _heldWeapons[_currentWeaponIndex];
-                }
-
-                return null;
-            }
-
+            get => _heldWeapons.Count > 0 ? _heldWeapons[_currentWeaponIndex] : null;
             private set => CmdEquipWeapon(value, _currentWeaponIndex);
         }
 
@@ -255,11 +247,6 @@ namespace Infection.Combat
             {
                 InstabilityPercentage = Mathf.Max(0f, InstabilityPercentage - Time.deltaTime);
             }
-        }
-
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
         }
 
         public override void OnStartLocalPlayer()
@@ -502,6 +489,8 @@ namespace Infection.Combat
                         {
                             // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
                             victim.TakeDamage(CurrentWeapon.weaponDefinition.damage, GetComponent<NetworkIdentity>().netId);
+                            GameObject particles = Instantiate(bloodImpactVfx, hit.point, Quaternion.LookRotation(Vector3.Reflect(ray.direction, hit.normal)));
+                            NetworkServer.Spawn(particles);
                         }
                         else
                         {
@@ -535,7 +524,7 @@ namespace Infection.Combat
             //Player.localPlayer.horizontalLook += Random.Range(-recoil, recoil);
 
             // Subtract ammo
-            CurrentWeapon.ConsumeMagazine(1);
+            // CurrentWeapon.ConsumeMagazine(1);
             // Update listeners
             EventOnAmmoChange?.Invoke();
         }
@@ -550,6 +539,7 @@ namespace Infection.Combat
                 // Show muzzle flash for split second
                 StartCoroutine(FlashMuzzle(influence));
             }
+            CurrentWeapon.ConsumeMagazine(1);
         }
 
         /// <summary>

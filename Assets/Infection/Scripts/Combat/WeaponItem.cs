@@ -6,9 +6,9 @@ namespace Infection.Combat
     [Serializable]
     public class WeaponItem
     {
-        public WeaponDefinition weaponDefinition;
-        public int magazine;
-        public int reserves;
+        [SyncVar] public WeaponDefinition weaponDefinition;
+        [SyncVar] public int magazine;
+        [SyncVar] public int reserves;
 
         public WeaponItem()
         {

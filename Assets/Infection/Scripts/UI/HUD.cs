@@ -206,7 +206,7 @@ namespace Infection.UI
             }
             else
             {
-                weaponNameDisplay.text = "No Weapon";
+                weaponNameDisplay.text = "";
             }
         }
 
