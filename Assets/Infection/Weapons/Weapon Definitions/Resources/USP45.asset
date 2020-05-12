@@ -25,7 +25,7 @@ MonoBehaviour:
   aimZoomMultiplier: 1.1
   pickupPrefab: {fileID: 3893175649572387255, guid: b5c3b56f3c3d6664eb910b67a3bff3e3,
     type: 3}
-  reloadTime: 2.3
+  reloadTime: 1
   readyTime: 0.2
   holsterTime: 0.3
   aimTime: 0.06
