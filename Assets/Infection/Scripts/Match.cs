@@ -1,0 +1,89 @@
+﻿using System;
+using Mirror;
+using Infection.UI;
+using UnityEngine;
+
+namespace Infection
+{
+    public class Match : NetworkBehaviour
+    {
+        [Serializable]
+        public class State
+        {
+            public string name = "";
+            public int time = 0;
+        }
+
+        [Header("Settings")]
+        public State preGame = new State();
+        public State game = new State();
+        public State postGame = new State();
+
+        private State _state;
+        private int _currentTime = 0;
+        private int _currentRound = 0;
+
+        private void Start()
+        {
+            if (!isServer) return;
+
+            SetState(preGame);
+            InvokeRepeating(nameof(Tick), 1f, 1f);
+        }
+
+        [Server]
+        private string GetRoundInfo()
+        {
+            if (!isServer) return "";
+
+            if (_state == game)
+            {
+                return "Round " + _currentRound;
+            }
+
+            return _state.name;
+        }
+
+        [Server]
+        private void SetState(State state)
+        {
+            _state = state;
+            _currentTime = state.time + 1;
+        }
+
+        [Server]
+        private void Tick()
+        {
+            if (_currentTime > 0)
+            {
+                _currentTime -= 1;
+                RpcTick();
+            }
+            else
+            {
+                if (_state == preGame)
+                {
+                    SetState(game);
+                    _currentRound += 1;
+                }
+                else if (_state == game)
+                {
+                    SetState(postGame);
+                }
+                else if (_state == postGame)
+                {
+                    SetState(preGame);
+                }
+            }
+        }
+
+        [ClientRpc]
+        public void RpcTick()
+        {
+            // HUD hud = Player.localPlayer.HUD.GetComponent<HUD>();
+            //
+            // hud.UpdateTimer(_currentTime);
+            // hud.UpdateRound(GetRoundInfo());
+        }
+    }
+}
