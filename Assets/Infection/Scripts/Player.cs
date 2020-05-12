@@ -89,8 +89,15 @@ namespace Infection
 
             if (health <= 0)
             {
-                Death(sourceID);
-                Infect();
+                if (team == Team.SURVIVOR)
+                {
+                    Infect();
+                    SetDefaults();
+                }
+                else
+                {
+                    Death(sourceID);
+                }
             }
         }
 
@@ -142,9 +149,9 @@ namespace Infection
         {
             GetComponent<CharacterController>().enabled = true;
 
-            // Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
-            // transform.position = spawnPoint.position;
-            // transform.rotation = spawnPoint.rotation;
+            Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
+            transform.position = spawnPoint.position;
+            transform.rotation = spawnPoint.rotation;
 
             GetComponent<PlayerMovement>().enabled = true;
             GetComponent<PlayerAnimator>().enabled = true;
