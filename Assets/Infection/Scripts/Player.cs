@@ -109,6 +109,21 @@ namespace Infection
             RpcOnInfected();
         }
 
+        public void ResetTeam()
+        {
+            team = Team.SURVIVOR;
+            isDead = true;
+            RpcOnDeath();
+            RpcOnResetTeam();
+        }
+
+        public void Freeze()
+        {
+            weapon.enabled = false;
+            infectedWeapon.enabled = false;
+            pickupBehavior.enabled = false;
+        }
+
         private void SetDefaults()
         {
             health = maxHealth;
@@ -165,6 +180,16 @@ namespace Infection
             weapon.enabled = false;
             infectedWeapon.enabled = true;
             pickupBehavior.enabled = false;
+        }
+
+        [ClientRpc]
+        public void RpcOnResetTeam()
+        {
+            zombieGraphics.SetActive(false);
+            survivorGraphics.SetActive(true);
+            weapon.enabled = true;
+            infectedWeapon.enabled = false;
+            pickupBehavior.enabled = true;
         }
     }
 }

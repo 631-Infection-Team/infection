@@ -249,6 +249,18 @@ namespace Infection.Combat
             }
         }
 
+        public void OnEnable()
+        {
+            if (isLocalPlayer)
+            {
+                CmdInitWeapons();
+                CmdUpdateWeaponModel();
+                CmdUpdateRemoteWeaponModel();
+                CmdEventOnWeaponChange();
+                CmdEventOnAmmoChange();
+            }
+        }
+
         public override void OnStartLocalPlayer()
         {
             CmdInitWeapons();
@@ -267,6 +279,7 @@ namespace Infection.Combat
         [Command]
         private void CmdInitWeapons()
         {
+            _heldWeapons.Clear();
             foreach (var weaponItem in startingWeapons)
             {
                 _heldWeapons.Add(new WeaponItem(weaponItem.weaponDefinition));

@@ -19,9 +19,9 @@ namespace Infection
         public State game = new State();
         public State postGame = new State();
 
-        private State _state;
-        private int _currentTime = 0;
-        private int _currentRound = 0;
+        [SyncVar] private State _state;
+        [SyncVar] private int _currentTime = 0;
+        [SyncVar] private int _currentRound = 0;
 
         private void Start()
         {
@@ -31,11 +31,8 @@ namespace Infection
             InvokeRepeating(nameof(Tick), 1f, 1f);
         }
 
-        [Server]
         private string GetRoundInfo()
         {
-            if (!isServer) return "";
-
             if (_state == game)
             {
                 return "Round " + _currentRound;
@@ -65,14 +62,17 @@ namespace Infection
                 {
                     SetState(game);
                     _currentRound += 1;
+                    MatchManager.InfectRandom();
                 }
                 else if (_state == game)
                 {
                     SetState(postGame);
+                    MatchManager.FreezeAllPlayers();
                 }
                 else if (_state == postGame)
                 {
                     SetState(preGame);
+                    MatchManager.ResetAllPlayers();
                 }
             }
         }
@@ -84,6 +84,13 @@ namespace Infection
             //
             // hud.UpdateTimer(_currentTime);
             // hud.UpdateRound(GetRoundInfo());
+
+            var huds = FindObjectsOfType<HUD>();
+            foreach (var hud in huds)
+            {
+                hud.UpdateTimer(_currentTime);
+                hud.UpdateRound(GetRoundInfo());
+            }
         }
     }
 }

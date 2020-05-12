@@ -126,7 +126,7 @@ namespace Infection.UI
             int min = Mathf.FloorToInt(timeLeft / 60);
             int sec = Mathf.FloorToInt(timeLeft % 60);
 
-            timerDisplay.color = sec <= 10 ? new Color(255, 0, 0, 0.8f) : new Color(255, 255, 255, 0.8f);
+            timerDisplay.color = sec <= 10 && min <= 0 ? new Color(255, 0, 0, 0.8f) : new Color(255, 255, 255, 0.8f);
             timerDisplay.text = min.ToString("00") + ":" + sec.ToString("00");
 
             // Round Timer animation
