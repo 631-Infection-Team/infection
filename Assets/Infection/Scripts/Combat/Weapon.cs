@@ -254,6 +254,7 @@ namespace Infection.Combat
             if (isLocalPlayer)
             {
                 SetAim(0f);
+                InstabilityPercentage = 0f;
                 CmdInitWeapons();
                 CmdUpdateWeaponModel();
                 CmdUpdateRemoteWeaponModel();
@@ -267,6 +268,7 @@ namespace Infection.Combat
             if (isLocalPlayer)
             {
                 SetAim(0f);
+                InstabilityPercentage = 0f;
                 _weaponHolderAnimator.SetFloat("AimPercentage", 0f);
                 _weaponHolderAnimator.SetTrigger("Reset");
             }
