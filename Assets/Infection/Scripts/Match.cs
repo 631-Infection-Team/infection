@@ -55,6 +55,12 @@ namespace Infection
             {
                 _currentTime -= 1;
                 RpcTick();
+
+                if (_state == game && MatchManager.InfectedWon())
+                {
+                    SetState(postGame);
+                    MatchManager.FreezeAllPlayers();
+                }
             }
             else
             {
@@ -90,6 +96,16 @@ namespace Infection
             {
                 hud.UpdateTimer(_currentTime);
                 hud.UpdateRound(GetRoundInfo());
+
+                // Win message during post round
+                if (_state == postGame)
+                {
+                    hud.UpdateRoundMessage(MatchManager.InfectedWon() ? "INFECTED WIN" : "SURVIVORS WIN");
+                }
+                else
+                {
+                    hud.UpdateRoundMessage("");
+                }
             }
         }
     }

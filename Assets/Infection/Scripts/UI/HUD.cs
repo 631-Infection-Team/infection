@@ -26,6 +26,7 @@ namespace Infection.UI
         [SerializeField] private TextMeshProUGUI reservesDisplay = null;
         [SerializeField] private TextMeshProUGUI timerDisplay = null;
         [SerializeField] private TextMeshProUGUI roundDisplay = null;
+        [SerializeField] private TextMeshProUGUI roundMessage = null;
         [SerializeField] private Slider healthSliderDisplay = null;
         [SerializeField] private Player player = null;
         [SerializeField] private Weapon playerWeapon = null;
@@ -66,6 +67,7 @@ namespace Infection.UI
             alertMessageDisplay.text = "";
             timerDisplay.text = "";
             roundDisplay.text = "";
+            roundMessage.text = "";
 
             interactionMessageDisplay.gameObject.SetActive(false);
 
@@ -136,6 +138,11 @@ namespace Infection.UI
         public void UpdateRound(string info)
         {
             roundDisplay.text = info;
+        }
+
+        public void UpdateRoundMessage(string message)
+        {
+            roundMessage.text = message;
         }
 
         public void SetHealthMax(int healthMax)

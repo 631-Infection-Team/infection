@@ -74,7 +74,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 101444, guid: 77c28bd5bb9c5724da72bfd765a054d7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 101444, guid: 77c28bd5bb9c5724da72bfd765a054d7, type: 3}
       propertyPath: m_Layer

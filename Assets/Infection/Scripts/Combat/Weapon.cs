@@ -253,11 +253,22 @@ namespace Infection.Combat
         {
             if (isLocalPlayer)
             {
+                SetAim(0f);
                 CmdInitWeapons();
                 CmdUpdateWeaponModel();
                 CmdUpdateRemoteWeaponModel();
                 CmdEventOnWeaponChange();
                 CmdEventOnAmmoChange();
+            }
+        }
+
+        public void OnDisable()
+        {
+            if (isLocalPlayer)
+            {
+                SetAim(0f);
+                _weaponHolderAnimator.SetFloat("AimPercentage", 0f);
+                _weaponHolderAnimator.SetTrigger("Reset");
             }
         }
 

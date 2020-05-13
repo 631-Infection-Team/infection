@@ -90,5 +90,12 @@ namespace Infection
                 player.Value.Freeze();
             }
         }
+
+        public static bool InfectedWon()
+        {
+            int totalInfected = GetAllPlayers().Sum(player => player.team == Player.Team.INFECTED ? 1 : 0);
+
+            return totalInfected >= players.Count;
+        }
     }
 }

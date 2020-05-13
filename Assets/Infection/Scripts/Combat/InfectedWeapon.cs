@@ -28,16 +28,6 @@ namespace Infection.Combat
             _weaponHolderAnimator = weaponHolder.GetComponent<Animator>();
         }
 
-        private void OnEnable()
-        {
-            if (isLocalPlayer)
-            {
-                _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
-                CmdUpdateWeaponModel();
-                CmdEventOnEnable();
-            }
-        }
-
         public void Update()
         {
             if (!isLocalPlayer) return;
@@ -49,6 +39,27 @@ namespace Infection.Combat
             }
 
             _timeSinceLastAttack += Time.deltaTime;
+        }
+
+        private void OnEnable()
+        {
+            if (isLocalPlayer)
+            {
+                _weaponHolderAnimator.runtimeAnimatorController = animatorOverride;
+                CmdUpdateWeaponModel();
+                CmdEventOnEnable();
+                _weaponHolderAnimator.SetFloat("AimPercentage", 0f);
+                _weaponHolderAnimator.SetTrigger("Reset");
+            }
+        }
+
+        public void OnDisable()
+        {
+            if (isLocalPlayer)
+            {
+                _weaponHolderAnimator.SetFloat("AimPercentage", 0f);
+                _weaponHolderAnimator.SetTrigger("Reset");
+            }
         }
 
         [Command]
