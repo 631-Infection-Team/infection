@@ -10,8 +10,8 @@ namespace Infection
         [Serializable]
         public class State
         {
-            public string name = "";
-            public int time = 0;
+            [SyncVar] public string name = "";
+            [SyncVar] public int time = 0;
         }
 
         [Header("Settings")]

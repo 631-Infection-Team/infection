@@ -63,11 +63,16 @@ namespace Infection
 
         public static void InfectRandom()
         {
+            // One out of every 4 players rounded up are infected
+            var maxInfected = Mathf.CeilToInt(players.Count / 4f);
             Random random = new Random();
-            var randomPlayer = players.ElementAt(random.Next(players.Count)).Value;
 
-            randomPlayer.TakeDamage(999, singleton.GetComponent<NetworkIdentity>().netId);
-            Debug.Log("Player " + randomPlayer + " was infected!");
+            for (int i = 0; i < maxInfected; i++)
+            {
+                var randomPlayer = players.ElementAt(random.Next(players.Count)).Value;
+                randomPlayer.TakeDamage(999, singleton.GetComponent<NetworkIdentity>().netId);
+                Debug.Log("Player " + randomPlayer + " was infected!");
+            }
         }
 
         public static void ResetAllPlayers()
