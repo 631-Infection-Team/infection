@@ -6,7 +6,7 @@ using FMODUnity;
 
 namespace Infection
 {
-    
+
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Player))]
     [RequireComponent(typeof(CharacterController))]
@@ -22,7 +22,7 @@ namespace Infection
         [Header("Movement")]
         [HideInInspector] public bool isGrounded = false;
         private readonly float moveSpeed = 12f;
-        private readonly float jumpSpeed = 5f;
+        private readonly float jumpSpeed = 10f;
         private float lastGrounded;
         private float velocityAtJump;
         private float verticalVelocity;
@@ -81,7 +81,7 @@ namespace Infection
 
             if (isGrounded && inputJump)
             {
-                verticalVelocity = 5f;
+                verticalVelocity = jumpSpeed;
                 isGrounded = false;
                 lostFooting = true;
             }
@@ -98,11 +98,11 @@ namespace Infection
         }
 
         [Client]
-        private void FootyNoise() 
+        private void FootyNoise()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
             float inputVertical = Input.GetAxis("Vertical");
-            footTimer += Time.deltaTime;    
+            footTimer += Time.deltaTime;
 
             if(characterController.isGrounded && footTimer > 0.5f && !player.isDead){
                 if(inputHorizontal > 0 || inputVertical > 0){
