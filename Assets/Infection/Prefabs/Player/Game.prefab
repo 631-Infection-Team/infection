@@ -924,7 +924,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3455571099040222673}
   - component: {fileID: 4170840336924983764}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Vision light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -938,13 +938,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8052178815591277290}
-  m_LocalRotation: {x: 0.06975647, y: -0, z: -0, w: 0.9975641}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6719484090044176302}
   m_RootOrder: 51
-  m_LocalEulerAnglesHint: {x: 8, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!108 &4170840336924983764
 Light:
   m_ObjectHideFlags: 0
@@ -975,7 +975,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 98839
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1

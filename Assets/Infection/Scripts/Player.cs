@@ -89,8 +89,15 @@ namespace Infection
 
             if (health <= 0)
             {
-                Death(sourceID);
-                Infect();
+                if (team == Team.SURVIVOR)
+                {
+                    Infect();
+                    SetDefaults();
+                }
+                else
+                {
+                    Death(sourceID);
+                }
             }
         }
 
@@ -100,6 +107,21 @@ namespace Infection
             weapon.UnequipAllWeapons();
 
             RpcOnInfected();
+        }
+
+        public void ResetTeam()
+        {
+            team = Team.SURVIVOR;
+            isDead = true;
+            RpcOnDeath();
+            RpcOnResetTeam();
+        }
+
+        public void Freeze()
+        {
+            weapon.enabled = false;
+            infectedWeapon.enabled = false;
+            pickupBehavior.enabled = false;
         }
 
         private void SetDefaults()
@@ -142,9 +164,9 @@ namespace Infection
         {
             GetComponent<CharacterController>().enabled = true;
 
-            // Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
-            // transform.position = spawnPoint.position;
-            // transform.rotation = spawnPoint.rotation;
+            Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
+            transform.position = spawnPoint.position;
+            transform.rotation = spawnPoint.rotation;
 
             GetComponent<PlayerMovement>().enabled = true;
             GetComponent<PlayerAnimator>().enabled = true;
@@ -158,6 +180,16 @@ namespace Infection
             weapon.enabled = false;
             infectedWeapon.enabled = true;
             pickupBehavior.enabled = false;
+        }
+
+        [ClientRpc]
+        public void RpcOnResetTeam()
+        {
+            zombieGraphics.SetActive(false);
+            survivorGraphics.SetActive(true);
+            weapon.enabled = true;
+            infectedWeapon.enabled = false;
+            pickupBehavior.enabled = true;
         }
     }
 }

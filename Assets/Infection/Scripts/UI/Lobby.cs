@@ -9,10 +9,10 @@ namespace Infection.UI
     [DisallowMultipleComponent]
     public class Lobby : MonoBehaviour
     {
-        [SerializeField] private NetworkRoomManagerInfection networkRoomManagerInfection;
-        [SerializeField] private GameObject uiPlayerList;
-        [SerializeField] private GameObject uiPlayerListPlayer;
-        [SerializeField] private List<NetworkRoomPlayer> playerList = new List<NetworkRoomPlayer>();
+        public NetworkRoomManagerInfection networkRoomManagerInfection;
+        public GameObject uiPlayerList;
+        public GameObject uiPlayerListPlayer;
+        public List<NetworkRoomPlayer> playerList = new List<NetworkRoomPlayer>();
 
         private void OnGUI()
         {
@@ -20,10 +20,18 @@ namespace Infection.UI
 
             foreach (NetworkRoomPlayer player in playerList) {
                 GameObject uiPlayerInstance = Instantiate(uiPlayerListPlayer, uiPlayerList.transform);
-                uiPlayerInstance.GetComponent<TextMeshProUGUI>().text = "Player " + (player.index + 1);
+                uiPlayerInstance.GetComponent<TextMeshProUGUI>().text = $"Player {player.index + 1}\t\t{(player.readyToBegin ? "READY" : "NOT READY")}";
             }
 
             playerList.Clear();
+        }
+
+        private void OnDisable()
+        {
+            foreach (Transform child in uiPlayerList.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 }

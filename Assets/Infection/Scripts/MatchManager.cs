@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Mirror;
+using Random = System.Random;
 
 namespace Infection
 {
@@ -57,6 +59,43 @@ namespace Infection
         public static Player[] GetAllPlayers()
         {
             return players.Values.ToArray();
+        }
+
+        public static void InfectRandom()
+        {
+            // One out of every 4 players rounded up are infected
+            var maxInfected = Mathf.CeilToInt(players.Count / 4f);
+            Random random = new Random();
+
+            for (int i = 0; i < maxInfected; i++)
+            {
+                var randomPlayer = players.ElementAt(random.Next(players.Count)).Value;
+                randomPlayer.TakeDamage(999, singleton.GetComponent<NetworkIdentity>().netId);
+                Debug.Log("Player " + randomPlayer + " was infected!");
+            }
+        }
+
+        public static void ResetAllPlayers()
+        {
+            foreach (var player in players)
+            {
+                player.Value.ResetTeam();
+            }
+        }
+
+        public static void FreezeAllPlayers()
+        {
+            foreach (var player in players)
+            {
+                player.Value.Freeze();
+            }
+        }
+
+        public static bool InfectedWon()
+        {
+            int totalInfected = GetAllPlayers().Sum(player => player.team == Player.Team.INFECTED ? 1 : 0);
+
+            return totalInfected >= players.Count;
         }
     }
 }

@@ -249,6 +249,29 @@ namespace Infection.Combat
             }
         }
 
+        public void OnEnable()
+        {
+            if (isLocalPlayer)
+            {
+                SetAim(0f);
+                CmdInitWeapons();
+                CmdUpdateWeaponModel();
+                CmdUpdateRemoteWeaponModel();
+                CmdEventOnWeaponChange();
+                CmdEventOnAmmoChange();
+            }
+        }
+
+        public void OnDisable()
+        {
+            if (isLocalPlayer)
+            {
+                SetAim(0f);
+                _weaponHolderAnimator.SetFloat("AimPercentage", 0f);
+                _weaponHolderAnimator.SetTrigger("Reset");
+            }
+        }
+
         public override void OnStartLocalPlayer()
         {
             CmdInitWeapons();
@@ -267,6 +290,7 @@ namespace Infection.Combat
         [Command]
         private void CmdInitWeapons()
         {
+            _heldWeapons.Clear();
             foreach (var weaponItem in startingWeapons)
             {
                 _heldWeapons.Add(new WeaponItem(weaponItem.weaponDefinition));
@@ -485,7 +509,7 @@ namespace Infection.Combat
 
                         Player victim = hit.transform.gameObject.GetComponent<Player>();
 
-                        if (victim)
+                        if (victim && victim.team == Player.Team.INFECTED)
                         {
                             // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
                             victim.TakeDamage(CurrentWeapon.weaponDefinition.damage, GetComponent<NetworkIdentity>().netId);
