@@ -7,6 +7,14 @@ namespace Infection
 {
     public class Match : NetworkBehaviour
     {
+        public FMOD.Studio.EventInstance roundOverMusic;
+
+        [FMODUnity.EventRef]
+        public string fmodEvent;
+
+        [SerializeField] [Range(0, 1)]
+        public int parameter;
+
         [Serializable]
         public class State
         {
@@ -26,6 +34,11 @@ namespace Infection
         private void Start()
         {
             if (!isServer) return;
+
+            roundOverMusic = FMODUnity.RuntimeManager.CreateInstance(fmodEvent);
+            roundOverMusic.start();
+
+            roundOverMusic.setParameterByName("RoundMusic", parameter);
 
             SetState(preGame);
             InvokeRepeating(nameof(Tick), 1f, 1f);
