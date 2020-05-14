@@ -73,7 +73,6 @@
 			<destination>{1594f911-c955-4cf0-b922-f35476ca6ab4}</destination>
 			<destination>{e13fc088-bef9-4b1c-b52c-e8cf165590da}</destination>
 			<destination>{22bb07f7-419b-4313-8126-e11cdb5f60fa}</destination>
-			<destination>{a6169364-ad72-47f4-8737-01e4f97d4e6d}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{1a0a7667-d216-4b6c-98ef-dd66a3e1dfc6}</destination>
@@ -84,7 +83,6 @@
 			<destination>{1594f911-c955-4cf0-b922-f35476ca6ab4}</destination>
 			<destination>{e13fc088-bef9-4b1c-b52c-e8cf165590da}</destination>
 			<destination>{22bb07f7-419b-4313-8126-e11cdb5f60fa}</destination>
-			<destination>{a6169364-ad72-47f4-8737-01e4f97d4e6d}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{24cd0c81-0f64-4da0-b08d-f08f15b521f7}</destination>
@@ -138,7 +136,7 @@
 	</object>
 	<object class="SingleSound" id="{e13fc088-bef9-4b1c-b52c-e8cf165590da}">
 		<property name="start">
-			<value>59</value>
+			<value>40</value>
 		</property>
 		<property name="length">
 			<value>31</value>
@@ -155,7 +153,7 @@
 	</object>
 	<object class="SingleSound" id="{22bb07f7-419b-4313-8126-e11cdb5f60fa}">
 		<property name="start">
-			<value>90</value>
+			<value>71</value>
 		</property>
 		<property name="length">
 			<value>29.225691609977332</value>
@@ -169,14 +167,6 @@
 		<relationship name="audioFile">
 			<destination>{36e36f2f-6a9d-4ca2-ac52-7b8e49edc0c7}</destination>
 		</relationship>
-	</object>
-	<object class="EventSound" id="{a6169364-ad72-47f4-8737-01e4f97d4e6d}">
-		<property name="start">
-			<value>108</value>
-		</property>
-		<property name="length">
-			<value>5</value>
-		</property>
 	</object>
 	<object class="EventMixerGroup" id="{1a0a7667-d216-4b6c-98ef-dd66a3e1dfc6}">
 		<property name="volume">
@@ -211,7 +201,7 @@
 	</object>
 	<object class="LoopRegion" id="{fa2dcb36-7728-4de7-bd3d-931b3df540b2}">
 		<property name="position">
-			<value>90</value>
+			<value>71</value>
 		</property>
 		<property name="length">
 			<value>29.225691609977332</value>
@@ -225,7 +215,7 @@
 	</object>
 	<object class="NamedMarker" id="{997f1f3b-9434-466e-be66-7796f5c8c474}">
 		<property name="position">
-			<value>59</value>
+			<value>40</value>
 		</property>
 		<property name="name">
 			<value>pregame</value>
@@ -239,7 +229,7 @@
 	</object>
 	<object class="NamedMarker" id="{818f9b56-4967-43ba-beb8-d79dd0d4d871}">
 		<property name="position">
-			<value>90</value>
+			<value>71</value>
 		</property>
 		<property name="name">
 			<value>Gamestart</value>
@@ -376,7 +366,7 @@
 	</object>
 	<object class="AutomationPoint" id="{b95f1d52-fa8f-4da0-bf82-5e6e6cc9b47d}">
 		<property name="position">
-			<value>87.400000000000006</value>
+			<value>68.400000000000006</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -387,7 +377,7 @@
 	</object>
 	<object class="AutomationPoint" id="{6b4d882f-0c75-4fe8-9243-631c8a2a3c01}">
 		<property name="position">
-			<value>90</value>
+			<value>71</value>
 		</property>
 		<property name="value">
 			<value>0</value>
