@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: 
-  Event: event:/UI_Click
+  Event: event:/Pickup_Health
   PlayEvent: 2
   StopEvent: 0
   AllowFadeout: 1
@@ -181,3 +181,4 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   m_AssetId: 
+  hasSpawned: 0
