@@ -136,10 +136,10 @@
 	</object>
 	<object class="SingleSound" id="{e13fc088-bef9-4b1c-b52c-e8cf165590da}">
 		<property name="start">
-			<value>32</value>
+			<value>40</value>
 		</property>
 		<property name="length">
-			<value>28.165804988662131</value>
+			<value>31</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{85963e29-f55a-47d9-af52-87db52906679}</destination>
@@ -153,7 +153,7 @@
 	</object>
 	<object class="SingleSound" id="{22bb07f7-419b-4313-8126-e11cdb5f60fa}">
 		<property name="start">
-			<value>60.165804988662131</value>
+			<value>71</value>
 		</property>
 		<property name="length">
 			<value>29.225691609977332</value>
@@ -201,12 +201,11 @@
 	</object>
 	<object class="LoopRegion" id="{fa2dcb36-7728-4de7-bd3d-931b3df540b2}">
 		<property name="position">
-			<value>60.165804988662131</value>
+			<value>71</value>
 		</property>
 		<property name="length">
 			<value>29.225691609977332</value>
 		</property>
-		<property name="name" />
 		<relationship name="timeline">
 			<destination>{6ec1eb29-53d7-4baa-b003-1d366dc95d61}</destination>
 		</relationship>
@@ -216,7 +215,7 @@
 	</object>
 	<object class="NamedMarker" id="{997f1f3b-9434-466e-be66-7796f5c8c474}">
 		<property name="position">
-			<value>32</value>
+			<value>40</value>
 		</property>
 		<property name="name">
 			<value>pregame</value>
@@ -230,7 +229,7 @@
 	</object>
 	<object class="NamedMarker" id="{818f9b56-4967-43ba-beb8-d79dd0d4d871}">
 		<property name="position">
-			<value>60.165804988662131</value>
+			<value>71</value>
 		</property>
 		<property name="name">
 			<value>Gamestart</value>
@@ -367,7 +366,7 @@
 	</object>
 	<object class="AutomationPoint" id="{b95f1d52-fa8f-4da0-bf82-5e6e6cc9b47d}">
 		<property name="position">
-			<value>59.800000000000004</value>
+			<value>68.400000000000006</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -378,7 +377,7 @@
 	</object>
 	<object class="AutomationPoint" id="{6b4d882f-0c75-4fe8-9243-631c8a2a3c01}">
 		<property name="position">
-			<value>60.165804988662131</value>
+			<value>71</value>
 		</property>
 		<property name="value">
 			<value>0</value>
