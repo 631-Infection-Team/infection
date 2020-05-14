@@ -83,7 +83,7 @@ namespace Infection
                         textColor = Color.white,
                     }
                 };
-                GUILayout.Label($"Player {index + 1}", style);
+                GUILayout.Label($"Player {index + 1}{(isLocalPlayer ? " (You)" : "")}", style);
 
                 var readyStyle = new GUIStyle
                 {
