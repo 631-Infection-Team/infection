@@ -91,7 +91,6 @@
 			<destination>{818f9b56-4967-43ba-beb8-d79dd0d4d871}</destination>
 			<destination>{d564836b-2c13-4723-9b74-613d9f780448}</destination>
 			<destination>{8e66a514-ede7-478a-884d-866990d4723c}</destination>
-			<destination>{25b2baad-f389-4f2b-9c88-3a32a0f87f49}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{f5cdb766-ec86-46f5-975e-0c8d5b4cb2eb}">
@@ -276,26 +275,6 @@
 			<destination>{9efa71e0-9ab9-42ca-a474-2c0b629ef6f0}</destination>
 		</relationship>
 	</object>
-	<object class="TransitionRegion" id="{25b2baad-f389-4f2b-9c88-3a32a0f87f49}">
-		<property name="position">
-			<value>90</value>
-		</property>
-		<property name="length">
-			<value>29.225691609977332</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{6ec1eb29-53d7-4baa-b003-1d366dc95d61}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{e82e1464-fd49-4360-8400-b3f11ca3ea5c}</destination>
-		</relationship>
-		<relationship name="destination">
-			<destination>{997f1f3b-9434-466e-be66-7796f5c8c474}</destination>
-		</relationship>
-		<relationship name="triggerConditions">
-			<destination>{62af6e85-3ee9-4287-b7d9-52b205d43edd}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusEffectChain" id="{00060c41-29f7-4f66-8992-81c1c34c45a5}">
 		<relationship name="effects">
 			<destination>{b5fd61c9-cfc8-4bb2-bbb6-f90ff1fc43b2}</destination>
@@ -371,17 +350,6 @@
 		</property>
 		<property name="maximum">
 			<value>1.2799999713897705</value>
-		</property>
-		<relationship name="parameter">
-			<destination>{c916dac9-cb3d-446c-9f8b-c292ad953352}</destination>
-		</relationship>
-	</object>
-	<object class="ParameterCondition" id="{62af6e85-3ee9-4287-b7d9-52b205d43edd}">
-		<property name="minimum">
-			<value>0.69999998807907104</value>
-		</property>
-		<property name="maximum">
-			<value>1.2400000095367432</value>
 		</property>
 		<relationship name="parameter">
 			<destination>{c916dac9-cb3d-446c-9f8b-c292ad953352}</destination>
