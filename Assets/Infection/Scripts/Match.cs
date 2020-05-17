@@ -1,12 +1,18 @@
 ﻿using System;
 using Mirror;
 using Infection.UI;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Infection
 {
     public class Match : NetworkBehaviour
     {
+        public GameObject RoundEnd;
+        public GameObject ParameterReset;
+        
+
         [Serializable]
         public class State
         {
@@ -48,6 +54,8 @@ namespace Infection
             _currentTime = state.time + 1;
         }
 
+      
+
         [Server]
         private void Tick()
         {
@@ -60,23 +68,28 @@ namespace Infection
                 {
                     SetState(postGame);
                     MatchManager.FreezeAllPlayers();
+                    RoundEnd.SetActive (true);
                 }
             }
             else
             {
                 if (_state == preGame)
                 {
+                    ParameterReset.SetActive (false);
                     SetState(game);
                     _currentRound += 1;
                     MatchManager.InfectRandom();
                 }
                 else if (_state == game)
                 {
+                    RoundEnd.SetActive (true);
                     SetState(postGame);
-                    MatchManager.FreezeAllPlayers();
+                    MatchManager.FreezeAllPlayers(); 
                 }
                 else if (_state == postGame)
                 {
+                    RoundEnd.SetActive (false);
+                    ParameterReset.SetActive (true);
                     SetState(preGame);
                     MatchManager.ResetAllPlayers();
                 }
