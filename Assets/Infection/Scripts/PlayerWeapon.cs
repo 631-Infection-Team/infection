@@ -37,7 +37,7 @@ namespace Infection
                 if (victim)
                 {
                     // Cause damage to the victim, and pass our network ID so we can keep track of who killed who.
-                    victim.TakeDamage(10, GetComponent<NetworkIdentity>().netId);
+                    victim.TakeDamage(30, GetComponent<NetworkIdentity>().netId);
                 }
             }
 
