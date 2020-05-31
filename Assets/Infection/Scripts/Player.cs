@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Mirror;
 using Infection.Combat;
+using Infection.Interaction;
 
 namespace Infection
 {
@@ -16,6 +17,7 @@ namespace Infection
         [Header("Components")]
         public Weapon weapon;
         public InfectedWeapon infectedWeapon;
+        public PickupBehavior pickupBehavior;
         public new Camera camera;
         public GameObject cameraContainer;
         public GameObject graphics;
@@ -87,8 +89,15 @@ namespace Infection
 
             if (health <= 0)
             {
-                Death(sourceID);
-                Infect();
+                if (team == Team.SURVIVOR)
+                {
+                    Infect();
+                    SetDefaults();
+                }
+                else
+                {
+                    Death(sourceID);
+                }
             }
         }
 
@@ -98,6 +107,21 @@ namespace Infection
             weapon.UnequipAllWeapons();
 
             RpcOnInfected();
+        }
+
+        public void ResetTeam()
+        {
+            team = Team.SURVIVOR;
+            isDead = true;
+            RpcOnDeath();
+            RpcOnResetTeam();
+        }
+
+        public void Freeze()
+        {
+            weapon.enabled = false;
+            infectedWeapon.enabled = false;
+            pickupBehavior.enabled = false;
         }
 
         private void SetDefaults()
@@ -155,6 +179,17 @@ namespace Infection
             survivorGraphics.SetActive(false);
             weapon.enabled = false;
             infectedWeapon.enabled = true;
+            pickupBehavior.enabled = false;
+        }
+
+        [ClientRpc]
+        public void RpcOnResetTeam()
+        {
+            zombieGraphics.SetActive(false);
+            survivorGraphics.SetActive(true);
+            weapon.enabled = true;
+            infectedWeapon.enabled = false;
+            pickupBehavior.enabled = true;
         }
     }
 }

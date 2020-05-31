@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6799708987592468989}
   - component: {fileID: 8977103626782947680}
+  - component: {fileID: 114838594324425230}
+  - component: {fileID: 114213292907429482}
   m_Layer: 0
   m_Name: MatchManager
   m_TagString: Untagged
@@ -43,3 +45,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed3915c12da4aa943a567101fd314532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114838594324425230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6799708987592468986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!114 &114213292907429482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6799708987592468986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2232e2161c4981bb8f4444e611caae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  preGame:
+    name: Round Starting
+    time: 30
+  game:
+    name: Round In-Progress
+    time: 90
+  postGame:
+    name: Round End
+    time: 10

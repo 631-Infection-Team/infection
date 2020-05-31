@@ -6,7 +6,7 @@ namespace Infection.Interaction
 {
     public class WeaponPickup : ItemPickup
     {
-        [SerializeField] private WeaponItem weaponItem = null;
+        public WeaponItem weaponItem = null;
 
         public override string ItemName => weaponItem.weaponDefinition.weaponName;
 
@@ -16,7 +16,7 @@ namespace Infection.Interaction
             set => weaponItem = value;
         }
 
-        protected override void OnGrantPickup(PickupBehavior pickupBehavior)
+        public override void GrantPickup(PickupBehavior pickupBehavior)
         {
             if (WeaponItem == null)
             {
@@ -43,11 +43,12 @@ namespace Infection.Interaction
 
                     // Throw weapon up a little and forward a lot
                     // TODO: Player should not be on "Default" layer, otherwise player will collide with the object when dropping old weapon
-                    pickup.GetComponent<Rigidbody>().AddRelativeForce(2f, 5f, 0f, ForceMode.Impulse);
+                    pickup.GetComponent<Rigidbody>().AddRelativeForce(2f, 12f, 0f, ForceMode.Impulse);
                     NetworkServer.Spawn(pickup);
                 }
 
                 NetworkServer.Destroy(gameObject);
+                Destroy(gameObject);
             }
         }
     }

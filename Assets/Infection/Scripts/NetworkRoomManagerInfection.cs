@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Mirror;
 using TMPro;
+using UnityEngine.UI;
 
 /*
 	Documentation: https://mirror-networking.com/docs/Components/NetworkRoomManager.html
@@ -25,10 +26,15 @@ namespace Infection
     public class NetworkRoomManagerInfection : NetworkRoomManager
     {
         public TMP_InputField ipField = null;
+        public RectTransform lobbyRect = null;
+        public RectTransform canvas = null;
 
         private void Update()
         {
-            networkAddress = ipField.text != "" ? ipField.text : "localhost";
+            if (ipField != null)
+            {
+                networkAddress = ipField.text != "" ? ipField.text : "localhost";
+            }
         }
 
         #region Server Callbacks
@@ -183,7 +189,36 @@ namespace Infection
 
         public override void OnGUI()
         {
-            base.OnGUI();
+            if (NetworkServer.active && IsSceneActive(GameplayScene))
+            {
+                GUILayout.BeginArea(new Rect(Screen.width - 150f, 10f, 140f, 30f));
+                if (GUILayout.Button("Return to Room"))
+                    ServerChangeScene(RoomScene);
+                GUILayout.EndArea();
+            }
+
+            if (IsSceneActive(RoomScene))
+            {
+                GUI.color = Color.clear;
+                // GUI.Box(new Rect(150f, 200f, 520f, 800f), "");
+                GUI.Box(GetWorldRect(), "");
+                GUI.color = Color.white;
+            }
+        }
+
+        public Rect GetWorldRect()
+        {
+            var rt = lobbyRect;
+            var scale = canvas.localScale;
+            // Convert the rectangle to world corners and grab the top left
+            Vector3[] corners = new Vector3[4];
+            rt.GetWorldCorners(corners);
+            Vector3 topLeft = corners[0];
+
+            // Rescale the size appropriately based on the current Canvas scale
+            Vector2 scaledSize = new Vector2(scale.x * rt.rect.size.x, scale.y * rt.rect.size.y);
+
+            return new Rect(topLeft, scaledSize);
         }
 
         #endregion

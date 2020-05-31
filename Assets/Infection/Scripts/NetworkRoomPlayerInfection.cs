@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 /// This component holds basic room player data required for the room to function.
 /// Game specific data for room players can be put in other components on the RoomPrefab or in scripts derived from NetworkRoomPlayer.
 /// </summary>
-/// 
+///
 
 namespace Infection
 {
@@ -54,7 +54,117 @@ namespace Infection
 
         public override void OnGUI()
         {
-            base.OnGUI();
+            if (!showRoomGUI)
+                return;
+
+            NetworkRoomManagerInfection room = NetworkManager.singleton as NetworkRoomManagerInfection;
+            if (room)
+            {
+                if (!NetworkManager.IsSceneActive(room.RoomScene))
+                    return;
+
+                DrawPlayerReadyState();
+                DrawPlayerReadyButton();
+            }
+        }
+
+        void DrawPlayerReadyState()
+        {
+            NetworkRoomManagerInfection room = NetworkManager.singleton as NetworkRoomManagerInfection;
+            Rect rect = room.GetWorldRect();
+
+            GUILayout.BeginArea(new Rect(rect.x, rect.y + 100f + (index * rect.height / 8f), rect.width, rect.height / 8f));
+            {
+                var style = new GUIStyle
+                {
+                    fontSize = 40,
+                    normal =
+                    {
+                        textColor = Color.white,
+                    }
+                };
+                GUILayout.Label($"Player {index + 1}{(isLocalPlayer ? " (You)" : "")}", style);
+
+                var readyStyle = new GUIStyle
+                {
+                    fontSize = 30
+                };
+                if (readyToBegin)
+                {
+                    readyStyle.normal.textColor = Color.green;
+                    GUILayout.Label("Ready", readyStyle);
+                }
+                else
+                {
+                    readyStyle.normal.textColor = Color.red;
+                    GUILayout.Label("Not Ready", readyStyle);
+                }
+
+                var removeStyle = new GUIStyle(GUI.skin.box)
+                {
+                    fixedHeight = 40f,
+                    fontSize = 24,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal =
+                    {
+                        textColor = Color.black,
+                        background = Texture2D.whiteTexture
+                    }
+                };
+                if (isServer && index > 0 || isServerOnly)
+                {
+                    GUILayout.BeginArea(new Rect(350f, 15f, 150f, 40f));
+                    {
+                        if (GUILayout.Button("Kick", removeStyle))
+                        {
+                            // This button only shows on the Host for all players other than the Host
+                            // Host and Players can't remove themselves (stop the client instead)
+                            // Host can kick a Player this way.
+                            GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
+                        }
+                    }
+                    GUILayout.EndArea();
+                }
+            }
+            GUILayout.EndArea();
+        }
+
+        void DrawPlayerReadyButton()
+        {
+            NetworkRoomManagerInfection room = NetworkManager.singleton as NetworkRoomManagerInfection;
+            Rect rect = room.GetWorldRect();
+            if (NetworkClient.active && isLocalPlayer)
+            {
+                GUILayout.BeginArea(new Rect(rect.x + 350f, rect.y + 120f + (index * rect.height / 8f), 150f, 40f));
+                {
+                    var style = new GUIStyle(GUI.skin.box)
+                    {
+                        fixedHeight = 40f,
+                        fontSize = 30,
+                        alignment = TextAnchor.MiddleCenter,
+                        normal =
+                        {
+                            textColor = Color.black,
+                            background = Texture2D.whiteTexture
+                        }
+                    };
+                    if (readyToBegin)
+                    {
+                        if (GUILayout.Button("Cancel", style))
+                        {
+                            CmdChangeReadyState(false);
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button("Ready", style))
+                        {
+                            CmdChangeReadyState(true);
+                        }
+                    }
+                }
+                GUILayout.EndArea();
+            }
         }
 
         #endregion

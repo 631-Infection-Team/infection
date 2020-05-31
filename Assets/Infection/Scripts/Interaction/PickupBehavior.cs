@@ -64,7 +64,13 @@ namespace Infection.Interaction
             }
         }
 
-        private void PickupItem(IPickup pickup)
+        private void OnDisable()
+        {
+            ResetTarget();
+        }
+
+        // [Command]
+        private void PickupItem(ItemPickup pickup)
         {
             pickup.GrantPickup(this);
         }
@@ -72,9 +78,12 @@ namespace Infection.Interaction
         private void ResetTarget()
         {
             // Reset previous target material and clear reference
-            _raycastObj.Highlight(false);
-            _raycastObj = null;
-            OnLookAt?.Invoke(null);
+            if (_raycastObj != null)
+            {
+                _raycastObj.Highlight(false);
+                _raycastObj = null;
+                OnLookAt?.Invoke(null);
+            }
         }
     }
 }
