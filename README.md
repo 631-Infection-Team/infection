@@ -9,8 +9,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## Website
-This website contains links to working builds. Feel free to download and play with friends!
-[Releases](https://infection-game.netlify.app/)
+[Infection Game Releases](https://infection-game.netlify.app/)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
