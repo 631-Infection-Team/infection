@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using FMODUnity;
+//using FMODUnity;
 
 namespace Infection
 {
@@ -12,7 +12,7 @@ namespace Infection
     [RequireComponent(typeof(CharacterController))]
     public class PlayerMovement : NetworkBehaviour
     {
-        [BankRef]
+        //[BankRef]
         public string footSteps;
 
         [Header("Components")]
@@ -107,7 +107,7 @@ namespace Infection
             if(characterController.isGrounded && footTimer > 0.5f && !player.isDead){
                 if(inputHorizontal > 0 || inputVertical > 0){
                     Debug.Log("The foot noise comith");
-                    FMODUnity.RuntimeManager.PlayOneShot(footSteps);
+                    //FMODUnity.RuntimeManager.PlayOneShot(footSteps);
                     footTimer = 0.0f;
                 }
             }
