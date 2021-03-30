@@ -24,8 +24,11 @@ namespace Infection
         public GameObject survivorGraphics;
         public GameObject zombieGraphics;
 <<<<<<< HEAD
+<<<<<<< HEAD
         public GameObject zombieGraphics1;
         public GameObject zombieGraphics2;
+=======
+>>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
 =======
 >>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
         public GameObject hud;
@@ -38,6 +41,7 @@ namespace Infection
         [Header("Team")]
         [SyncVar] public Team team = Team.SURVIVOR;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         public void charpicker( GameObject SkinOne, GameObject SkinTwo, GameObject SkinThree)
         {
@@ -62,13 +66,18 @@ namespace Infection
 
 =======
 >>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
+=======
+>>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
         public override void OnStartLocalPlayer()
         {
             base.OnStartLocalPlayer();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2);
 
+=======
+>>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
 =======
 >>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
             cameraContainer.SetActive(true);
@@ -205,7 +214,10 @@ namespace Infection
             GetComponent<PlayerMovement>().enabled = true;
             GetComponent<PlayerAnimator>().enabled = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
             
+=======
+>>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
 =======
 >>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
         }
@@ -214,8 +226,11 @@ namespace Infection
         public void RpcOnInfected()
         {
 <<<<<<< HEAD
+<<<<<<< HEAD
             charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2);
 
+=======
+>>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
 =======
 >>>>>>> parent of a746ed09 (added 2nd and 3rd zombie models.)
             zombieGraphics.SetActive(true);
