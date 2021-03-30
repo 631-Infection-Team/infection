@@ -25,7 +25,6 @@ namespace Infection
         public GameObject zombieGraphics;
         public GameObject zombieGraphics1;
         public GameObject zombieGraphics2;
-        public GameObject zombieGraphics3;
         public GameObject hud;
 
         [Header("Health")]
@@ -36,9 +35,9 @@ namespace Infection
         [Header("Team")]
         [SyncVar] public Team team = Team.SURVIVOR;
 
-        public void charpicker(GameObject result, GameObject SkinOne, GameObject SkinTwo, GameObject SkinThree)
+        public void charpicker( GameObject SkinOne, GameObject SkinTwo, GameObject SkinThree)
         {
-            int charnumber = Random.Range(1, 3);
+            int charnumber = Random.Range(0, 3);
             GameObject tempObj;
             if (charnumber == 2)
             {
@@ -53,7 +52,7 @@ namespace Infection
                 tempObj = SkinOne;
             }
 
-            result = tempObj;
+            SkinOne = tempObj;
 
         }
 
@@ -61,7 +60,7 @@ namespace Infection
         {
             base.OnStartLocalPlayer();
 
-            charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2, zombieGraphics3);
+            charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2);
 
             cameraContainer.SetActive(true);
             graphics.SetActive(false);
@@ -196,13 +195,13 @@ namespace Infection
 
             GetComponent<PlayerMovement>().enabled = true;
             GetComponent<PlayerAnimator>().enabled = true;
-            charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2, zombieGraphics3);
+            
         }
 
         [ClientRpc]
         public void RpcOnInfected()
         {
-            charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2, zombieGraphics3);
+            charpicker(zombieGraphics, zombieGraphics1, zombieGraphics2);
 
             zombieGraphics.SetActive(true);
             survivorGraphics.SetActive(false);
