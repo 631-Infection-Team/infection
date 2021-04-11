@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 /*
@@ -19,6 +20,8 @@ namespace Infection
 {
     public class NetworkRoomPlayerInfection : NetworkRoomPlayer
     {
+        //public TMP_InputField userName = null;
+
         #region Room Client Callbacks
 
         /// <summary>
@@ -87,7 +90,7 @@ namespace Infection
 
                 var readyStyle = new GUIStyle
                 {
-                    fontSize = 30
+                    fontSize = 20
                 };
                 if (readyToBegin)
                 {

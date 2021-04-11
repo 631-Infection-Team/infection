@@ -25,16 +25,23 @@ namespace Infection
     [DisallowMultipleComponent]
     public class NetworkRoomManagerInfection : NetworkRoomManager
     {
-        public TMP_InputField ipField = null;
+        //public TMP_InputField ipField = null;
         public RectTransform lobbyRect = null;
         public RectTransform canvas = null;
+        public TextMeshProUGUI PlayerCount = null;
+        //
+        public TMP_InputField userName = null;
 
         private void Update()
         {
-            if (ipField != null)
-            {
-                networkAddress = ipField.text != "" ? ipField.text : "localhost";
-            }
+          //every frame check and update player count in lobby
+          networkAddress = "localhost";
+          PlayerCount.SetText("Player Count: {0}", numPlayers);
+
+            // if (ipField != null)
+            // {
+            //     networkAddress = ipField.text != "" ? ipField.text : "localhost";
+            // }
         }
 
         #region Server Callbacks
@@ -186,6 +193,11 @@ namespace Infection
         #endregion
 
         #region Optional UI
+        public void setGameplayScene(string Scene)
+        {
+          //for loading scenes
+          GameplayScene = Scene;
+        }
 
         public override void OnGUI()
         {
@@ -194,6 +206,7 @@ namespace Infection
                 GUILayout.BeginArea(new Rect(Screen.width - 150f, 10f, 140f, 30f));
                 if (GUILayout.Button("Return to Room"))
                     ServerChangeScene(RoomScene);
+
                 GUILayout.EndArea();
             }
 
