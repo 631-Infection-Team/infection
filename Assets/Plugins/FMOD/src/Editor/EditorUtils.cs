@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -28,21 +29,6 @@ namespace FMODUnity
 
         public const string BuildFolder = "Build";
 
-        public static string GetBankDirectory()
-        {
-            if (Settings.Instance.HasSourceProject && !String.IsNullOrEmpty(Settings.Instance.SourceProjectPath))
-            {
-                string projectPath = Settings.Instance.SourceProjectPath;
-                string projectFolder = Path.GetDirectoryName(projectPath);
-                return Path.Combine(projectFolder, BuildFolder);
-            }
-            else if (!String.IsNullOrEmpty(Settings.Instance.SourceBankPath))
-            {
-                return Path.GetFullPath(Settings.Instance.SourceBankPath);
-            }
-            return null;
-        }
-
         public static void ValidateSource(out bool valid, out string reason)
         {
             valid = true;
@@ -53,13 +39,13 @@ namespace FMODUnity
                 if (string.IsNullOrEmpty(settings.SourceProjectPath))
                 {
                     valid = false;
-                    reason = "FMOD Studio Project path not set";
+                    reason = "The FMOD Studio project path must be set to an .fspro file.";
                     return;
                 }
                 if (!File.Exists(settings.SourceProjectPath))
                 {
                     valid = false;
-                    reason = "FMOD Studio Project not found";
+                    reason = string.Format("The FMOD Studio project path '{0}' does not exist.", settings.SourceProjectPath);
                     return;
                 }
 
@@ -72,7 +58,7 @@ namespace FMODUnity
                     )
                 {
                     valid = false;
-                    reason = "FMOD Studio Project does not contain any built data. Please build your project in FMOD Studio.";
+                    reason = string.Format("The FMOD Studio project '{0}' does not contain any built banks. Please build your project in FMOD Studio.", settings.SourceProjectPath);
                     return;
                 }
             }
@@ -81,13 +67,13 @@ namespace FMODUnity
                 if (String.IsNullOrEmpty(settings.SourceBankPath))
                 {
                     valid = false;
-                    reason = "Build path not set";
+                    reason = "The build path has not been set.";
                     return;
                 }
                 if (!Directory.Exists(settings.SourceBankPath))
                 {
                     valid = false;
-                    reason = "Build path doesn't exist";
+                    reason = string.Format("The build path '{0}' does not exist.", settings.SourceBankPath);
                     return;
                 }
 
@@ -96,7 +82,7 @@ namespace FMODUnity
                     if (Directory.GetDirectories(settings.SourceBankPath).Length == 0)
                     {
                         valid = false;
-                        reason = "Build path doesn't contain any platform folders";
+                        reason = string.Format("Build path '{0}' does not contain any platform sub-directories. Please check that the build path is correct.", settings.SourceBankPath);
                         return;
                     }
                 }
@@ -105,7 +91,7 @@ namespace FMODUnity
                     if (Directory.GetFiles(settings.SourceBankPath, "*.strings.bank").Length == 0)
                     {
                         valid = false;
-                        reason = "Build path doesn't contain the contents of an FMOD Studio Build";
+                        reason = string.Format("Build path '{0}' does not contain any built banks.", settings.SourceBankPath);
                         return;
                     }
                 }
@@ -141,6 +127,34 @@ namespace FMODUnity
             uint patch = (version & 0x000000FF);
 
             return major.ToString("X1") + "." + minor.ToString("X2") + "." + patch.ToString("X2");
+        }
+
+        public static string DurationString(float seconds)
+        {
+            float minutes = seconds / 60;
+            float hours = minutes / 60;
+
+            if (hours >= 1)
+            {
+                return Pluralize(Mathf.FloorToInt(hours), "hour", "hours");
+            }
+            else if (minutes >= 1)
+            {
+                return Pluralize(Mathf.FloorToInt(minutes), "minute", "minutes");
+            }
+            else if (seconds >= 1)
+            {
+                return Pluralize(Mathf.FloorToInt(seconds), "second", "seconds");
+            }
+            else
+            {
+                return "a moment";
+            }
+        }
+
+        public static string Pluralize(int count, string singular, string plural)
+        {
+            return string.Format("{0} {1}", count, (count == 1) ? singular : plural);
         }
 
         static EditorUtils()
@@ -181,6 +195,13 @@ namespace FMODUnity
             if (system.isValid())
             {
                 CheckResult(system.update());
+
+                if (speakerMode != Settings.Instance.GetEditorSpeakerMode())
+                {
+                    PreviewStop();
+                    DestroySystem();
+                    CreateSystem();
+                }
             }
 
             if (previewEventInstance.isValid())
@@ -195,6 +216,7 @@ namespace FMODUnity
         }
 
         static FMOD.Studio.System system;
+        static FMOD.SPEAKERMODE speakerMode;
 
         static void DestroySystem()
         {
@@ -223,7 +245,8 @@ namespace FMODUnity
             CheckResult(system.getCoreSystem(out lowlevel));
 
             // Use play-in-editor speaker mode for event browser preview and metering
-            lowlevel.setSoftwareFormat(0, (FMOD.SPEAKERMODE)Settings.Instance.GetSpeakerMode(FMODPlatform.Default),0 );
+            speakerMode = Settings.Instance.GetEditorSpeakerMode();
+            CheckResult(lowlevel.setSoftwareFormat(0, speakerMode, 0));
 
             CheckResult(system.initialize(256, FMOD.Studio.INITFLAGS.ALLOW_MISSING_PLUGINS | FMOD.Studio.INITFLAGS.SYNCHRONOUS_UPDATE, FMOD.INITFLAGS.NORMAL, IntPtr.Zero));
 
@@ -290,28 +313,52 @@ namespace FMODUnity
             }
         }
 
+        [MenuItem("FMOD/Help/Getting Started", priority = 2)]
+        static void OnlineGettingStarted()
+        {
+            OpenOnlineDocumentation("unity", "user-guide");
+        }
+
         [MenuItem("FMOD/Help/Integration Manual", priority = 3)]
         static void OnlineManual()
         {
-            Application.OpenURL("https://fmod.com/resources/documentation-unity");
+            OpenOnlineDocumentation("unity");
         }
 
-        [MenuItem("FMOD/Help/API Documentation", priority = 4)]
+        [MenuItem("FMOD/Help/API Manual", priority = 4)]
         static void OnlineAPIDocs()
         {
-            Application.OpenURL("https://fmod.com/resources/documentation-api");
+            OpenOnlineDocumentation("api");
         }
 
-        [MenuItem("FMOD/Help/Support Forum", priority = 5)]
+        [MenuItem("FMOD/Help/Support Forum", priority = 16)]
         static void OnlineQA()
         {
             Application.OpenURL("https://qa.fmod.com/");
         }
 
-        [MenuItem("FMOD/Help/Revision History", priority = 6)]
+        [MenuItem("FMOD/Help/Revision History", priority = 5)]
         static void OnlineRevisions()
         {
-            Application.OpenURL("https://fmod.com/resources/documentation-api?version=2.0&page=welcome-revision-history.html");
+            OpenOnlineDocumentation("api", "welcome-revision-history");
+        }
+
+        static void OpenOnlineDocumentation(string section, string page = null)
+        {
+            const string Prefix = "https://fmod.com/resources/documentation-";
+            string version = string.Format("{0:X}.{1:X}", FMOD.VERSION.number >> 16, (FMOD.VERSION.number >> 8) & 0xFF);
+            string url;
+
+            if (!string.IsNullOrEmpty(page))
+            {
+                url = string.Format("{0}{1}?version={2}&page={3}.html", Prefix, section, version, page);
+            }
+            else
+            {
+                url = string.Format("{0}{1}?version={2}", Prefix, section, version);
+            }
+                
+            Application.OpenURL(url);
         }
 
         [MenuItem("FMOD/About Integration", priority = 7)]
@@ -323,7 +370,7 @@ namespace FMODUnity
             uint version;
             CheckResult(lowlevel.getVersion(out version));
 
-            EditorUtility.DisplayDialog("FMOD Studio Unity Integration", "Version: " + VerionNumberToString(version) + "\n\nCopyright \u00A9 Firelight Technologies Pty, Ltd. 2014-2020 \n\nSee LICENSE.TXT for additional license information.", "OK");
+            EditorUtility.DisplayDialog("FMOD Studio Unity Integration", "Version: " + VerionNumberToString(version) + "\n\nCopyright \u00A9 Firelight Technologies Pty, Ltd. 2014-2021 \n\nSee LICENSE.TXT for additional license information.", "OK");
         }
 
         [MenuItem("FMOD/Consolidate Plugin Files")]
@@ -672,10 +719,10 @@ namespace FMODUnity
             int channels;
             lowlevel.getSpeakerModeChannels(mode, out channels);
 
-            float[] data = new float[outputMetering.numchannels > 0 ? outputMetering.numchannels : channels];
+            float[] data = new float[channels];
             if (outputMetering.numchannels > 0)
             {
-                Array.Copy(outputMetering.rmslevel, data, outputMetering.numchannels);
+                Array.Copy(outputMetering.rmslevel, data, channels);
             }
             return data;
         }
@@ -821,22 +868,6 @@ namespace FMODUnity
             }
         }
 
-        public static bool IsFileOpenByStudio(string path)
-        {
-            bool open = true;
-            try
-            {
-                using (var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    open = false;
-                }
-            }
-            catch (Exception)
-            {
-            }
-            return open;
-        }
-
         private static string GetMasterBank()
         {
             GetScriptOutput(string.Format("masterBankFolder = studio.project.workspace.masterBankFolder;"));
@@ -909,6 +940,124 @@ namespace FMODUnity
 
             string eventGuid = GetScriptOutput(string.Format("event.id;"));
             return eventGuid;
+        }
+
+        [InitializeOnLoadMethod]
+        private static void CleanObsoleteFiles()
+        {
+            if (Environment.GetCommandLineArgs().Any(a => a == "-exportPackage"))
+            {
+                // Don't delete anything or it won't be included in the package
+                return;
+            }
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                // Messing with the asset database while entering play mode causes a NullReferenceException
+                return;
+            }
+            if (AssetDatabase.IsValidFolder("Assets/Plugins/FMOD/obsolete"))
+            {
+                EditorApplication.LockReloadAssemblies();
+
+                string[] guids = AssetDatabase.FindAssets(string.Empty, new string[] { "Assets/Plugins/FMOD/obsolete" });
+                foreach (string guid in guids)
+                {
+                    string path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (AssetDatabase.DeleteAsset(path))
+                    {
+                        Debug.LogFormat("FMOD: Removed obsolete file {0}", path);
+                    }
+                }
+                if(AssetDatabase.MoveAssetToTrash("Assets/Plugins/FMOD/obsolete"))
+                {
+                    Debug.LogFormat("FMOD: Removed obsolete folder Assets/Plugins/FMOD/obsolete");
+                }
+                EditorApplication.UnlockReloadAssemblies();
+            }
+        }
+    }
+
+    public static class SerializedPropertyExtensions
+    {
+        public static bool ArrayContains(this SerializedProperty array, Func<SerializedProperty, bool> predicate)
+        {
+            return FindArrayIndex(array, predicate) >= 0;
+        }
+
+        public static bool ArrayContains(this SerializedProperty array, string subPropertyName,
+            Func<SerializedProperty, bool> predicate)
+        {
+            return FindArrayIndex(array, subPropertyName, predicate) >= 0;
+        }
+
+        public static int FindArrayIndex(this SerializedProperty array, Func<SerializedProperty, bool> predicate)
+        {
+            for (int i = 0; i < array.arraySize; ++i)
+            {
+                SerializedProperty current = array.GetArrayElementAtIndex(i);
+
+                if (predicate(current))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static int FindArrayIndex(this SerializedProperty array, string subPropertyName,
+            Func<SerializedProperty, bool> predicate)
+        {
+            for (int i = 0; i < array.arraySize; ++i)
+            {
+                SerializedProperty current = array.GetArrayElementAtIndex(i);
+                SerializedProperty subProperty = current.FindPropertyRelative(subPropertyName);
+
+                if (predicate(subProperty))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static void ArrayAdd(this SerializedProperty array, Action<SerializedProperty> initialize)
+        {
+            array.InsertArrayElementAtIndex(array.arraySize);
+            initialize(array.GetArrayElementAtIndex(array.arraySize - 1));
+        }
+
+        public static void ArrayClear(this SerializedProperty array)
+        {
+            while (array.arraySize > 0)
+            {
+                array.DeleteArrayElementAtIndex(array.arraySize - 1);
+            }
+        }
+    }
+
+    public class NoIndentScope : IDisposable
+    {
+        int oldIndentLevel;
+
+        public NoIndentScope()
+        {
+            oldIndentLevel = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+        }
+
+        public void Dispose()
+        {
+            EditorGUI.indentLevel = oldIndentLevel;
+        }
+    }
+
+    public class NaturalComparer : IComparer<string>
+    {
+        public int Compare(string a, string b)
+        {
+            return EditorUtility.NaturalCompare(a, b);
         }
     }
 }

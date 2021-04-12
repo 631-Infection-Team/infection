@@ -1,7 +1,7 @@
 ﻿using Mirror;
 using UnityEngine;
 using Infection.Combat;
-using FMODUnity;
+//using FMODUnity;
 
 namespace Infection.Interaction
 {
