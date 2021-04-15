@@ -39,9 +39,17 @@ namespace Infection
 
         private string GetRoundInfo()
         {
+            if (_state == preGame)
+            {
+                return "Warm Up\nGame is over when only one is left standing!";
+            }
             if (_state == game)
             {
-                return "Round " + _currentRound;
+                return "Kill all enemies, Human or Zombie";
+            }
+            if (_state == postGame)
+            {
+                return "Game Over";
             }
 
             return _state.name;
@@ -64,7 +72,7 @@ namespace Infection
                 _currentTime -= 1;
                 RpcTick();
 
-                if (_state == game && MatchManager.InfectedWon())
+                if (_state == game && _currentTime == 1)
                 {
                     SetState(postGame);
                     MatchManager.FreezeAllPlayers();
@@ -78,7 +86,7 @@ namespace Infection
                     ParameterReset.SetActive (false);
                     SetState(game);
                     _currentRound += 1;
-                    MatchManager.InfectRandom();
+                    //MatchManager.InfectRandom();
                 }
                 else if (_state == game)
                 {
@@ -113,7 +121,7 @@ namespace Infection
                 // Win message during post round
                 if (_state == postGame)
                 {
-                    hud.UpdateRoundMessage(MatchManager.InfectedWon() ? "INFECTED WIN" : "SURVIVORS WIN");
+                    hud.UpdateRoundMessage("GAME OVER: Player 1 Wins!");
                 }
                 else
                 {

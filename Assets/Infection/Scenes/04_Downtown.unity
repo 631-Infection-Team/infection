@@ -22457,18 +22457,28 @@ PrefabInstance:
       objectReference: {fileID: 805082929435115133}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
+      propertyPath: game.name
+      value: Kill all enemies, Human or Zombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
+        type: 3}
+      propertyPath: game.time
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
+        type: 3}
       propertyPath: Musictest2
       value: 
       objectReference: {fileID: 6327288548136810523}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
       propertyPath: preGame.name
-      value: Warm-Up Phase
+      value: Warm Up
       objectReference: {fileID: 0}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
       propertyPath: preGame.time
-      value: 60
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}

@@ -106,7 +106,7 @@ namespace Infection
 
             if(characterController.isGrounded && footTimer > 0.5f && !player.isDead){
                 if(inputHorizontal > 0 || inputVertical > 0){
-                    Debug.Log("The foot noise comith");
+                    //Debug.Log("The foot noise comith");
                     FMODUnity.RuntimeManager.PlayOneShot(footSteps);
                     footTimer = 0.0f;
                 }
