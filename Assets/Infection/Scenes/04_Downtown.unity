@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.502
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3177494, g: 0.34902126, b: 0.38517746, a: 0.502}
+  m_IndirectSpecularColor: {r: 0.32138523, g: 0.35878083, b: 0.41761568, a: 0.502}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1607,7 +1607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100010, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: d0223f77114284b47a0e8b317e71e4dc, type: 3}
       propertyPath: m_RootOrder
@@ -22457,18 +22457,28 @@ PrefabInstance:
       objectReference: {fileID: 805082929435115133}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
+      propertyPath: game.name
+      value: Kill all enemies, Human or Zombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
+        type: 3}
+      propertyPath: game.time
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
+        type: 3}
       propertyPath: Musictest2
       value: 
       objectReference: {fileID: 6327288548136810523}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
       propertyPath: preGame.name
-      value: Warm-Up Phase
+      value: Warm Up
       objectReference: {fileID: 0}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
       propertyPath: preGame.time
-      value: 60
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 114213292907429482, guid: 887a4fe0c854c094282dce681fc82a5b,
         type: 3}
@@ -38492,7 +38502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &1388684204
 Light:
   m_ObjectHideFlags: 0
