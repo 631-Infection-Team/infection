@@ -272,7 +272,7 @@ namespace myTest
         {
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
-            PhotonNetwork.LoadLevel("SampleScene");
+            PhotonNetwork.LoadLevel("04_Downtown");
         }
 
         #endregion
