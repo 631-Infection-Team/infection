@@ -15,6 +15,7 @@ namespace myTest
     public class PlayerManager : MonoBehaviourPun
     {
         public static GameObject LocalPlayerInstance;
+        //public static GameManager Instance
         [SerializeField]
         public GameObject PlayerUiPrefab;
       //  private PhotonView photonView;
@@ -118,6 +119,7 @@ namespace myTest
 //        /// </summary>
        void Start()
        {
+           //Instance = this;
            CameraLogic _cameraLogic = this.gameObject.GetComponent<CameraLogic>();
 
 
