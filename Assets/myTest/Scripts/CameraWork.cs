@@ -12,6 +12,7 @@ using UnityEngine;
 
 namespace myTest
 {
+	//public static GameObject LocalPlayerInstance;
 	/// <summary>
 	/// Camera work. Follow a target
 	/// </summary>

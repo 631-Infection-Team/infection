@@ -122,8 +122,8 @@ namespace myTest
            //Instance = this;
            CameraLogic _cameraLogic = this.gameObject.GetComponent<CameraLogic>();
 
-
-           if (_cameraLogic != null)
+            // changes camera perspective (enable if player is dead to spectate or exit)
+           if (_cameraLogic != null )
            {
                 if (Input.GetKeyDown(KeyCode.Q))
                 {

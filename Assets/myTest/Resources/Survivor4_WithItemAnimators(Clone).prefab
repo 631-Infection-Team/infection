@@ -307,7 +307,7 @@ Transform:
   m_GameObject: {fileID: 2992798419735103682}
   m_LocalRotation: {x: 0, y: 0.5676212, z: 0, w: -0.8232899}
   m_LocalPosition: {x: -5.3650546e-13, y: 0.5000002, z: 1.058982e-14}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 561269398478951202}
   - {fileID: 8516242424014804399}
@@ -736,7 +736,7 @@ MonoBehaviour:
   height: 0
   centerOffset: {x: 0, y: 0, z: 0}
   followOnStart: 1
-  smoothSpeed: 0.03
+  smoothSpeed: 0
 --- !u!114 &-264414726659691334
 MonoBehaviour:
   m_ObjectHideFlags: 0
