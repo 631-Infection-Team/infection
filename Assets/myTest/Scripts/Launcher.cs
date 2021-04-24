@@ -46,7 +46,6 @@ namespace myTest
         /// </summary>
         [Header("lobby Room Panel")]
         public GameObject LobbyPanel;
-        public Transform PlayerScrollView;
 
         public Button EnterMatchButton;
         public GameObject PlayerListEntryPrefab;
@@ -104,9 +103,9 @@ namespace myTest
             progressLabel.SetActive(true);
             MainPanel.SetActive(false);
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
-            if (PhotonNetwork.IsConnectedAndReady)
+            if (PhotonNetwork.IsConnected)
             {
-                //
+                // 
                 string roomName = "gameRoom";
                 RoomOptions opt = new RoomOptions();
                 opt.IsOpen = true;
@@ -178,7 +177,7 @@ namespace myTest
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 GameObject entry = Instantiate(PlayerListEntryPrefab);
-                entry.transform.SetParent(PlayerScrollView);
+                entry.transform.SetParent(LobbyPanel.transform);
                 entry.transform.localScale = Vector3.one;
                 entry.GetComponent<PlayerListEntry>().Initialize(p.ActorNumber, p.NickName);
 
@@ -215,7 +214,7 @@ namespace myTest
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             GameObject entry = Instantiate(PlayerListEntryPrefab);
-            entry.transform.SetParent(PlayerScrollView);
+            entry.transform.SetParent(LobbyPanel.transform);
             entry.transform.localScale = Vector3.one;
             entry.GetComponent<PlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
 
