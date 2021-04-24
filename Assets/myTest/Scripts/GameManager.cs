@@ -166,6 +166,7 @@ namespace myTest
 			Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
 
 			PhotonNetwork.LoadLevel("04_Downtown");
+			//PhotonNetwork.LoadLevel("SampleScene");
 		}
 
 		#endregion

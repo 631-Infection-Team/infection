@@ -10,8 +10,9 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-namespace Photon.Pun.Demo.PunBasics
+namespace myTest
 {
 	#pragma warning disable 649
 
@@ -35,7 +36,15 @@ namespace Photon.Pun.Demo.PunBasics
 	    [SerializeField]
 	    private Slider playerHealthSlider;
 
-        PlayerManager target;
+		[SerializeField] private Image crosshair = null;
+		[SerializeField] private TextMeshProUGUI timerDisplay = null;
+		[SerializeField] private TextMeshProUGUI gameState = null;
+		[SerializeField] private TextMeshProUGUI roundMessage = null;
+		[SerializeField] private TextMeshProUGUI healthValueDisplay = null;
+
+		private Animation _timerAnim = null;
+
+		PlayerManager target;
 
 		float characterControllerHeight;
 
@@ -60,6 +69,37 @@ namespace Photon.Pun.Demo.PunBasics
 			_canvasGroup = this.GetComponent<CanvasGroup>();
 			
 			this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
+
+			_timerAnim = timerDisplay.gameObject.GetComponent<Animation>();
+		}
+
+		private void OnEnable()
+		{
+			timerDisplay.text = "0:59";
+			gameState.text = "Pre-Game";
+			roundMessage.text = "";
+		}
+
+		public void UpdateTimer(float timeLeft)
+		{
+			int min = Mathf.FloorToInt(timeLeft / 60);
+			int sec = Mathf.FloorToInt(timeLeft % 60);
+
+			timerDisplay.color = sec <= 10 && min <= 0 ? new Color(255, 0, 0, 0.8f) : new Color(255, 255, 255, 0.8f);
+			timerDisplay.text = min.ToString("00") + ":" + sec.ToString("00");
+
+			// Round Timer animation
+			_timerAnim.Play();
+		}
+
+		public void UpdateState(string info)
+		{
+			gameState.text = info;
+		}
+
+		public void UpdateRoundMessage(string message)
+		{
+			roundMessage.text = message;
 		}
 
 		/// <summary>
@@ -69,16 +109,20 @@ namespace Photon.Pun.Demo.PunBasics
 		void Update()
 		{
 			// Destroy itself if the target is null, It's a fail safe when Photon is destroying Instances of a Player over the network
+			/*
 			if (target == null) {
 				Destroy(this.gameObject);
 				return;
 			}
+			*/
 
 
 			// Reflect the Player Health
+			/*
 			if (playerHealthSlider != null) {
 				playerHealthSlider.value = target.Health;
 			}
+			*/
 		}
 
 		/// <summary>
