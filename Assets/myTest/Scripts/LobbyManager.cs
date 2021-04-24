@@ -21,7 +21,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     //method when join room clicked
     public void JoinRoom(){
 
-      if (PhotonNetwork.IsConnectedAndReady)
+      if (PhotonNetwork.IsConnected)
       {
           string playerName = nickNameField.text;
           string lobbyName = lobbyNameField.text;

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 
 
 using System.Collections;
@@ -14,7 +15,7 @@ namespace myTest
     /// <summary>
     /// Player name input field. Let the user input his name, will appear above the player in the game.
     /// </summary>
-    [RequireComponent(typeof(InputField))]
+    [RequireComponent(typeof(TMP_InputField))]
     public class PlayerNameInputField : MonoBehaviour
     {
         #region Private Constants
@@ -37,7 +38,7 @@ namespace myTest
         {
 
             string defaultName = string.Empty;
-            InputField _inputField = this.GetComponent<InputField>();
+            TMP_InputField _inputField = this.GetComponent<TMP_InputField>();
             if (_inputField != null)
             {
                 if (PlayerPrefs.HasKey(playerNamePrefKey))
