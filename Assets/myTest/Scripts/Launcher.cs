@@ -209,7 +209,7 @@ namespace myTest
 
             playerListEntries.Clear();
             playerListEntries = null;
-        //    MainPanel.SetActive(true);
+            //    MainPanel.SetActive(true);
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
