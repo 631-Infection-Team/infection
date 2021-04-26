@@ -212,24 +212,24 @@ namespace myTest
             //    MainPanel.SetActive(true);
         }
 
-        public override void OnPlayerEnteredRoom(Player newPlayer)
-        {
-            GameObject entry = Instantiate(PlayerListEntryPrefab);
-            entry.transform.SetParent(PlayerScrollView);
-            entry.transform.localScale = Vector3.one;
-            entry.GetComponent<PlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
-
-            playerListEntries.Add(newPlayer.ActorNumber, entry);
-
-            EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
-        }
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-            Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
-            playerListEntries.Remove(otherPlayer.ActorNumber);
-
-            EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
-        }
+        // public override void OnPlayerEnteredRoom(Player newPlayer)
+        // {
+        //     GameObject entry = Instantiate(PlayerListEntryPrefab);
+        //     entry.transform.SetParent(PlayerScrollView);
+        //     entry.transform.localScale = Vector3.one;
+        //     entry.GetComponent<PlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
+        //
+        //     playerListEntries.Add(newPlayer.ActorNumber, entry);
+        //
+        //     EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+        // }
+        // public override void OnPlayerLeftRoom(Player otherPlayer)
+        // {
+        //     Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
+        //     playerListEntries.Remove(otherPlayer.ActorNumber);
+        //
+        //     EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+        // }
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
