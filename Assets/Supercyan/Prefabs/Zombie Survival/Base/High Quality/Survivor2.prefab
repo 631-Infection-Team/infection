@@ -602,9 +602,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 1305549795275730755}
+  photonView: {fileID: 0}
   isGrounded: 0
   mouseSensitivity: 100
   playerBody: {fileID: 0}
+  cameraHolder: {fileID: 0}
 --- !u!114 &351039391219478020
 MonoBehaviour:
   m_ObjectHideFlags: 0
