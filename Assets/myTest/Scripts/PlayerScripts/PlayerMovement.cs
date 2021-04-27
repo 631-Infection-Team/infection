@@ -27,8 +27,10 @@ namespace myTest
         private float footTimer = 0.0f;
         private Vector3 moveDirection;
         float xRotation = 0f;
+        float yRotation = 0f;
         public float mouseSensitivity = 100f;
         public Transform playerBody;
+        [SerializeField] GameObject cameraHolder;
 
 
         private void Awake()
@@ -146,9 +148,19 @@ namespace myTest
             float lookY = Input.GetAxis("Look Y") * 100f * Time.deltaTime;
 
             xRotation -= lookY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            playerBody.Rotate(Vector3.up * lookX);
+            xRotation = Mathf.Clamp(xRotation, -60f, 60f);
+
+            yRotation += lookX;
+            transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+            cameraHolder.transform.localEulerAngles = new Vector3(xRotation, 0f, 0f); //(Vector3.up * lookX);
+
+            //transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivity);
+
+            //verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivity;
+            //verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
+
+            //cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
+
         }
     }
 
