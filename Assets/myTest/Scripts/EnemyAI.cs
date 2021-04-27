@@ -22,7 +22,7 @@ public class EnemyAI : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         float distance = Vector3.Distance(transform.position, target.position);
 

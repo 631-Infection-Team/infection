@@ -184,6 +184,11 @@ namespace Photon.Realtime
             return this.RoomReference.GetPlayer(id);
         }
 
+        public void SetCustomProperties(System.Collections.Hashtable props)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>Gets this Player's next Player, as sorted by ActorNumber (Player.ID). Wraps around.</summary>
         /// <returns>Player or null.</returns>
         public Player GetNext()

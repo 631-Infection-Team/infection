@@ -4,13 +4,11 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
-using UnityEngine.SceneManagement;
 
 namespace myTest
 {
     public class Launcher : MonoBehaviourPunCallbacks
     {
-        #region Private Serializable Fields
         /// <summary>
         /// The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created.
         /// </summary>
@@ -18,10 +16,7 @@ namespace myTest
         [SerializeField]
         private byte maxPlayersPerRoom = 4;
 
-        #endregion
-
-
-        #region Private Fields
+     
         /// <summary>
         /// Keep track of the current process. Since connection is asynchronous and is based on several callbacks from Photon,
         /// we need to keep track of this to properly adjust the behavior when we receive call back by Photon.
@@ -29,16 +24,10 @@ namespace myTest
         /// </summary>
         bool isConnecting;
 
-        /// <summary>
-        /// This client's version number. Users are separated from each other by gameVersion (which allows you to make breaking changes).
-        /// </summary>
+    
         string gameVersion = "1";
 
 
-        #endregion
-
-
-        #region MonoBehaviour CallBacks
 
 
         /// <summary>
@@ -57,7 +46,9 @@ namespace myTest
         void Awake()
         {
             if (instance != null && instance != this)
+            {
                 gameObject.SetActive(false);
+            }
             else
             {
                 instance = this;
@@ -79,10 +70,6 @@ namespace myTest
         }
 
 
-        #endregion
-
-
-        #region Public Methods
         [Tooltip("The Ui Panel to let the user enter name, connect and play")]
         [SerializeField]
         private GameObject MainPanel;
@@ -90,15 +77,6 @@ namespace myTest
         [SerializeField]
         private GameObject progressLabel;
 
-
-
-
-
-        /// <summary>
-        /// Start the connection process
-        /// - If already connected, we attempt joining a random room
-        /// - if not yet connected, Connect this application instance to Photon Cloud Network
-        /// </summary>
         public void Connect()
         {
             progressLabel.SetActive(true);
@@ -106,7 +84,7 @@ namespace myTest
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
             if (PhotonNetwork.IsConnectedAndReady)
             {
-                //
+               
                 string roomName = "gameRoom";
                 RoomOptions opt = new RoomOptions();
                 opt.IsOpen = true;
@@ -125,14 +103,12 @@ namespace myTest
         }
 
 
-        #endregion
-        #region MonoBehaviourPunCallbacks Callbacks
-
+    
 
         public override void OnConnectedToMaster()
         {
 
-            Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
+            Debug.Log(" OnConnectedToMaster() was called by PUN");
             // we don't want to do anything if we are not attempting to join a room.
             // this case where isConnecting is false is typically when you lost or quit the game, when this level is loaded, OnConnectedToMaster will be called, in that case
             // we don't want to do anything.
@@ -209,27 +185,27 @@ namespace myTest
 
             playerListEntries.Clear();
             playerListEntries = null;
-            //    MainPanel.SetActive(true);
+              MainPanel.SetActive(true);
         }
 
-        // public override void OnPlayerEnteredRoom(Player newPlayer)
-        // {
-        //     GameObject entry = Instantiate(PlayerListEntryPrefab);
-        //     entry.transform.SetParent(PlayerScrollView);
-        //     entry.transform.localScale = Vector3.one;
-        //     entry.GetComponent<PlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
-        //
-        //     playerListEntries.Add(newPlayer.ActorNumber, entry);
-        //
-        //     EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
-        // }
-        // public override void OnPlayerLeftRoom(Player otherPlayer)
-        // {
-        //     Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
-        //     playerListEntries.Remove(otherPlayer.ActorNumber);
-        //
-        //     EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
-        // }
+         //public override void OnPlayerEnteredRoom(Player newPlayer)
+         //{
+         //    GameObject entry = Instantiate(PlayerListEntryPrefab);
+         //    entry.transform.SetParent(PlayerScrollView);
+         //    entry.transform.localScale = Vector3.one;
+         //    entry.GetComponent<PlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
+        
+         //    playerListEntries.Add(newPlayer.ActorNumber, entry);
+        
+         //    EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+         //}
+         //public override void OnPlayerLeftRoom(Player otherPlayer)
+         //{
+         //    Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
+         //    playerListEntries.Remove(otherPlayer.ActorNumber);
+        
+         //    EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+         //}
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
@@ -259,9 +235,7 @@ namespace myTest
             EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
         }
 
-        #endregion
-
-        #region UI CALLBACKS
+      
 
         public void OnBackButtonClicked()
         {
@@ -275,8 +249,6 @@ namespace myTest
             PhotonNetwork.CurrentRoom.IsVisible = false;
             PhotonNetwork.LoadLevel("04_Downtown");
         }
-
-        #endregion
 
         private bool CheckPlayersReady()
         {
@@ -308,4 +280,5 @@ namespace myTest
             EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
         }
     }
-}
+
+   }
