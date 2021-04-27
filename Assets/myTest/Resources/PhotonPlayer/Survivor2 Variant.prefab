@@ -617,6 +617,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Survivor2 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220870347, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d00596e41815b345a1c3a58a6d68338, type: 3}
 --- !u!1 &1627729936789315867 stripped
