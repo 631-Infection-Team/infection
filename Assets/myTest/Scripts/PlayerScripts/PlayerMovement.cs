@@ -56,6 +56,8 @@ namespace myTest
                 Destroy(GetComponentInChildren<Camera>().gameObject);
                 Destroy(characterController);
             }
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
         public void Update()
         {
