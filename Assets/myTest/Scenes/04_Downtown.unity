@@ -6592,7 +6592,7 @@ MonoBehaviour:
   theEnemy: {fileID: 1334583259}
   xPos: 0
   zPos: 0
-  enemyCount: 8
+  enemyCount: 9
 --- !u!1001 &219798767
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34282,7 +34282,7 @@ MonoBehaviour:
   theEnemy: {fileID: 969486298}
   xPos: 0
   zPos: 0
-  enemyCount: 6
+  enemyCount: 8
 --- !u!1 &1243694340
 GameObject:
   m_ObjectHideFlags: 0
@@ -60219,7 +60219,7 @@ MonoBehaviour:
   theEnemy: {fileID: 1334583259}
   xPos: 0
   zPos: 0
-  enemyCount: 8
+  enemyCount: 6
 --- !u!1001 &2066527192
 PrefabInstance:
   m_ObjectHideFlags: 0
