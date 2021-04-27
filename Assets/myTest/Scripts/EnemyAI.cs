@@ -19,7 +19,7 @@ public class EnemyAI : MonoBehaviourPun
 
     void Start()
     {
-        if(photonView.IsMine)
+        if(!photonView.IsMine)
         {
             return;
         }

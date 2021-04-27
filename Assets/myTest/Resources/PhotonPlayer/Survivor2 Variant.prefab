@@ -1,0 +1,271 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8083069399609265195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 4235729983373041094}
+  - {fileID: 5294115896867199429}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &4235729983373041094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 1
+    SynchronizeType: 0
+    Name: MoveHorizontal
+  - Type: 1
+    SynchronizeType: 0
+    Name: MoveVertical
+  - Type: 4
+    SynchronizeType: 0
+    Name: Grounded
+  - Type: 3
+    SynchronizeType: 0
+    Name: GunType
+  - Type: 1
+    SynchronizeType: 0
+    Name: AimAngle
+  - Type: 3
+    SynchronizeType: 0
+    Name: MoveState
+  - Type: 9
+    SynchronizeType: 0
+    Name: WeaponFire
+  - Type: 9
+    SynchronizeType: 0
+    Name: WeaponReload
+  - Type: 4
+    SynchronizeType: 0
+    Name: Zombie
+  - Type: 9
+    SynchronizeType: 0
+    Name: Death1
+  - Type: 9
+    SynchronizeType: 0
+    Name: Death2
+  - Type: 9
+    SynchronizeType: 0
+    Name: Death3
+  - Type: 9
+    SynchronizeType: 0
+    Name: TakingHit1
+  - Type: 9
+    SynchronizeType: 0
+    Name: TakingHit2
+  - Type: 4
+    SynchronizeType: 0
+    Name: IsDead
+  - Type: 4
+    SynchronizeType: 0
+    Name: HoldingWeapon
+  - Type: 4
+    SynchronizeType: 0
+    Name: HoldingR
+  - Type: 9
+    SynchronizeType: 0
+    Name: InteractR
+  - Type: 9
+    SynchronizeType: 0
+    Name: DropItemR
+  - Type: 4
+    SynchronizeType: 0
+    Name: HoldingL
+  - Type: 9
+    SynchronizeType: 0
+    Name: InteractL
+  - Type: 9
+    SynchronizeType: 0
+    Name: DropItemL
+  - Type: 4
+    SynchronizeType: 0
+    Name: Animating
+  - Type: 4
+    SynchronizeType: 0
+    Name: HoldingB
+  - Type: 4
+    SynchronizeType: 0
+    Name: InteractionLoop
+  - Type: 4
+    SynchronizeType: 0
+    Name: Stunned
+  - Type: 4
+    SynchronizeType: 0
+    Name: Sitting
+  - Type: 4
+    SynchronizeType: 0
+    Name: Sleeping
+  - Type: 4
+    SynchronizeType: 0
+    Name: Typing
+  - Type: 4
+    SynchronizeType: 0
+    Name: Talking
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
+  - SynchronizeType: 0
+    LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
+  - SynchronizeType: 0
+    LayerIndex: 5
+  - SynchronizeType: 0
+    LayerIndex: 6
+  - SynchronizeType: 0
+    LayerIndex: 7
+  - SynchronizeType: 0
+    LayerIndex: 8
+--- !u!114 &5294115896867199429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &4431613009542935393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2323773138218321221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 902c92e8427137a48abffe92822019dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &2323773136598046672
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2942987612128333657, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: playerBody
+      value: 
+      objectReference: {fileID: 1627729936789749063}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220703401, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938794368220870347, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_Name
+      value: Survivor2 Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1727868925229996647, guid: 0d00596e41815b345a1c3a58a6d68338, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 0d00596e41815b345a1c3a58a6d68338, type: 3}
+--- !u!1 &1627729936789315867 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3938794368220870347, guid: 0d00596e41815b345a1c3a58a6d68338,
+    type: 3}
+  m_PrefabInstance: {fileID: 2323773136598046672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1627729936789749063 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3938794368220703383, guid: 0d00596e41815b345a1c3a58a6d68338,
+    type: 3}
+  m_PrefabInstance: {fileID: 2323773136598046672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2323773138218321221 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1671205525, guid: 0d00596e41815b345a1c3a58a6d68338,
+    type: 3}
+  m_PrefabInstance: {fileID: 2323773136598046672}
+  m_PrefabAsset: {fileID: 0}
