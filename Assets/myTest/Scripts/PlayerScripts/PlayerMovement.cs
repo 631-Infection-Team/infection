@@ -16,7 +16,7 @@ namespace myTest
         [Header("Components")]
        // public Player1 player;
         public CharacterController characterController;
-
+        public PhotonView photonView;
         [Header("Movement")]
         [HideInInspector] public bool isGrounded = false;
         private readonly float moveSpeed = 10f;
@@ -29,6 +29,13 @@ namespace myTest
         float xRotation = 0f;
         public float mouseSensitivity = 100f;
         public Transform playerBody;
+
+
+        private void Awake()
+        {
+            characterController = GetComponent<CharacterController>();
+            photonView = GetComponent<PhotonView>();
+        }
         //public void OnTriggerEnter(Collider other)
         //{
         //    Trigger trigger = other.GetComponent<Trigger>();
@@ -40,6 +47,14 @@ namespace myTest
         //    }
         //}
 
+        private void Start()
+        {
+            if (!photonView.IsMine)
+            {
+                Destroy(GetComponentInChildren<Camera>().gameObject);
+                Destroy(characterController);
+            }
+        }
         public void Update()
         {
             if (!photonView.IsMine) return;
