@@ -47,6 +47,7 @@ namespace myTest
         [Header("lobby Room Panel")]
         public GameObject LobbyPanel;
         public Transform PlayerScrollView;
+        public GameObject WaitingText;
 
         public Button EnterMatchButton;
         public GameObject PlayerListEntryPrefab;
@@ -190,6 +191,7 @@ namespace myTest
                 playerListEntries.Add(p.ActorNumber, entry);
 
                 EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+                WaitingText.gameObject.SetActive(CheckPlayersReadyWaiting());
 
                 Hashtable props = new Hashtable
                 {
@@ -237,6 +239,7 @@ namespace myTest
             {
                 EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
             }
+
         }
 
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
@@ -257,6 +260,7 @@ namespace myTest
             }
 
             EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+            WaitingText.gameObject.SetActive(CheckPlayersReadyWaiting());
         }
 
         #endregion
@@ -277,6 +281,23 @@ namespace myTest
         }
 
         #endregion
+        private bool CheckPlayersReadyWaiting(){
+          if(!PhotonNetwork.IsMasterClient){
+            foreach (Player p in PhotonNetwork.PlayerList)
+            {
+              object isPlayerReady;
+              if(p.CustomProperties.TryGetValue(SampleGame.PLAYER_READY, out isPlayerReady))
+              {
+                if((bool)isPlayerReady)
+                {
+                  return true;
+                }
+
+              }
+            }
+          }
+          return false;
+        }
 
         private bool CheckPlayersReady()
         {
@@ -303,9 +324,12 @@ namespace myTest
 
             return true;
         }
+
         public void LocalPlayerPropertiesUpdated()
         {
             EnterMatchButton.gameObject.SetActive(CheckPlayersReady());
+            WaitingText.SetActive(CheckPlayersReadyWaiting());
+
         }
     }
 }
