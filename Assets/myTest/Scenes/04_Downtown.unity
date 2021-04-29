@@ -15566,6 +15566,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 554178245}
     m_Modifications:
+    - target: {fileID: 70255087390547524, guid: d02bd543d31a8ba41a0c1c47f4ce1de5,
+        type: 3}
+      propertyPath: m_characterRenderer
+      value: 
+      objectReference: {fileID: 480233285}
     - target: {fileID: 5270622464474446402, guid: d02bd543d31a8ba41a0c1c47f4ce1de5,
         type: 3}
       propertyPath: m_Controller
@@ -15713,6 +15718,12 @@ NavMeshAgent:
   m_BaseOffset: -0.02
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!137 &480233285 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8818654366320256669, guid: d02bd543d31a8ba41a0c1c47f4ce1de5,
+    type: 3}
+  m_PrefabInstance: {fileID: 480233279}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &482528863
 GameObject:
   m_ObjectHideFlags: 0
@@ -28327,6 +28338,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 554178245}
     m_Modifications:
+    - target: {fileID: 2843769968117140257, guid: c4508aa638c7e4e4589e32a0f9a4396a,
+        type: 3}
+      propertyPath: m_characterRenderer
+      value: 
+      objectReference: {fileID: 936108324}
     - target: {fileID: 7020999674974167751, guid: c4508aa638c7e4e4589e32a0f9a4396a,
         type: 3}
       propertyPath: m_Controller
@@ -28474,6 +28490,12 @@ NavMeshAgent:
   m_BaseOffset: -0.03
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!137 &936108324 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7452580109850696557, guid: c4508aa638c7e4e4589e32a0f9a4396a,
+    type: 3}
+  m_PrefabInstance: {fileID: 936108318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &937817542
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58548,6 +58570,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 3eb470786e9e26a4a91fafb5777fb972, type: 2}
+    - target: {fileID: 8831775840198275026, guid: 73a45715cf4fa0c42ad1ee1f477567c5,
+        type: 3}
+      propertyPath: m_characterRenderer
+      value: 
+      objectReference: {fileID: 1889569512}
     m_RemovedComponents:
     - {fileID: 4940624964733148357, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
     - {fileID: 6107498237453121605, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
@@ -58615,6 +58642,12 @@ NavMeshAgent:
   m_BaseOffset: -0.03
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!137 &1889569512 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3063788033127253403, guid: 73a45715cf4fa0c42ad1ee1f477567c5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1889569506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1893939563
 GameObject:
   m_ObjectHideFlags: 0

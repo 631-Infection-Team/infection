@@ -1,25 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &6551273888928678696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2170561158317532523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0354f432ecd5c3941a4b5052b439cdb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenOffset: {x: 0, y: 30, z: 0}
-  playerNameText: {fileID: 2170561159329677276}
-  playerHealthSlider: {fileID: 6153035324202660062}
-  crosshair: {fileID: 3439307393396932809}
-  timerDisplay: {fileID: 1664886089853151200}
-  gameState: {fileID: 2631875127210658893}
-  roundMessage: {fileID: 852837621649326356}
-  healthValueDisplay: {fileID: 6624347107115688026}
 --- !u!114 &-8083069399609265195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +164,26 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &6551273888928678696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170561158317532523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0354f432ecd5c3941a4b5052b439cdb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenOffset: {x: 0, y: 30, z: 0}
+  playerNameText: {fileID: 2170561159329677276}
+  playerHealthSlider: {fileID: 6153035324202660062}
+  crosshair: {fileID: 3439307393396932809}
+  timerDisplay: {fileID: 1664886089853151200}
+  gameState: {fileID: 2631875127210658893}
+  roundMessage: {fileID: 852837621649326356}
+  healthValueDisplay: {fileID: 6624347107115688026}
 --- !u!114 &4431613009542935393
 MonoBehaviour:
   m_ObjectHideFlags: 0
