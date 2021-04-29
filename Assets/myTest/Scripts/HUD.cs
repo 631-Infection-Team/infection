@@ -45,23 +45,23 @@ namespace myTest
 
         #endregion
 
-        #region PUN CALLBACKS
+        //#region PUN CALLBACKS
 
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-            Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
-            playerListEntries.Remove(otherPlayer.ActorNumber);
-        }
+        //public override void OnPlayerLeftRoom(Player otherPlayer)
+        //{
+        //    Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
+        //    playerListEntries.Remove(otherPlayer.ActorNumber);
+        //}
 
-        public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-        {
-            GameObject entry;
-            if (playerListEntries.TryGetValue(targetPlayer.ActorNumber, out entry))
-            {
-                entry.GetComponent<Text>().text = string.Format("{0}\nScore: {1}\nLives: {2}", targetPlayer.NickName, targetPlayer.GetScore(), targetPlayer.CustomProperties[SampleGame.PLAYER_LIVES]);
-            }
-        }
+        //public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+        //{
+        //    GameObject entry;
+        //    if (playerListEntries.TryGetValue(targetPlayer.ActorNumber, out entry))
+        //    {
+        //        entry.GetComponent<Text>().text = string.Format("{0}\nScore: {1}\nLives: {2}", targetPlayer.NickName, targetPlayer.GetScore(), targetPlayer.CustomProperties[SampleGame.PLAYER_LIVES]);
+        //    }
+        //}
 
-        #endregion
+        //#endregion
     }
 }

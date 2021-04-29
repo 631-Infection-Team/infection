@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviourPun
 {
+
     Transform target;
     NavMeshAgent agent;
     Animator anim;
@@ -14,16 +16,26 @@ public class EnemyAI : MonoBehaviour
     [SerializeField]
     float turnSpeed = 5f;
 
+
     void Start()
     {
+        if(!photonView.IsMine)
+        {
+            return;
+        }
         target = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        if (photonView.IsMine)
+        {
+            return;
+        }
+
         float distance = Vector3.Distance(transform.position, target.position);
 
         if (distance > chaseDistance && !isDead)
