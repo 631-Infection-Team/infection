@@ -30,7 +30,8 @@ namespace myTest
         float yRotation = 0f;
         public float mouseSensitivity = 100f;
         public Transform playerBody;
-        [SerializeField] GameObject cameraHolder;
+        [SerializeField] GameObject playerCamera;
+        [SerializeField] GameObject minimapCamera;
 
 
         private void Awake()
@@ -53,7 +54,8 @@ namespace myTest
         {
             if (!photonView.IsMine)
             {
-                Destroy(GetComponentInChildren<Camera>().gameObject);
+                Destroy(playerCamera);
+                Destroy(minimapCamera);
                 Destroy(characterController);
             }
             Cursor.visible = false;
@@ -154,7 +156,7 @@ namespace myTest
 
             yRotation += lookX;
             transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
-            cameraHolder.transform.localEulerAngles = new Vector3(xRotation, 0f, 0f); //(Vector3.up * lookX);
+            playerCamera.transform.localEulerAngles = new Vector3(xRotation, 0f, 0f); //(Vector3.up * lookX);
 
             //transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivity);
 
