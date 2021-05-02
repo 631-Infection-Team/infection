@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 
 
@@ -32,10 +33,13 @@ namespace myTest
         public Transform playerBody;
         [SerializeField] GameObject playerCamera;
         [SerializeField] GameObject minimapCamera;
-
+        [SerializeField] GameObject playerCanvas;
+        [SerializeField] Text playerName;
 
         private void Awake()
         {
+            string PlayerUserName = GetComponent<PhotonView>().Owner.NickName;
+            playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
         }
@@ -57,6 +61,7 @@ namespace myTest
                 Destroy(playerCamera);
                 Destroy(minimapCamera);
                 Destroy(characterController);
+                Destroy(playerCanvas);
             }
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;

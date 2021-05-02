@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Realtime;
+using Photon.Pun;
 
 namespace myTest
 {
-    public class Match : MonoBehaviour
+    public class Match : MonoBehaviourPunCallbacks
     {
         public GameObject RoundEnd;
         public GameObject ParameterReset;
@@ -109,13 +111,13 @@ namespace myTest
             //
             // hud.UpdateTimer(_currentTime);
             // hud.UpdateRound(GetRoundInfo());
-
+            int count = PhotonNetwork.PlayerList.Length;
             var PlayerUIs = FindObjectsOfType<PlayerUI>();
             foreach (var PlayerUI in PlayerUIs)
             {
                 PlayerUI.UpdateTimer(_currentTime);
                 PlayerUI.UpdateState(GetRoundInfo());
-
+                PlayerUI.UpdatePlayerCount(count);
                 // Win message during post round
                 if (_state == postGame)
                 {

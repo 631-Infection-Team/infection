@@ -41,6 +41,7 @@ namespace myTest
 		[SerializeField] private TextMeshProUGUI gameState = null;
 		[SerializeField] private TextMeshProUGUI roundMessage = null;
 		[SerializeField] private TextMeshProUGUI healthValueDisplay = null;
+		[SerializeField] private TextMeshProUGUI playerCount = null;
 
 		private Animation _timerAnim = null;
 
@@ -68,7 +69,7 @@ namespace myTest
 
 			_canvasGroup = this.GetComponent<CanvasGroup>();
 			
-			this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
+			//this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
 
 			_timerAnim = timerDisplay.gameObject.GetComponent<Animation>();
 		}
@@ -100,6 +101,18 @@ namespace myTest
 		public void UpdateRoundMessage(string message)
 		{
 			roundMessage.text = message;
+		}
+
+		public void UpdatePlayerCount(int number)
+		{
+            if (number == 1)
+            {
+				playerCount.text = "1 Player Left";
+			}
+            else
+            {
+				playerCount.text = number.ToString() + " Players Left";
+			}
 		}
 
 		/// <summary>

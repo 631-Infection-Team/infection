@@ -51,9 +51,16 @@ namespace myTest
         void Start()
         {
             Instance = this;
+            //int count = PhotonNetwork.PlayerList.Length;
 
-            // in case we started this demo with the wrong scene being active, simply load the menu scene
-            if (!PhotonNetwork.IsConnected)
+            //Debug.Log(count);
+            //var PlayerUIs = FindObjectsOfType<PlayerUI>();
+            //foreach (var PlayerUI in PlayerUIs)
+            //{
+            //    PlayerUI.UpdatePlayerCount(count.ToString());
+            //}
+                // in case we started this demo with the wrong scene being active, simply load the menu scene
+                if (!PhotonNetwork.IsConnected)
             {
                 SceneManager.LoadScene("Launcher");
 
