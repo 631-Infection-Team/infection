@@ -26,16 +26,112 @@ namespace myTest
         public State postGame = new State();
 
         private State _state;
-        private int _currentTime = 0;
-        private int _currentRound = 0;
+        ExitGames.Client.Photon.Hashtable CustomValue;
+        double timerIncrementValue;
+        double startTime;
+        bool startTimer = false;
+        bool tracker = false;
 
         private void Start()
         {
-            //if (!isServer) return;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CustomValue = new ExitGames.Client.Photon.Hashtable();
+                startTime = PhotonNetwork.Time;
+                startTimer = true;
+                CustomValue["StartTime"] = startTime;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
+            }
+            else
+            {
+                //StartCoroutine(ExampleCoroutine());
+            }
             SetState(preGame);
-            InvokeRepeating(nameof(Tick), 1f, 1f);
+            //InvokeRepeating(nameof(Tick), 1f, 1f);
+        }
+        IEnumerator ExampleCoroutine()
+        {
+            //Print the time of when the function is first called.
+            Debug.Log("Started Coroutine at timestamp : " + Time.time);
+
+            //yield on a new YieldInstruction that waits for 5 seconds.
+            yield return new WaitForSeconds(5);
+
+            //After we have waited 5 seconds print the time again.
+            Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+            tracker = true;
         }
 
+        void startTimerOther()
+        {
+            if (startTimer != true)
+            {
+                startTime = double.Parse(PhotonNetwork.CurrentRoom.CustomProperties["StartTime"].ToString());
+                startTimer = true;
+                PhotonNetwork.CurrentRoom.CustomProperties["StartTime"] = null;
+                //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["StartTime"]);
+            }
+        }
+        void Update()
+        {
+            if(!PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.CustomProperties["StartTime"] != null && tracker==true)
+            {
+                startTimerOther();
+            }
+
+            if (!startTimer) return;
+
+            timerIncrementValue = PhotonNetwork.Time - startTime;
+            var PlayerUIs = FindObjectsOfType<PlayerUI>();
+            foreach (var PlayerUI in PlayerUIs)
+            {
+                int playerNum = GameObject.FindGameObjectsWithTag("Player").Length;
+                PlayerUI.UpdatePlayerCount(playerNum);
+                PlayerUI.UpdateTimer((float)(_state.time+1 - timerIncrementValue));
+                PlayerUI.UpdateState(GetRoundInfo());
+                if (_state == postGame)
+                {
+                    PlayerUI.UpdateRoundMessage("GAME OVER");
+                }
+                else
+                {
+                    PlayerUI.UpdateRoundMessage("");
+                }
+            }
+
+
+            if ((_state.time+1 - timerIncrementValue) > 1)
+            {
+                if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length == 1)
+                {
+                    SetState(postGame);
+                }
+            }
+            else
+            {
+                if(_state == preGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
+                {
+                    Debug.Log("TO POST");
+                    SetState(postGame);
+                }
+                else if (_state == preGame)
+                {
+                    Debug.Log("TO GAME");
+                    SetState(game);
+                }
+                else if (_state == game)
+                {
+                    Debug.Log("TO POST");
+                    SetState(postGame);
+                }
+                else if (_state == postGame)
+                {
+                    Debug.Log("TO PRE");
+                    SetState(preGame);
+                }
+            }
+
+        }
         private string GetRoundInfo()
         {
             if (_state == preGame)
@@ -58,75 +154,87 @@ namespace myTest
         private void SetState(State state)
         {
             _state = state;
-            _currentTime = state.time + 1;
-        }
-
-
-
-        //[Server]
-        private void Tick()
-        {
-            if (_currentTime > 0)
+            if (PhotonNetwork.IsMasterClient)
             {
-                _currentTime -= 1;
-                RpcTick();
-
-                if (_state == game && _currentTime == 1)
-                {
-                    SetState(postGame);
-                    //MatchManager.FreezeAllPlayers();
-                    RoundEnd.SetActive(true);
-                }
+                startTime = PhotonNetwork.Time;
+                CustomValue["StartTime"] = startTime;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
+                //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["StartTime"]);
             }
-            else
+            if(!PhotonNetwork.IsMasterClient)
             {
-                if (_state == preGame)
-                {
-                    ParameterReset.SetActive(false);
-                    SetState(game);
-                    _currentRound += 1;
-                    //MatchManager.InfectRandom();
-                }
-                else if (_state == game)
-                {
-                    RoundEnd.SetActive(true);
-                    SetState(postGame);
-                    //MatchManager.FreezeAllPlayers();
-                }
-                else if (_state == postGame)
-                {
-                    RoundEnd.SetActive(false);
-                    ParameterReset.SetActive(true);
-                    SetState(preGame);
-                    //MatchManager.ResetAllPlayers();
-                }
+                startTime = PhotonNetwork.Time;
+                startTimer = false;
             }
         }
 
-        //[ClientRpc]
-        public void RpcTick()
-        {
-            // HUD hud = Player.localPlayer.HUD.GetComponent<HUD>();
-            //
-            // hud.UpdateTimer(_currentTime);
-            // hud.UpdateRound(GetRoundInfo());
-            var PlayerUIs = FindObjectsOfType<PlayerUI>();
-            foreach (var PlayerUI in PlayerUIs)
-            {
-                int playerNum = GameObject.FindGameObjectsWithTag("Player").Length;
-                PlayerUI.UpdatePlayerCount(playerNum);
-                PlayerUI.UpdateTimer(_currentTime);
-                PlayerUI.UpdateState(GetRoundInfo());
-                // Win message during post round
-                if (_state == postGame)
-                {
-                    PlayerUI.UpdateRoundMessage("GAME OVER");
-                }
-                else
-                {
-                    PlayerUI.UpdateRoundMessage("");
-                }
-            }
-        }
+
+
+        //private void Tick()
+        //{
+        //    if (_currentTime > 0)
+        //    {
+        //        if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length==1)
+        //        {
+        //            SetState(postGame);
+        //            RoundEnd.SetActive(true);
+        //        }
+
+        //        _currentTime -= 1;
+        //        RpcTick();
+
+        //        if (_state == game && _currentTime == 1)
+        //        {
+        //            SetState(postGame);
+        //            RoundEnd.SetActive(true);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (_state == preGame)
+        //        {
+        //            ParameterReset.SetActive(false);
+        //            SetState(game);
+        //            _currentRound += 1;
+        //        }
+        //        else if (_state == game)
+        //        {
+        //            RoundEnd.SetActive(true);
+        //            SetState(postGame);
+        //        }
+        //        else if (_state == postGame)
+        //        {
+        //            RoundEnd.SetActive(false);
+        //            ParameterReset.SetActive(true);
+        //            SetState(preGame);
+        //        }
+        //    }
+        //}
+
+        ////[ClientRpc]
+        //public void RpcTick()
+        //{
+        //    // HUD hud = Player.localPlayer.HUD.GetComponent<HUD>();
+        //    //
+        //    // hud.UpdateTimer(_currentTime);
+        //    // hud.UpdateRound(GetRoundInfo());
+        //    var PlayerUIs = FindObjectsOfType<PlayerUI>();
+        //    foreach (var PlayerUI in PlayerUIs)
+        //    {
+        //        int playerNum = GameObject.FindGameObjectsWithTag("Player").Length;
+        //        PlayerUI.UpdatePlayerCount(playerNum);
+        //        PlayerUI.UpdateTimer(_currentTime);
+        //        PlayerUI.UpdateState(GetRoundInfo());
+        //        // Win message during post round
+        //        if (_state == postGame)
+        //        {
+        //            PlayerUI.UpdateRoundMessage("GAME OVER");
+        //        }
+        //        else
+        //        {
+        //            PlayerUI.UpdateRoundMessage("");
+        //        }
+        //    }
+        //}
     }
 }

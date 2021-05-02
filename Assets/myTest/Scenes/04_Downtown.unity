@@ -18116,13 +18116,13 @@ MonoBehaviour:
   ParameterReset: {fileID: 1997076006877502122}
   preGame:
     name: Pre
-    time: 30
+    time: 10
   game:
     name: Game
-    time: 30
+    time: 10
   postGame:
     name: Post
-    time: 30
+    time: 10
 --- !u!1001 &570318889
 PrefabInstance:
   m_ObjectHideFlags: 0
