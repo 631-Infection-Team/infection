@@ -32,7 +32,6 @@ namespace myTest
         private void Start()
         {
             //if (!isServer) return;
-
             SetState(preGame);
             InvokeRepeating(nameof(Tick), 1f, 1f);
         }
@@ -111,13 +110,13 @@ namespace myTest
             //
             // hud.UpdateTimer(_currentTime);
             // hud.UpdateRound(GetRoundInfo());
-            int count = PhotonNetwork.PlayerList.Length;
             var PlayerUIs = FindObjectsOfType<PlayerUI>();
             foreach (var PlayerUI in PlayerUIs)
             {
+                int playerNum = GameObject.FindGameObjectsWithTag("Player").Length;
+                PlayerUI.UpdatePlayerCount(playerNum);
                 PlayerUI.UpdateTimer(_currentTime);
                 PlayerUI.UpdateState(GetRoundInfo());
-                PlayerUI.UpdatePlayerCount(count);
                 // Win message during post round
                 if (_state == postGame)
                 {

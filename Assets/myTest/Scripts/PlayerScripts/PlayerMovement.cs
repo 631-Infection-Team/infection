@@ -71,7 +71,10 @@ namespace myTest
             if (!photonView.IsMine) return;
          //   if (player.isDead) return;
             if (!characterController.enabled) return;
-
+            if (Input.GetKeyDown("k"))
+            {
+                PhotonNetwork.Destroy(this.gameObject);
+            }
             Look();
             InputHandler();
             GravityHandler();
