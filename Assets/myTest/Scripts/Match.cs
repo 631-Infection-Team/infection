@@ -34,18 +34,18 @@ namespace myTest
 
         private void Start()
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                CustomValue = new ExitGames.Client.Photon.Hashtable();
-                startTime = PhotonNetwork.Time;
-                startTimer = true;
-                CustomValue["StartTime"] = startTime;
-                PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
-            }
-            else
-            {
-                //StartCoroutine(ExampleCoroutine());
-            }
+            //if (PhotonNetwork.IsMasterClient)
+            //{
+            //    CustomValue = new ExitGames.Client.Photon.Hashtable();
+            //    startTime = PhotonNetwork.Time;
+            //    startTimer = true;
+            //    CustomValue["StartTime"] = startTime;
+            //    PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
+            //}
+            //else
+            //{
+            //    StartCoroutine(ExampleCoroutine());
+            //}
             SetState(preGame);
             //InvokeRepeating(nameof(Tick), 1f, 1f);
         }
@@ -74,7 +74,7 @@ namespace myTest
         }
         void Update()
         {
-            if(!PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.CustomProperties["StartTime"] != null && tracker==true)
+            if (!PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.CustomProperties["StartTime"] != null )
             {
                 startTimerOther();
             }
@@ -87,7 +87,7 @@ namespace myTest
             {
                 int playerNum = GameObject.FindGameObjectsWithTag("Player").Length;
                 PlayerUI.UpdatePlayerCount(playerNum);
-                PlayerUI.UpdateTimer((float)(_state.time+1 - timerIncrementValue));
+                PlayerUI.UpdateTimer((float)(_state.time + 1 - timerIncrementValue));
                 PlayerUI.UpdateState(GetRoundInfo());
                 if (_state == postGame)
                 {
@@ -100,7 +100,7 @@ namespace myTest
             }
 
 
-            if ((_state.time+1 - timerIncrementValue) > 1)
+            if ((_state.time + 1 - timerIncrementValue) > 1)
             {
                 if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length == 1)
                 {
@@ -109,7 +109,7 @@ namespace myTest
             }
             else
             {
-                if(_state == preGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
+                if (_state == preGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
                 {
                     Debug.Log("TO POST");
                     SetState(postGame);
@@ -161,7 +161,7 @@ namespace myTest
                 PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
                 //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["StartTime"]);
             }
-            if(!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient)
             {
                 startTime = PhotonNetwork.Time;
                 startTimer = false;
