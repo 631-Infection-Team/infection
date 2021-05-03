@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 
 
@@ -30,11 +31,15 @@ namespace myTest
         float yRotation = 0f;
         public float mouseSensitivity = 100f;
         public Transform playerBody;
-        [SerializeField] GameObject cameraHolder;
-
+        [SerializeField] GameObject playerCamera;
+        [SerializeField] GameObject minimapCamera;
+        [SerializeField] GameObject playerCanvas;
+        [SerializeField] Text playerName;
 
         private void Awake()
         {
+            string PlayerUserName = GetComponent<PhotonView>().Owner.NickName;
+            playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
         }
@@ -53,8 +58,10 @@ namespace myTest
         {
             if (!photonView.IsMine)
             {
-                Destroy(GetComponentInChildren<Camera>().gameObject);
+                Destroy(playerCamera);
+                Destroy(minimapCamera);
                 Destroy(characterController);
+                Destroy(playerCanvas);
             }
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -64,7 +71,11 @@ namespace myTest
             if (!photonView.IsMine) return;
          //   if (player.isDead) return;
             if (!characterController.enabled) return;
-
+            if (Input.GetKeyDown("k"))
+            {
+                PhotonNetwork.Destroy(this.gameObject);
+                GameObject.Find("GameManager").GetComponent<Match>().activeDeathUI();
+            }
             Look();
             InputHandler();
             GravityHandler();
@@ -126,7 +137,7 @@ namespace myTest
 
             if(characterController.isGrounded && footTimer > 0.5f ){
                 if(inputHorizontal > 0 || inputVertical > 0){
-                    Debug.Log("The foot noise comith");
+                    //Debug.Log("The foot noise comith");
                   //  FMODUnity.RuntimeManager.PlayOneShot(footSteps);
                     footTimer = 0.0f;
                 }
@@ -154,7 +165,7 @@ namespace myTest
 
             yRotation += lookX;
             transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
-            cameraHolder.transform.localEulerAngles = new Vector3(xRotation, 0f, 0f); //(Vector3.up * lookX);
+            playerCamera.transform.localEulerAngles = new Vector3(xRotation, 0f, 0f); //(Vector3.up * lookX);
 
             //transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivity);
 

@@ -62,7 +62,7 @@ namespace myTest
             else
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
+                //DontDestroyOnLoad(gameObject);
             }
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
@@ -75,6 +75,8 @@ namespace myTest
         /// </summary>
         void Start()
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             progressLabel.SetActive(false);
             MainPanel.SetActive(true);
         }
