@@ -89,9 +89,14 @@ namespace myTest
                 PlayerUI.UpdatePlayerCount(playerNum);
                 PlayerUI.UpdateTimer((float)(_state.time + 1 - timerIncrementValue));
                 PlayerUI.UpdateState(GetRoundInfo());
-                if (_state == postGame)
+                if (_state == postGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
                 {
-                    PlayerUI.UpdateRoundMessage("GAME OVER");
+                    string WinnerUserName = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PhotonView>().Owner.NickName;
+                    PlayerUI.UpdateRoundMessage("GAME OVER: " + WinnerUserName + " has won!");
+                }
+                else if (_state == postGame)
+                {
+                    PlayerUI.UpdateRoundMessage("GAME OVER: Time is Up");
                 }
                 else
                 {
