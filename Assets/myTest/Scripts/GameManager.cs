@@ -51,9 +51,16 @@ namespace myTest
         void Start()
         {
             Instance = this;
+            //int count = PhotonNetwork.PlayerList.Length;
 
-            // in case we started this demo with the wrong scene being active, simply load the menu scene
-            if (!PhotonNetwork.IsConnected)
+            //Debug.Log(count);
+            //var PlayerUIs = FindObjectsOfType<PlayerUI>();
+            //foreach (var PlayerUI in PlayerUIs)
+            //{
+            //    PlayerUI.UpdatePlayerCount(count.ToString());
+            //}
+                // in case we started this demo with the wrong scene being active, simply load the menu scene
+                if (!PhotonNetwork.IsConnected)
             {
                 SceneManager.LoadScene("Launcher");
 
@@ -140,7 +147,7 @@ namespace myTest
         /// </summary>
         public override void OnLeftRoom()
         {
-            SceneManager.LoadScene("Launcher");
+            SceneManager.LoadScene("01_Menu 1");
         }
 
         #endregion
@@ -155,6 +162,15 @@ namespace myTest
         public void QuitApplication()
         {
             Application.Quit();
+        }
+
+        public void gameReset()
+        {
+            SceneManager.LoadScene("01_Menu 1");
+            //if (PhotonNetwork.IsMasterClient)
+            //{
+            //    PhotonNetwork.LoadLevel("01_Menu 1");
+            //}
         }
 
         #endregion

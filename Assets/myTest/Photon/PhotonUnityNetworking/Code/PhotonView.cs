@@ -124,6 +124,11 @@ namespace Photon.Pun
 
         protected internal bool mixedModeIsReliable = false;
 
+        public void RestartGame()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>Defines if ownership of this PhotonView is fixed, can be requested or simply taken.</summary>
         /// <remarks>
         /// Note that you can't edit this value at runtime.
