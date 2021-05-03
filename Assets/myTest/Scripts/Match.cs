@@ -34,18 +34,18 @@ namespace myTest
 
         private void Start()
         {
-            //if (PhotonNetwork.IsMasterClient)
-            //{
-            //    CustomValue = new ExitGames.Client.Photon.Hashtable();
-            //    startTime = PhotonNetwork.Time;
-            //    startTimer = true;
-            //    CustomValue["StartTime"] = startTime;
-            //    PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
-            //}
-            //else
-            //{
-            //    StartCoroutine(ExampleCoroutine());
-            //}
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CustomValue = new ExitGames.Client.Photon.Hashtable();
+                startTime = PhotonNetwork.Time;
+                startTimer = true;
+                CustomValue["StartTime"] = startTime;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(CustomValue);
+            }
+            else
+            {
+                //StartCoroutine(ExampleCoroutine());
+            }
             SetState(preGame);
             //InvokeRepeating(nameof(Tick), 1f, 1f);
         }
