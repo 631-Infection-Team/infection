@@ -147,7 +147,7 @@ namespace myTest
         /// </summary>
         public override void OnLeftRoom()
         {
-            SceneManager.LoadScene("Launcher");
+            SceneManager.LoadScene("01_Menu 1");
         }
 
         #endregion
@@ -162,6 +162,15 @@ namespace myTest
         public void QuitApplication()
         {
             Application.Quit();
+        }
+
+        public void gameReset()
+        {
+            SceneManager.LoadScene("01_Menu 1");
+            //if (PhotonNetwork.IsMasterClient)
+            //{
+            //    PhotonNetwork.LoadLevel("01_Menu 1");
+            //}
         }
 
         #endregion

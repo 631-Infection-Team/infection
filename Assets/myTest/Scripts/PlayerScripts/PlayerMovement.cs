@@ -74,6 +74,7 @@ namespace myTest
             if (Input.GetKeyDown("k"))
             {
                 PhotonNetwork.Destroy(this.gameObject);
+                GameObject.Find("GameManager").GetComponent<Match>().activeDeathUI();
             }
             Look();
             InputHandler();

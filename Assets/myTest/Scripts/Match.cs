@@ -11,7 +11,7 @@ namespace myTest
     {
         public GameObject RoundEnd;
         public GameObject ParameterReset;
-
+        public PhotonView photonView;
 
         [Serializable]
         public class State
@@ -25,6 +25,9 @@ namespace myTest
         public State game = new State();
         public State postGame = new State();
 
+        [SerializeField]
+        private GameObject DeathUI;
+
         private State _state;
         ExitGames.Client.Photon.Hashtable CustomValue;
         double timerIncrementValue;
@@ -34,6 +37,7 @@ namespace myTest
 
         private void Start()
         {
+            DeathUI.SetActive(false);
             if (PhotonNetwork.IsMasterClient)
             {
                 CustomValue = new ExitGames.Client.Photon.Hashtable();
@@ -131,8 +135,12 @@ namespace myTest
                 }
                 else if (_state == postGame)
                 {
-                    Debug.Log("TO PRE");
-                    SetState(preGame);
+                    GameObject.Find("GameManager").GetComponent<GameManager>().LeaveRoom();
+                    GameObject.Find("GameManager").GetComponent<GameManager>().gameReset();
+                    //GameObject.Find("GameManager").GetComponent<GameManager>()
+                    //Debug.Log("Reset");
+                    //SetState(preGame);
+                    
                 }
             }
 
@@ -171,6 +179,11 @@ namespace myTest
                 startTime = PhotonNetwork.Time;
                 startTimer = false;
             }
+        }
+
+        public void activeDeathUI()
+        {
+            DeathUI.SetActive(true);
         }
 
 
