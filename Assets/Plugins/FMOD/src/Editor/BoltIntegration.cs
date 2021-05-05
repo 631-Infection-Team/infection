@@ -6,9 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 
-#if (UNITY_VISUALSCRIPTING_EXIST)
-using Unity.VisualScripting;
-#elif (UNITY_BOLT_EXIST)
+#if UNITY_BOLT_EXIST
 using Ludiq;
 using Bolt;
 #endif
@@ -17,18 +15,18 @@ namespace FMODUnity
 {
     public class BoltIntegration : MonoBehaviour
     {
-        [MenuItem("FMOD/Generate Visual Scripting Units")]
+        [MenuItem("FMOD/Generate Bolt Unit Options")]
         public static void GenerateBoltUnitOptions()
         {
-#if (UNITY_BOLT_EXIST || UNITY_VISUALSCRIPTING_EXIST)
+#if UNITY_BOLT_EXIST
             BuildBoltUnitOptions();
 #else
             TriggerBuild();
 #endif
         }
 
-#if !(UNITY_BOLT_EXIST || UNITY_VISUALSCRIPTING_EXIST)
-        [MenuItem("FMOD/Generate Visual Scripting Units", true)]
+#if !UNITY_BOLT_EXIST
+        [MenuItem("FMOD/Generate Bolt Unit Options", true)]
         private static bool IsBoltPresent()
         {
             Assembly ludiqCoreRuntimeAssembly = null;
@@ -79,12 +77,9 @@ namespace FMODUnity
 
         private static void BuildBoltUnitOptions()
         {
-#if (UNITY_BOLT_EXIST)
             DictionaryAsset projectSettings = AssetDatabase.LoadAssetAtPath(PathUtility.FromProject(LudiqCore.Paths.projectSettings), typeof(DictionaryAsset)) as DictionaryAsset;
+
             List<LooseAssemblyName> assemblyOptions = projectSettings.dictionary["assemblyOptions"] as List<LooseAssemblyName>;
-#else
-            List<LooseAssemblyName> assemblyOptions = BoltCore.Configuration.assemblyOptions;
-#endif
 
             if (!assemblyOptions.Contains("FMODUnity"))
             {
@@ -95,11 +90,8 @@ namespace FMODUnity
             {
                 assemblyOptions.Add("FMODUnityResonance");
             }
-#if (UNITY_BOLT_EXIST)
+
             List<Type> typeOptions = projectSettings.dictionary["typeOptions"] as List<Type>;
-#else
-            List<Type> typeOptions = BoltCore.Configuration.typeOptions;
-#endif
             Assembly fmodUnityAssembly = Assembly.Load("FMODUnity");
             Assembly fmodUnityResonanceAssembly = Assembly.Load("FMODUnityResonance");
 
@@ -114,12 +106,7 @@ namespace FMODUnity
                 }
             }
 
-            Codebase.UpdateSettings();
-#if (UNITY_BOLT_EXIST)
             UnitBase.Build();
-#else
-            UnitBase.Rebuild();
-#endif
         }
 
         private static IEnumerable<Type> GetTypesForNamespace(Assembly assembly, string requestedNamespace)

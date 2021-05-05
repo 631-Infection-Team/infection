@@ -259,6 +259,14 @@ namespace FMODUnity
                 return rows;
             }
 
+            private class NaturalComparer : IComparer<string>
+            {
+                public int Compare(string a, string b)
+                {
+                    return EditorUtility.NaturalCompare(a, b);
+                }
+            }
+
             private static NaturalComparer naturalComparer = new NaturalComparer();
 
             private void CreateSubTree<T>(string rootName, string rootPath,
