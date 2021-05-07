@@ -31,12 +31,11 @@ public class EnemyAI : MonoBehaviourPun
 
     void FixedUpdate()
     {
-        if (photonView.IsMine)
+        if (!photonView.IsMine)
         {
             return;
         }
-
-        float distance = Vector3.Distance(transform.position, target.position);
+        var distance = Vector3.Distance(transform.position, target.position);
 
         if (distance > chaseDistance && !isDead)
         {
