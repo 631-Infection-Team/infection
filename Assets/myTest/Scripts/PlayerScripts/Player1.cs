@@ -14,10 +14,10 @@ namespace myTest
         
         public new Camera camera;
         public GameObject CameraManager;
-        public GameObject graphics;
-        public GameObject survivorGraphics;
-        public GameObject zombieGraphics;
-        public GameObject hud;
+        //public GameObject graphics;
+        //public GameObject survivorGraphics;
+        //public GameObject zombieGraphics;
+        //public GameObject hud;
 
         [Header("Health")]
         [SerializeField] public int health = 100;
@@ -84,11 +84,11 @@ namespace myTest
         {
   
 
-            if (photonView.IsMine)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
+            //if (photonView.IsMine)
+            //{
+            //    Cursor.lockState = CursorLockMode.None;
+            //    Cursor.visible = true;
+            //}
         }
 
         //public void Heal(int amount = 100)

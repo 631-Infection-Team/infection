@@ -111,17 +111,17 @@ namespace myTest
 
             if ((_state.time + 1 - timerIncrementValue) > 1)
             {
-                if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length == 1)
-                {
-                    SetState(postGame);
-                }
+              // if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length == 1)
+              // {
+              //     SetState(postGame);
+              // }
             }
             else
             {
                 if (_state == preGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
                 {
                     Debug.Log("TO POST");
-                    SetState(postGame);
+                 //   SetState(postGame);
                 }
                 else if (_state == preGame)
                 {
@@ -131,7 +131,7 @@ namespace myTest
                 else if (_state == game)
                 {
                     Debug.Log("TO POST");
-                    SetState(postGame);
+                  //  SetState(postGame);
                 }
                 else if (_state == postGame)
                 {

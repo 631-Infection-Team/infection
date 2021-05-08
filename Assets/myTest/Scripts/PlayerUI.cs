@@ -12,6 +12,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+using System.Collections;
+using myTest.Combat;
+
 namespace myTest
 {
 	#pragma warning disable 649
@@ -42,6 +45,9 @@ namespace myTest
 		[SerializeField] private TextMeshProUGUI roundMessage = null;
 		[SerializeField] private TextMeshProUGUI healthValueDisplay = null;
 		[SerializeField] private TextMeshProUGUI playerCount = null;
+		[SerializeField] private Weapon playerWeapon = null;
+		[SerializeField] private PickupBehavior playerPickupBehavior = null;
+
 
 		private Animation _timerAnim = null;
 
