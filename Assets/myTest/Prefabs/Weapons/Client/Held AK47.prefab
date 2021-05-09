@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2455399664354262672}
   - component: {fileID: 2455399664351407734}
   - component: {fileID: 2455399664352451378}
-  m_Layer: 15
+  m_Layer: 10
   m_Name: SA_Wep_AssaultRifle01_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 2455399664354257446}
   - component: {fileID: 2455399664351434824}
   - component: {fileID: 2455399664352444216}
-  m_Layer: 15
+  m_Layer: 10
   m_Name: SA_Wep_AssaultRifle01_Silencer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 2455399664354307156}
   - component: {fileID: 2455399664351324112}
   - component: {fileID: 2455399664352475154}
-  m_Layer: 15
+  m_Layer: 10
   m_Name: SA_Wep_AssaultRifle01_Flashlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,8 @@ GameObject:
   - component: {fileID: 2455399664351409562}
   - component: {fileID: 2455399664352006330}
   - component: {fileID: 2519733118990573870}
-  m_Layer: 15
+  - component: {fileID: 4926397669528307243}
+  m_Layer: 10
   m_Name: Held AK47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,6 +339,28 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43073776427769362, guid: f5f033eea14124e4981abc4c803d4c11, type: 2}
+--- !u!114 &4926397669528307243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455399664354486728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2455399664354492218
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,7 +372,7 @@ GameObject:
   - component: {fileID: 2455399664354227952}
   - component: {fileID: 2455399664351355898}
   - component: {fileID: 2455399664351987048}
-  m_Layer: 15
+  m_Layer: 10
   m_Name: SA_Wep_AssaultRifle01_Reddot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +451,7 @@ GameObject:
   - component: {fileID: 2455399664354323448}
   - component: {fileID: 2455399664351419160}
   - component: {fileID: 2455399664352447244}
-  m_Layer: 15
+  m_Layer: 10
   m_Name: SA_Wep_AssaultRifle01_Acog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -510,11 +533,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6021062346852631298, guid: 9b7b80b449dcb834ca6e23cd5b0d0fa6,
         type: 3}
-      propertyPath: m_Layer
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6021062346852631298, guid: 9b7b80b449dcb834ca6e23cd5b0d0fa6,
-        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -522,11 +540,6 @@ PrefabInstance:
         type: 3}
       propertyPath: Event
       value: event:/Player/Weapons/weapon_AK
-      objectReference: {fileID: 0}
-    - target: {fileID: 7121014036245286393, guid: 9b7b80b449dcb834ca6e23cd5b0d0fa6,
-        type: 3}
-      propertyPath: m_Layer
-      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 9122207744144774458, guid: 9b7b80b449dcb834ca6e23cd5b0d0fa6,
         type: 3}

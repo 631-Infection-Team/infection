@@ -23220,16 +23220,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pickup AK47 Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 3487464906906157031, guid: b4da46c2ed757ad4182a751da88f11c8,
-        type: 3}
-      propertyPath: sceneViewId
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3487464906906157031, guid: b4da46c2ed757ad4182a751da88f11c8,
-        type: 3}
-      propertyPath: observableSearch
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4da46c2ed757ad4182a751da88f11c8, type: 3}
 --- !u!4 &771109974 stripped
@@ -23238,45 +23228,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 771109973}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &771109975 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 991871360611236214, guid: b4da46c2ed757ad4182a751da88f11c8,
-    type: 3}
-  m_PrefabInstance: {fileID: 771109973}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &771109976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771109975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87b32276b841674d965aa336a07fbd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightMaterial: {fileID: 2100000, guid: 15c7ddcaf9ad6d541923d28100aef724, type: 2}
-  weaponItem:
-    weaponDefinition: {fileID: 11400000, guid: b6343a72b27c1f342a578cb75e7e7ba9, type: 2}
-    magazine: 0
-    reserves: 0
---- !u!114 &771109977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771109975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1001 &773954268
 PrefabInstance:
   m_ObjectHideFlags: 0

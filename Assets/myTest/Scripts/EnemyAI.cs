@@ -58,7 +58,7 @@ public class EnemyAI : MonoBehaviourPun
     {
         agent.updateRotation = true;
         agent.updatePosition = true;
-        agent.SetDestination(target.position);
+      //  agent.SetDestination(target.position);
         anim.SetBool("isWalking", true);
         anim.SetBool("isAttacking", false);
     }

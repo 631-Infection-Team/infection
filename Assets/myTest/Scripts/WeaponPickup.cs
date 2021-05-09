@@ -49,6 +49,7 @@ namespace myTest
                 }
 
                 //NetworkServer.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
             }
         }
