@@ -529,7 +529,7 @@ GameObject:
   - component: {fileID: 3453302620636062725}
   - component: {fileID: 7586253102404144661}
   - component: {fileID: 1528192078402413991}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Survivor2 Variant
   m_TagString: Player
   m_Icon: {fileID: 0}

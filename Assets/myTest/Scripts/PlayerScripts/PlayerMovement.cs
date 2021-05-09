@@ -157,8 +157,8 @@ namespace myTest
 
         void Look()
         {
-            float lookX = Input.GetAxis("Look X") * 100f * Time.deltaTime;
-            float lookY = Input.GetAxis("Look Y") * 100f * Time.deltaTime;
+            float lookX = Input.GetAxis("Mouse X") * 100f * Time.deltaTime;
+            float lookY = Input.GetAxis("Mouse Y") * 100f * Time.deltaTime;
 
             xRotation -= lookY;
             xRotation = Mathf.Clamp(xRotation, -60f, 60f);
