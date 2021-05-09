@@ -105,22 +105,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &9197440404023096364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2480657426207829750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!114 &6987706077606406651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +132,22 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
+--- !u!114 &9197440404023096364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480657426207829750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &2480657426207795240
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100062, guid: 2ed2b97e9845de549b27ab91576b68e7, type: 3}
       propertyPath: m_Name
-      value: zombie_survival_zombie_1 Variant
+      value: Zombie3
       objectReference: {fileID: 0}
     - target: {fileID: 400060, guid: 2ed2b97e9845de549b27ab91576b68e7, type: 3}
       propertyPath: m_RootOrder

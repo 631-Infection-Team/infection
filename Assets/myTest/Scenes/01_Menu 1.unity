@@ -813,18 +813,10 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 193397863}
-        m_MethodName: SetPlayerName
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: [{m_Target: {fileID: 193397863}, m_MethodName: SetPlayerName, m_Mode: 0,
+          m_Arguments: {m_ObjectArgument: {fileID: 0}, m_ObjectArgumentAssemblyTypeName: 'UnityEngine.Object,
+              UnityEngine', m_IntArgument: 0, m_FloatArgument: 0, m_StringArgument: '',
+            m_BoolArgument: 0}, m_CallState: 2}]
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -10405,7 +10397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attenuationObject: {fileID: 0}
+  attenuationObject: {fileID: 1439868446}
   ListenerNumber: -1
 --- !u!114 &1439868451
 MonoBehaviour:
@@ -10482,11 +10474,11 @@ MonoBehaviour:
   CollisionTag: 
   Event: event:/Music
   PlayEvent: 1
-  StopEvent: 0
+  StopEvent: 2
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
-  Params: []
+  Params: [{Name: Intensity, Value: 0}]
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
@@ -10674,7 +10666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: 
-  Event: 
+  Event: event:/UI_Hover
   PlayEvent: 0
   StopEvent: 0
   AllowFadeout: 1
@@ -10682,8 +10674,8 @@ MonoBehaviour:
   Preload: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
 --- !u!1001 &1524043416
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19647,7 +19639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: 
-  Event: 
+  Event: event:/UI_Click
   PlayEvent: 0
   StopEvent: 0
   AllowFadeout: 1
@@ -19655,8 +19647,8 @@ MonoBehaviour:
   Preload: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
 --- !u!1001 &1937949691
 PrefabInstance:
   m_ObjectHideFlags: 0
