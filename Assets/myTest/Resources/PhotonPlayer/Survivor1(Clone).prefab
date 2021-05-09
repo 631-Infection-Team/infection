@@ -388,7 +388,7 @@ MonoBehaviour:
   m_shootButtonType: 0
   m_shootMouseButton: 0
   m_shootButton: 
-  m_shootKey: 49
+  m_shootKey: 323
   m_reloadButtonType: 1
   m_reloadMouseButton: 0
   m_reloadButton: 
