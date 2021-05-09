@@ -40,6 +40,8 @@ namespace myTest
         [Tooltip("The prefab to use for representing the player")]
         [SerializeField]
         private GameObject playerPrefab;
+        
+        //public Animator animator;
 
         #endregion
 
@@ -81,7 +83,9 @@ namespace myTest
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                    
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-50f, 3f, -15f), Quaternion.identity, 0);
+
                 }
                 else
                 {

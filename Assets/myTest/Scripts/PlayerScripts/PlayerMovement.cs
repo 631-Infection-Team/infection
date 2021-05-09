@@ -36,12 +36,16 @@ namespace myTest
         [SerializeField] GameObject playerCanvas;
         [SerializeField] Text playerName;
 
+        //private GameManager gameManager;
+
         private void Awake()
         {
             string PlayerUserName = GetComponent<PhotonView>().Owner.NickName;
             playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
+
+            //gameManager = GetComponent<GameManager>();
         }
         //public void OnTriggerEnter(Collider other)
         //{
@@ -95,6 +99,7 @@ namespace myTest
             {
                 lastGrounded = 0f;
                 isGrounded = true;
+                //gameManager.animator.SetBool("Grounded", true);
             }
             else
             {
@@ -106,6 +111,7 @@ namespace myTest
                     {
                         lostFooting = true;
                         isGrounded = false;
+                        //gameManager.animator.SetBool("Grounded", false);
                     }
                 }
             }
