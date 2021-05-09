@@ -290,6 +290,8 @@ GameObject:
   - component: {fileID: 4574079993470713316}
   - component: {fileID: 3297987901149989701}
   - component: {fileID: -264414726659691334}
+  - component: {fileID: 7950452327796175180}
+  - component: {fileID: -7976609385358062917}
   m_Layer: 0
   m_Name: Survivor4_WithItemAnimators(Clone)
   m_TagString: Player
@@ -737,6 +739,166 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 0
   m_TeleportEnabled: 0
   m_TeleportIfDistanceGreaterThan: 3
+--- !u!135 &7950452327796175180
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2992798419735103682}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.6459858
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-7976609385358062917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2992798419735103682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Emitters:
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  - Target: {fileID: 0}
+    Params: []
+  TriggerEvent: 3
 --- !u!1 &3050294702958841004
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,6 +1117,7 @@ MonoBehaviour:
   gameState: {fileID: 8838860520797780337}
   roundMessage: {fileID: 6195369686273405992}
   healthValueDisplay: {fileID: 414845957939107174}
+  playerCount: {fileID: 0}
 --- !u!1 &5461738309498354129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,18 +2018,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &414845957939107174 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6538498219332587274, guid: 2f17f566331aec4419b37c1960e5c98e,
-    type: 3}
-  m_PrefabInstance: {fileID: 6880582480007551596}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &814102242758247906 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6066622350413275022, guid: 2f17f566331aec4419b37c1960e5c98e,
@@ -1918,6 +2069,18 @@ MonoBehaviour:
 --- !u!114 &6195369686273405992 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 758542799282695748, guid: 2f17f566331aec4419b37c1960e5c98e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6880582480007551596}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &414845957939107174 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6538498219332587274, guid: 2f17f566331aec4419b37c1960e5c98e,
     type: 3}
   m_PrefabInstance: {fileID: 6880582480007551596}
   m_PrefabAsset: {fileID: 0}
