@@ -81,13 +81,17 @@ namespace myTest
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                    PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-50f, 3f, -15f), Quaternion.identity, 0);
                 }
                 else
                 {
 
                     Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
                 }
+
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-21f, 1f, -18f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-51f, 1f, -6f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-30f, 1f, -41f), Quaternion.identity, 0);
 
 
             }

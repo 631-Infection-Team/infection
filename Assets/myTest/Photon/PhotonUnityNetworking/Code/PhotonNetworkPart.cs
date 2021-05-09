@@ -81,6 +81,11 @@ namespace Photon.Pun
         /// <summary>Parameters: PhotonView for which ownership was requested, player who requested (but didn't get) ownership.</summary>
         private static event Action<PhotonView, Player> OnOwnershipTransferFailedEv;
 
+        public static void InstantiateSceneObject(string v1, string v2)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Registers an object for callbacks for the implemented callback-interfaces.
         /// </summary>

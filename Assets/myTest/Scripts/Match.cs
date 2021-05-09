@@ -108,13 +108,46 @@ namespace myTest
                 }
             }
 
+            var DeathUIs = FindObjectsOfType<DeathUI>();
+            foreach (var DeathUI in DeathUIs)
+            {
+                int playerNum = GameObject.FindGameObjectsWithTag("Player").Length;
+                DeathUI.UpdatePlayerCount(playerNum);
+                DeathUI.UpdateTimer((float)(_state.time + 1 - timerIncrementValue));
+                DeathUI.UpdateState(GetState());
+                DeathUI.UpdateRoundInfo(GetRoundInfo());
+
+                var Players = GameObject.FindGameObjectsWithTag("Player");
+                string[] playerNames = new string[Players.Length];
+                int pos = 0;
+                foreach(var Player in Players)
+                {
+                    playerNames[pos] = Player.GetComponent<PhotonView>().Owner.NickName;
+                    pos++;
+                }
+                DeathUI.UpdateAlivePlayers(playerNames);
+
+                if (_state == postGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
+                {
+                    string WinnerUserName = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PhotonView>().Owner.NickName;
+                    DeathUI.UpdateEndMessage("GAME OVER: " + WinnerUserName + " has won!");
+                }
+                else if (_state == postGame)
+                {
+                    DeathUI.UpdateEndMessage("GAME OVER: Time is Up");
+                }
+                else
+                {
+                    DeathUI.UpdateEndMessage("");
+                }
+            }
 
             if ((_state.time + 1 - timerIncrementValue) > 1)
             {
-              // if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length == 1)
-              // {
-              //     SetState(postGame);
-              // }
+                if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length < 2)
+                {
+                    SetState(postGame);
+                }
             }
             else
             {
@@ -162,6 +195,24 @@ namespace myTest
 
             return _state.name;
         }
+        private string GetState()
+        {
+            if (_state == preGame)
+            {
+                return "Pre-Game";
+            }
+            if (_state == game)
+            {
+                return "Game in-Progress";
+            }
+            if (_state == postGame)
+            {
+                return "Post-Game";
+            }
+
+            return _state.name;
+        }
+
 
         //[Server]
         private void SetState(State state)
