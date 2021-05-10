@@ -203,27 +203,6 @@ Transform:
   m_Father: {fileID: 2929770063614493475}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1551381803694850708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4549449755024552403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0354f432ecd5c3941a4b5052b439cdb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenOffset: {x: 0, y: 30, z: 0}
-  playerNameText: {fileID: 4549449756143119204}
-  playerHealthSlider: {fileID: 8385276633765422182}
-  crosshair: {fileID: 1046904905797964913}
-  timerDisplay: {fileID: 3902185178534032216}
-  gameState: {fileID: 413145715249567989}
-  roundMessage: {fileID: 3091834262052165036}
-  healthValueDisplay: {fileID: 8850678507084936418}
-  playerCount: {fileID: 292697707855714380}
 --- !u!1 &2385519632653030807
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,6 +843,27 @@ Transform:
   m_Father: {fileID: 2429938931571879063}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1551381803694850708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549449755024552403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0354f432ecd5c3941a4b5052b439cdb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenOffset: {x: 0, y: 30, z: 0}
+  playerNameText: {fileID: 4549449756143119204}
+  playerHealthSlider: {fileID: 8385276633765422182}
+  crosshair: {fileID: 1046904905797964913}
+  timerDisplay: {fileID: 3902185178534032216}
+  gameState: {fileID: 413145715249567989}
+  roundMessage: {fileID: 3091834262052165036}
+  healthValueDisplay: {fileID: 8850678507084936418}
+  playerCount: {fileID: 292697707855714380}
 --- !u!1 &4629157191319373549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,7 +1072,7 @@ GameObject:
   - component: {fileID: 6405000832965110320}
   m_Layer: 0
   m_Name: Survivor1(Clone)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
