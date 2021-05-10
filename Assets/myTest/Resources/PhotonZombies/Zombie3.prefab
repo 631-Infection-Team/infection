@@ -115,8 +115,8 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 9197440404023096364}
   - {fileID: 6987706077606406651}
+  - {fileID: 9197440404023096364}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -173,6 +173,10 @@ PrefabInstance:
     - target: {fileID: 100062, guid: 2ed2b97e9845de549b27ab91576b68e7, type: 3}
       propertyPath: m_Name
       value: Zombie3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100062, guid: 2ed2b97e9845de549b27ab91576b68e7, type: 3}
+      propertyPath: m_TagString
+      value: zombie
       objectReference: {fileID: 0}
     - target: {fileID: 400060, guid: 2ed2b97e9845de549b27ab91576b68e7, type: 3}
       propertyPath: m_RootOrder

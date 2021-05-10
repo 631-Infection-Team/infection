@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!135 &8624811348284583389
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 11.124517
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-8083069399609265195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24,6 +37,38 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &3772215609838507805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: zombie
+  parameter: Intensity
+  TriggerEvent: 4
+  value: 1.01
+--- !u!114 &3897208925479618908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: zombie
+  parameter: Intensity
+  TriggerEvent: 4
+  value: 3
 --- !u!114 &4235729983373041094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +231,51 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &6754032041773944695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: zombie
+  parameter: Intensity
+  TriggerEvent: 3
+  value: 1.5
+--- !u!135 &5273858692845653142
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315941}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.0800862
+  m_Center: {x: 0, y: -0, z: 0}
+--- !u!114 &2064488098657595499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627729936789315941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: zombie
+  parameter: Intensity
+  TriggerEvent: 4
+  value: 3
 --- !u!114 &4431613009542935393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,6 +314,11 @@ PrefabInstance:
     - target: {fileID: 1897972710, guid: 0d00596e41815b345a1c3a58a6d68338, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2942987612128333657, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: footSteps
+      value: event:/Player/SFX/Footsteps
       objectReference: {fileID: 0}
     - target: {fileID: 2942987612128333657, guid: 0d00596e41815b345a1c3a58a6d68338,
         type: 3}
@@ -356,6 +451,12 @@ GameObject:
 --- !u!143 &3612324250129266835 stripped
 CharacterController:
   m_CorrespondingSourceObject: {fileID: 1305549795275730755, guid: 0d00596e41815b345a1c3a58a6d68338,
+    type: 3}
+  m_PrefabInstance: {fileID: 2323773136598046672}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1627729936789315941 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3938794368220870325, guid: 0d00596e41815b345a1c3a58a6d68338,
     type: 3}
   m_PrefabInstance: {fileID: 2323773136598046672}
   m_PrefabAsset: {fileID: 0}
