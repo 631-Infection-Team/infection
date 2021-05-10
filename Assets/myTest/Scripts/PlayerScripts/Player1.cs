@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 using Photon.Pun;
-
+using System;
 
 namespace myTest
 {
@@ -23,6 +23,8 @@ namespace myTest
         [SerializeField] public int health = 100;
         [SerializeField] private int maxHealth = 100;
          public bool isDead = false;
+
+        public float PlayerHealth { get; private set; }
 
 
         //public override void OnStartLocalPlayer()
@@ -78,6 +80,18 @@ namespace myTest
                 }
             }
            
+        }
+
+        public void DeductHealth(float deductHealth)
+        {
+            PlayerHealth -= deductHealth;
+
+            if (PlayerHealth <= 0) { PlayerDead(); }
+        }
+
+        private void PlayerDead()
+        {
+            throw new NotImplementedException();
         }
 
         public void OnDestroy()
