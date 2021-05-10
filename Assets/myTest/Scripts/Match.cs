@@ -35,6 +35,11 @@ namespace myTest
         bool startTimer = false;
         bool tracker = false;
 
+        
+        public GameObject GameOverSound;
+        public GameObject PreGameSound;
+
+
         private void Start()
         {
             DeathUI.SetActive(false);
@@ -146,7 +151,9 @@ namespace myTest
             {
                 if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length < 2)
                 {
+                    GameOverSound.SetActive (true);
                     SetState(postGame);
+                    GameOverSound.SetActive (false);
                 }
             }
             else
@@ -154,17 +161,23 @@ namespace myTest
                 if (_state == preGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
                 {
                     Debug.Log("TO POST");
+                    GameOverSound.SetActive (true);
                     SetState(postGame);
+                    GameOverSound.SetActive (false);
                 }
                 else if (_state == preGame)
                 {
                     Debug.Log("TO GAME");
+                    PreGameSound.SetActive (true);
                     SetState(game);
+                    PreGameSound.SetActive (false);
                 }
                 else if (_state == game)
                 {
                     Debug.Log("TO POST");
+                    GameOverSound.SetActive (true);
                     SetState(postGame);
+                    GameOverSound.SetActive (false);
                 }
                 else if (_state == postGame)
                 {

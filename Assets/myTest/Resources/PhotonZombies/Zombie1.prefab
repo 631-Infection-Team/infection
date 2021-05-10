@@ -138,6 +138,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie1
       objectReference: {fileID: 0}
+    - target: {fileID: 7452580109839128083, guid: c4508aa638c7e4e4589e32a0f9a4396a,
+        type: 3}
+      propertyPath: m_TagString
+      value: zombie
+      objectReference: {fileID: 0}
     - target: {fileID: 7452580109839354481, guid: c4508aa638c7e4e4589e32a0f9a4396a,
         type: 3}
       propertyPath: m_RootOrder

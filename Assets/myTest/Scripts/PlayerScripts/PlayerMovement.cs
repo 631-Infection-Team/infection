@@ -11,8 +11,8 @@ namespace myTest
   
     public class PlayerMovement : MonoBehaviourPun
     {
-   
-        //public string footSteps;
+        [FMODUnity.EventRef]
+        public string footSteps;
 
         [Header("Components")]
        // public Player1 player;
@@ -137,8 +137,8 @@ namespace myTest
 
             if(characterController.isGrounded && footTimer > 0.5f ){
                 if(inputHorizontal > 0 || inputVertical > 0){
-                    //Debug.Log("The foot noise comith");
-                  //  FMODUnity.RuntimeManager.PlayOneShot(footSteps);
+                    Debug.Log("The foot noise comith");
+                    FMODUnity.RuntimeManager.PlayOneShot(footSteps);
                     footTimer = 0.0f;
                 }
             }
