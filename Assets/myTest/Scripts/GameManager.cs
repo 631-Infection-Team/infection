@@ -79,9 +79,30 @@ namespace myTest
                 if (Player1.LocalPlayerInstance == null)
                 {
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
-
+                    Debug.Log("INFO");
+                    Debug.Log(PhotonNetwork.PlayerList.Length);
+                    Debug.Log(PhotonNetwork.PlayerList[0].UserId);
+                    Debug.Log(PhotonNetwork.LocalPlayer.UserId);
+                    Debug.Log("INFO");
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                    PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+
+
+                    if(PhotonNetwork.PlayerList[0].UserId == PhotonNetwork.LocalPlayer.UserId)
+                    {
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-20f, 3f, -15f), Quaternion.identity, 0);
+                    }
+                    else if (PhotonNetwork.PlayerList[1].UserId == PhotonNetwork.LocalPlayer.UserId)
+                    {
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-65f, 3f, -170f), Quaternion.identity, 0);
+                    }
+                    else if (PhotonNetwork.PlayerList[2].UserId == PhotonNetwork.LocalPlayer.UserId)
+                    {
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-135f, 3f, -40f), Quaternion.identity, 0);
+                    }
+                    else if (PhotonNetwork.PlayerList[3].UserId == PhotonNetwork.LocalPlayer.UserId)
+                    {
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-265f, 3f, -80f), Quaternion.identity, 0);
+                    }
                 }
                 else
                 {
