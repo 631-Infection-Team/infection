@@ -218,6 +218,10 @@ PrefabInstance:
     - {fileID: 2272144312721485189, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
     - {fileID: 1739161101824476341, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
     - {fileID: 603954696352201214, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
+    - {fileID: 5057690841327301341, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
+    - {fileID: 5373672803132969026, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
+    - {fileID: 5449820459157601510, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
+    - {fileID: 7884722332185357570, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c4508aa638c7e4e4589e32a0f9a4396a, type: 3}
 --- !u!1 &3346248603176579049 stripped
 GameObject:
