@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Launcher.cs" company="Exit Games GmbH">
 //   Part of: Photon Unity Networking Demos
 // </copyright>
@@ -89,19 +89,19 @@ namespace myTest
 
                     if(PhotonNetwork.PlayerList[0].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-20f, 3f, -15f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor1(Clone)"), new Vector3(-20f, 3f, -15f), Quaternion.identity, 0);
                     }
                     else if (PhotonNetwork.PlayerList[1].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-65f, 3f, -170f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2(Clone)"), new Vector3(-65f, 3f, -170f), Quaternion.identity, 0);
                     }
                     else if (PhotonNetwork.PlayerList[2].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-135f, 3f, -40f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor3(Clone)"), new Vector3(-135f, 3f, -40f), Quaternion.identity, 0);
                     }
                     else if (PhotonNetwork.PlayerList[3].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-265f, 3f, -80f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor4(Clone)"), new Vector3(-265f, 3f, -80f), Quaternion.identity, 0);
                     }
                 }
                 else
