@@ -8,11 +8,11 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Photon.Pun;
+using Photon.Realtime;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.IO;
-using Photon.Realtime;
-using Photon.Pun;
 
 namespace myTest
 {
@@ -92,8 +92,15 @@ namespace myTest
                 PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-21f, 1f, -18f), Quaternion.identity, 0);
                 PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-51f, 1f, -6f), Quaternion.identity, 0);
                 PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-30f, 1f, -41f), Quaternion.identity, 0);
-
-
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-39f, 1f, -46f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-108f, 1f, -6f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-96f, 1f, -56f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-21f, 1f, -18f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-51f, 1f, -6f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-30f, 1f, -41f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-39f, 1f, -46f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-108f, 1f, -6f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-96f, 1f, -56f), Quaternion.identity, 0);
             }
 
         }

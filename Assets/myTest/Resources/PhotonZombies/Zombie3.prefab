@@ -22,7 +22,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2480657426207829750}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 69a526a296b75074db3310a32ab2ba19, type: 3}
+  m_Avatar: {fileID: 9000000, guid: f42af7d2aef2a0c44889171330a6e1a1, type: 3}
   m_Controller: {fileID: 9100000, guid: 3eb470786e9e26a4a91fafb5777fb972, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -81,6 +81,21 @@ NavMeshAgent:
   m_BaseOffset: 0.02
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &952635714947048291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480657426207829750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9268b67cb4367d4187f2e173634bd22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_animator: {fileID: 1634020863}
+  m_weaponAnimator: {fileID: 0}
+  m_aimController: {fileID: 0}
 --- !u!114 &2043072761094846126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,8 +115,8 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 9197440404023096364}
   - {fileID: 6987706077606406651}
+  - {fileID: 9197440404023096364}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
