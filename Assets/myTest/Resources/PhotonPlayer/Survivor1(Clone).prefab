@@ -1192,6 +1192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0dadafeee3555742af3f0fb89152435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  footSteps: 
   characterController: {fileID: 2430073844523173057}
   photonView: {fileID: 42192037376511339}
   isGrounded: 0
