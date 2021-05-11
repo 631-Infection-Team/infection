@@ -8,11 +8,11 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Photon.Pun;
+using Photon.Realtime;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.IO;
-using Photon.Realtime;
-using Photon.Pun;
 
 namespace myTest
 {
@@ -89,19 +89,19 @@ namespace myTest
 
                     if(PhotonNetwork.PlayerList[0].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-20f, 3f, -15f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor1(Clone)"), new Vector3(-20f, 3f, -15f), Quaternion.identity, 0);
                     }
                     else if (PhotonNetwork.PlayerList[1].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-65f, 3f, -170f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor1(Clone)"), new Vector3(-65f, 3f, -170f), Quaternion.identity, 0);
                     }
                     else if (PhotonNetwork.PlayerList[2].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-135f, 3f, -40f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor1(Clone)"), new Vector3(-135f, 3f, -40f), Quaternion.identity, 0);
                     }
                     else if (PhotonNetwork.PlayerList[3].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor2 Variant"), new Vector3(-265f, 3f, -80f), Quaternion.identity, 0);
+                        PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor1(Clone)"), new Vector3(-265f, 3f, -80f), Quaternion.identity, 0);
                     }
                 }
                 else
@@ -113,8 +113,15 @@ namespace myTest
                 PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-21f, 1f, -18f), Quaternion.identity, 0);
                 PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-51f, 1f, -6f), Quaternion.identity, 0);
                 PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-30f, 1f, -41f), Quaternion.identity, 0);
-
-
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-39f, 1f, -46f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-108f, 1f, -6f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-96f, 1f, -56f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-31f, 0f, -16f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-55f, 0f, -8f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-35f, 0f, -42f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-49f, 0f, -44f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-118f, 0f, -8f), Quaternion.identity, 0);
+                PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-86f, 0f, -46f), Quaternion.identity, 0);
             }
 
         }

@@ -198,6 +198,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie2
       objectReference: {fileID: 0}
+    - target: {fileID: 3063788033124075749, guid: 73a45715cf4fa0c42ad1ee1f477567c5,
+        type: 3}
+      propertyPath: m_TagString
+      value: zombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 6812150992488756118, guid: 73a45715cf4fa0c42ad1ee1f477567c5,
+        type: 3}
+      propertyPath: m_strafer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6983986608329974923, guid: 73a45715cf4fa0c42ad1ee1f477567c5,
         type: 3}
       propertyPath: m_Controller
@@ -218,6 +228,10 @@ PrefabInstance:
     - {fileID: 6107498237453121605, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
     - {fileID: 7496012663249858584, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
     - {fileID: 6967206762367830777, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
+    - {fileID: 5384110947945288295, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
+    - {fileID: 2284449422204385614, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
+    - {fileID: 239977650894948235, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
+    - {fileID: 8831775840198275026, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
 --- !u!1 &6920192523119094614 stripped
 GameObject:

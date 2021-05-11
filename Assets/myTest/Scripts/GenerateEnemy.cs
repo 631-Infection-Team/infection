@@ -37,7 +37,9 @@ namespace myTest
 
                 //}
 
-
+               // PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie3"), new Vector3(-49f, 0f, -44f), Quaternion.identity, 0);
+              //  PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie1"), new Vector3(-118f, 0f, -8f), Quaternion.identity, 0);
+               // PhotonNetwork.InstantiateSceneObject(Path.Combine("PhotonZombies", "Zombie2"), new Vector3(-86f, 0f, -46f), Quaternion.identity, 0);
                 yield return new WaitForSeconds(0.1f);
                 enemyCount += 1;
             }
