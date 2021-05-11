@@ -95,25 +95,18 @@ namespace myTest
         //{
         //    health = Mathf.Clamp(health + amount, 0, maxHealth);
         //}
+      //  public void TakeDamage(int amount, uint sourceID)
 
-        //public void TakeDamage(int amount, uint sourceID)
-        //{
-        //    health = Mathf.Clamp(health -= amount, 0, maxHealth);
-        
+       public void TakeDamage(int amount)
+       {
+           health = Mathf.Clamp(health -= amount, 0, maxHealth);
+       
 
-        //    if (health <= 0)
-        //    {
-        //        if (team == Team.SURVIVOR)
-        //        {
-
-        //            SetDefaults();
-        //        }
-        //        else
-        //        {
-        //            Death(sourceID);
-        //        }
-        //    }
-        //}
+           if (health <= 0)
+           {
+                isDead = true;
+           }
+       }
 
         //public void Freeze()
         //{
@@ -135,6 +128,23 @@ namespace myTest
 
         //    RpcOnDeath();
         //}
+
+        [PunRPC]
+        void RPC_TakeDamage(int damage)
+        {
+
+            if (!photonView.IsMine)
+                return;
+
+            health -= damage;
+            Debug.Log("Ow ive been shoot" + photonView.name);
+       //     healthbarImage.fillAmount = health/ maxHealth;
+            
+            if (health <= 0)
+            {
+                isDead = true;
+            }
+        }
 
 
     }

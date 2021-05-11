@@ -9,13 +9,13 @@ namespace myTest
 {
 
   
-    public class PlayerMovement : MonoBehaviourPunCallbacks, IDamageable
+    public class PlayerMovement : MonoBehaviourPunCallbacks
     {
         [FMODUnity.EventRef]
         public string footSteps;
 
         [Header("Components")]
-       // public Player1 player;
+        public Player1 player;
         public CharacterController characterController;
         public PhotonView photonView;
         [Header("Movement")]
@@ -95,7 +95,16 @@ namespace myTest
 
             if (shot)
             {
-                
+                Debug.Log("mouse0 down by " + photonView.name);
+                Transform camTransform = playerCamera.transform;
+                Ray ray = new Ray(camTransform.position, camTransform.forward);
+              //  Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+             //   ray.origin = cam.transform.position;
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    hit.collider.gameObject.GetComponent<Player1>()?.TakeDamage(2);
+                   photonView.RPC("RPC_Shoot", RpcTarget.All, hit.point, hit.normal);
+                }
                 shot = false;
             }
             if (characterController.isGrounded)
