@@ -93,6 +93,8 @@ namespace myTest
             bool inputJump = Input.GetButtonDown("Jump");
             bool lostFooting = false;
 
+            
+
             if (characterController.isGrounded)
             {
                 lastGrounded = 0f;
