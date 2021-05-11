@@ -9,7 +9,7 @@ namespace myTest
     public class Player1 : MonoBehaviourPun
     {
         public static GameObject LocalPlayerInstance;
-        private PhotonView photonView;
+        public PhotonView photonView;
    
         
         public new Camera camera;
@@ -55,7 +55,10 @@ namespace myTest
 
         public void Awake()
         {
-            if (photonView.IsMine)
+            if (!photonView.IsMine) {
+                return;
+            }
+            else
             {
                 PlayerManager.LocalPlayerInstance = this.gameObject;
             }
@@ -69,7 +72,10 @@ namespace myTest
 
         public void Update()
         {
-            if (photonView.IsMine)
+            if (!photonView.IsMine){
+                return;
+            }
+            else
             {
              //   this.ProcessInputs();
                 if (health <= 0f)
@@ -84,7 +90,10 @@ namespace myTest
         {
   
 
-            if (photonView.IsMine)
+            if (!photonView.IsMine){
+                return;
+            }
+            else
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;

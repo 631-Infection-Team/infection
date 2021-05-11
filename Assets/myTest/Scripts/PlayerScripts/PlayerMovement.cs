@@ -36,6 +36,8 @@ namespace myTest
         [SerializeField] GameObject playerCanvas;
         [SerializeField] Text playerName;
 
+        
+
         private void Awake()
         {
             string PlayerUserName = GetComponent<PhotonView>().Owner.NickName;
