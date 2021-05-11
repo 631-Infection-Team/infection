@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
-
+using Photon.Realtime;
 
 namespace myTest
 {
 
   
-    public class PlayerMovement : MonoBehaviourPun
+    public class PlayerMovement : MonoBehaviourPunCallbacks, IDamageable
     {
         [FMODUnity.EventRef]
         public string footSteps;
 
         [Header("Components")]
-        public Player1 player;
+       // public Player1 player;
         public CharacterController characterController;
         public PhotonView photonView;
         [Header("Movement")]
@@ -35,7 +35,6 @@ namespace myTest
         [SerializeField] GameObject minimapCamera;
         [SerializeField] GameObject playerCanvas;
         [SerializeField] Text playerName;
-        [SerializeField] GameObject playerGun;
 
         private void Awake()
         {
@@ -43,7 +42,6 @@ namespace myTest
             playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
-            playerGun = playerCamera.GetComponentInChildren<GameObject>();
         }
         //public void OnTriggerEnter(Collider other)
         //{
@@ -93,10 +91,12 @@ namespace myTest
             bool inputJump = Input.GetButtonDown("Jump");
             bool lostFooting = false;
 
-            if (Input.GetMouseButtonDown(0))
+            bool shot = Input.GetButtonDown("Fire");
+
+            if (shot)
             {
-                Debug.Log("mouse button 0 down ");
-                Shoot();
+                
+                shot = false;
             }
             if (characterController.isGrounded)
             {
@@ -133,8 +133,6 @@ namespace myTest
             moveDirection = transform.TransformDirection(moveDirection);
 
             characterController.Move(moveDirection);
-            
-        
         }
 
        
@@ -184,19 +182,6 @@ namespace myTest
             //cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
 
         }
-        public void Shoot()
-        {
-            Debug.Log("pew pew");
-            //Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-            //ray.origin = cam.transform.position;
-            //if (Physics.Raycast(ray, out RaycastHit hit))
-            //{
-            //	hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
-            //	PV.RPC("RPC_Shoot", RpcTarget.All, hit.point, hit.normal);
-            //}
-        }
-
     }
-  
 
 }

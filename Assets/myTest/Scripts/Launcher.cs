@@ -22,28 +22,15 @@ namespace myTest
 
 
         #region Private Fields
-        /// <summary>
-        /// Keep track of the current process. Since connection is asynchronous and is based on several callbacks from Photon,
-        /// we need to keep track of this to properly adjust the behavior when we receive call back by Photon.
-        /// Typically this is used for the OnConnectedToMaster() callback.
-        /// </summary>
+
         bool isConnecting;
-
-        /// <summary>
-        /// This client's version number. Users are separated from each other by gameVersion (which allows you to make breaking changes).
-        /// </summary>
         string gameVersion = "1";
-
 
         #endregion
 
 
         #region MonoBehaviour CallBacks
 
-
-        /// <summary>
-        /// MonoBehaviour method called on GameObject by Unity during early initialization phase.
-        /// </summary>
         [Header("lobby Room Panel")]
         public GameObject LobbyPanel;
         public Transform PlayerScrollView;
@@ -96,12 +83,6 @@ namespace myTest
 
 
 
-
-        /// <summary>
-        /// Start the connection process
-        /// - If already connected, we attempt joining a random room
-        /// - if not yet connected, Connect this application instance to Photon Cloud Network
-        /// </summary>
         public void Connect()
         {
             progressLabel.SetActive(true);
@@ -109,7 +90,7 @@ namespace myTest
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
             if (PhotonNetwork.IsConnectedAndReady)
             {
-                //
+                
                 string roomName = "gameRoom";
                 RoomOptions opt = new RoomOptions();
                 opt.IsOpen = true;
@@ -121,7 +102,7 @@ namespace myTest
             }
             else
             {
-                // #Critical, we must first and foremost connect to Photon Online Server.
+                // Connect to Photon Online Server.
                 isConnecting = PhotonNetwork.ConnectUsingSettings();
                 PhotonNetwork.GameVersion = gameVersion;
             }

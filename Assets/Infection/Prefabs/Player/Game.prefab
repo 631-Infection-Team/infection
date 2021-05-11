@@ -311,7 +311,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4455965949840066444}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
   m_Name: 
@@ -488,7 +488,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4455965949840066444}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf35395e6bf2462686c3f26cbebdb046, type: 3}
   m_Name: 
@@ -1722,6 +1722,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SA_Character_Survivor_01
       objectReference: {fileID: 0}
+    - target: {fileID: 182906, guid: 15b5cf975452ce04489593cb933c0a90, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 433502, guid: 15b5cf975452ce04489593cb933c0a90, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.00046159796
@@ -1773,6 +1777,10 @@ PrefabInstance:
     - target: {fileID: 435208, guid: 15b5cf975452ce04489593cb933c0a90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9522282, guid: 15b5cf975452ce04489593cb933c0a90, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9522282, guid: 15b5cf975452ce04489593cb933c0a90, type: 3}
       propertyPath: m_Controller

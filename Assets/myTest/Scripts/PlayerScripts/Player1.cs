@@ -27,7 +27,7 @@ namespace myTest
 
         //public override void OnStartLocalPlayer()
         //{
-        //    base.OnStartLocalPlayer();
+        //     base.OnStartLocalPlayer();
 
         //    cameraContainer.SetActive(true);
         //    graphics.SetActive(false);
