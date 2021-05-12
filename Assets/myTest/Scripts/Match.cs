@@ -151,9 +151,9 @@ namespace myTest
             {
                 if (_state == game && GameObject.FindGameObjectsWithTag("Player").Length < 2)
                 {
-                    GameOverSound.SetActive (true);
+                    //ameOverSound.SetActive (true);
                     SetState(postGame);
-                    GameOverSound.SetActive (false);
+                    //GameOverSound.SetActive (false);
                 }
             }
             else
@@ -161,23 +161,23 @@ namespace myTest
                 if (_state == preGame && GameObject.FindGameObjectsWithTag("Player").Length == 1)
                 {
                     Debug.Log("TO POST");
-                    GameOverSound.SetActive (true);
+                    //GameOverSound.SetActive (true);
                     SetState(postGame);
-                    GameOverSound.SetActive (false);
+                    //GameOverSound.SetActive (false);
                 }
                 else if (_state == preGame)
                 {
                     Debug.Log("TO GAME");
-                    PreGameSound.SetActive (true);
+                    //PreGameSound.SetActive (true);
                     SetState(game);
-                    PreGameSound.SetActive (false);
+                    //PreGameSound.SetActive (false);
                 }
                 else if (_state == game)
                 {
                     Debug.Log("TO POST");
-                    GameOverSound.SetActive (true);
+                    //GameOverSound.SetActive (true);
                     SetState(postGame);
-                    GameOverSound.SetActive (false);
+                    //GameOverSound.SetActive (false);
                 }
                 else if (_state == postGame)
                 {
@@ -231,6 +231,7 @@ namespace myTest
         private void SetState(State state)
         {
             _state = state;
+            Debug.Log("State");
             if (PhotonNetwork.IsMasterClient)
             {
                 startTime = PhotonNetwork.Time;

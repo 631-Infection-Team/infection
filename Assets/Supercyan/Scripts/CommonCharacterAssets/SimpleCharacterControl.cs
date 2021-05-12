@@ -127,7 +127,7 @@ public class SimpleCharacterControl : MonoBehaviour, IInitializable
         switch (m_controlMode)
         {
             case ControlMode.Direct:
-                DirectUpdate();
+                //DirectUpdate();
                 break;
 
             case ControlMode.Tank:
