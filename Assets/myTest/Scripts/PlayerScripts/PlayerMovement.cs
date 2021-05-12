@@ -17,7 +17,7 @@ namespace myTest
         [Header("Components")]
        // public Player1 player;
         public CharacterController characterController;
-        public PhotonView photonView;
+        private PhotonView photonView;
         [Header("Movement")]
         [HideInInspector] public bool isGrounded = false;
         private readonly float moveSpeed = 10f;
@@ -31,9 +31,12 @@ namespace myTest
         float yRotation = 0f;
         public float mouseSensitivity = 100f;
         public Transform playerBody;
+        [SerializeField] GameObject CameraContainer;
         [SerializeField] GameObject playerCamera;
+        [SerializeField] GameObject weaponCamera;
         [SerializeField] GameObject minimapCamera;
         [SerializeField] GameObject playerCanvas;
+        [SerializeField] GameObject weapon;
         [SerializeField] Text playerName;
 
         private void Awake()
@@ -58,10 +61,14 @@ namespace myTest
         {
             if (!photonView.IsMine)
             {
-                Destroy(playerCamera);
-                Destroy(minimapCamera);
+                //Destroy(playerCamera);
+                //Destroy(weaponCamera);
+                //Destroy(minimapCamera);
+                Destroy(CameraContainer);
                 Destroy(characterController);
                 Destroy(playerCanvas);
+                weapon.layer = 0;
+                //Destroy(weapon);
             }
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;

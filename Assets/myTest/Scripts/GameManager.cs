@@ -199,10 +199,10 @@ namespace myTest
         public void gameReset()
         {
             SceneManager.LoadScene("01_Menu 1");
-            //if (PhotonNetwork.IsMasterClient)
-            //{
-            //    PhotonNetwork.LoadLevel("01_Menu 1");
-            //}
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.LoadLevel("01_Menu 1");
+            }
         }
 
         #endregion

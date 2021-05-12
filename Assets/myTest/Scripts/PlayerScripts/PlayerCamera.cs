@@ -16,34 +16,34 @@ namespace myTest
         bool isFollowing;
         private void Awake() {
             if (!photonView.IsMine) return;
-            camera = GetComponent<Camera>();
-            isFollowing = true;
+            //camera = GetComponent<Camera>();
+            //isFollowing = true;
         }
         private void Update()
         {
-            if (!photonView.IsMine) return;
+            //if (!photonView.IsMine) return;
 
-            float lookY = Input.GetAxis("Look Y");
-            float lookX = Input.GetAxis("Look X");
-            camera = GetComponent<Camera>();
+            //float lookY = Input.GetAxis("Look Y");
+            //float lookX = Input.GetAxis("Look X");
+            //camera = GetComponent<Camera>();
 
-            verticalLook -= lookY;
-            if (verticalLook > 90f) verticalLook = 90f;
-            if (verticalLook < -90f) verticalLook = -90f;
+            //verticalLook -= lookY;
+            //if (verticalLook > 90f) verticalLook = 90f;
+            //if (verticalLook < -90f) verticalLook = -90f;
 
-            Vector3 currentAngles = camera.transform.localEulerAngles;
-            currentAngles.x = verticalLook;
+            //Vector3 currentAngles = camera.transform.localEulerAngles;
+            //currentAngles.x = verticalLook;
 
-            camera.transform.localEulerAngles = currentAngles;
+            //camera.transform.localEulerAngles = currentAngles;
 
-            horizontalLook += lookX;
-            if (horizontalLook > 360) horizontalLook -= 360.0f;
-            if (horizontalLook < 0) horizontalLook += 360.0f;
+            //horizontalLook += lookX;
+            //if (horizontalLook > 360) horizontalLook -= 360.0f;
+            //if (horizontalLook < 0) horizontalLook += 360.0f;
 
-            currentAngles = transform.localEulerAngles;
-            currentAngles.y = horizontalLook;
+            //currentAngles = transform.localEulerAngles;
+            //currentAngles.y = horizontalLook;
 
-            transform.localEulerAngles = currentAngles;
+            //transform.localEulerAngles = currentAngles;
         }
     }
 }
