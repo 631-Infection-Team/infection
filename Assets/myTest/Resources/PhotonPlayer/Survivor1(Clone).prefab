@@ -279,10 +279,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.1
-  m_Height: 1
+  m_Radius: 0.57
+  m_Height: 3.07
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!54 &2608620247018547831
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -328,13 +328,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 3.01
+  m_Radius: 0.59
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.81, z: 0}
 --- !u!114 &2947481972445142805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +380,7 @@ MonoBehaviour:
   playerCanvas: {fileID: 8191053600761894984}
   weapon: {fileID: 3842847168062447842}
   playerName: {fileID: 2274475824403551288}
+  gunFlash: {fileID: 1060973751653386882}
 --- !u!114 &887217711958912038
 MonoBehaviour:
   m_ObjectHideFlags: 0
