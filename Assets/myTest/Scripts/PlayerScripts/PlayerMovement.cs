@@ -39,6 +39,7 @@ namespace myTest
         [SerializeField] GameObject weapon;
         [SerializeField] Text playerName;
         [SerializeField] ParticleSystem gunFlash;
+        
 
         private void Awake()
         {
@@ -46,6 +47,9 @@ namespace myTest
             playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
+            var coll = gunFlash.collision;
+            coll.enabled = true;
+           
         }
         //public void OnTriggerEnter(Collider other)
         //{
@@ -69,7 +73,7 @@ namespace myTest
                 Destroy(characterController);
                 Destroy(playerCanvas);
                 weapon.layer = 0;
-                //Destroy(weapon);
+                
             }
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
