@@ -38,6 +38,7 @@ namespace myTest
         [SerializeField] GameObject playerCanvas;
         [SerializeField] GameObject weapon;
         [SerializeField] Text playerName;
+        [SerializeField] ParticleSystem gunFlash;
 
         private void Awake()
         {
@@ -96,6 +97,7 @@ namespace myTest
             float inputHorizontal = Input.GetAxis("Horizontal");
             float inputVertical = Input.GetAxis("Vertical");
             bool inputJump = Input.GetButtonDown("Jump");
+            bool inputShot = Input.GetButtonDown("Fire");
             bool lostFooting = false;
 
             if (characterController.isGrounded)
@@ -124,6 +126,10 @@ namespace myTest
                 lostFooting = true;
             }
 
+            if (inputShot) {
+                Debug.Log("pew pew");
+                gunFlash.Play();
+            }
             if (lostFooting) velocityAtJump = moveSpeed;
             moveDirection = new Vector3(inputHorizontal, 0, inputVertical);
             if (moveDirection.magnitude > 1) moveDirection = moveDirection.normalized;
