@@ -1,11 +1,11 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class EnemyHealth : MonoBehaviour
+using Photon.Pun;
+public class EnemyHealth : MonoBehaviourPun
 {
 
-    public float enemyHealth = 100f;
+    public float enemyHealth = 3;
     EnemyAI enemyAI;
 
     private void Start()
@@ -23,7 +23,8 @@ public class EnemyHealth : MonoBehaviour
     void EnemyDead()
     {
         enemyAI.EnemyDeathAnim();
-        Destroy(gameObject, 10);
+        gameObject.SetActive(false);
+        PhotonNetwork.Destroy(gameObject);
     }
 }
 

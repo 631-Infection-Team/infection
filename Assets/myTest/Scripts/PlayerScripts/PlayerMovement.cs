@@ -8,14 +8,14 @@ using Photon.Pun;
 namespace myTest
 {
 
-  
+
     public class PlayerMovement : MonoBehaviourPun
     {
         [FMODUnity.EventRef]
         public string footSteps;
 
         [Header("Components")]
-       // public Player1 player;
+        // public Player1 player;
         public CharacterController characterController;
         private PhotonView photonView;
         [Header("Movement")]
@@ -38,7 +38,8 @@ namespace myTest
         [SerializeField] GameObject playerCanvas;
         [SerializeField] GameObject weapon;
         [SerializeField] Text playerName;
-        [SerializeField] ParticleSystem gunFlash;
+    //    [SerializeField] ParticleSystem gunFlash;
+        public LayerMask layer;
 
         private void Awake()
         {
@@ -46,6 +47,9 @@ namespace myTest
             playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
+            //var coll = gunFlash.collision;
+            //coll.enabled = true;
+
         }
         //public void OnTriggerEnter(Collider other)
         //{
@@ -69,7 +73,7 @@ namespace myTest
                 Destroy(characterController);
                 Destroy(playerCanvas);
                 weapon.layer = 0;
-                //Destroy(weapon);
+
             }
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -77,7 +81,7 @@ namespace myTest
         public void Update()
         {
             if (!photonView.IsMine) return;
-         //   if (player.isDead) return;
+            //   if (player.isDead) return;
             if (!characterController.enabled) return;
             if (Input.GetKeyDown("k"))
             {
@@ -85,19 +89,58 @@ namespace myTest
                 GameObject.Find("GameManager").GetComponent<Match>().activeDeathUI();
             }
             Look();
+           // if (Input.GetButtonDown("Fire")) { Shoot(); }
             InputHandler();
             GravityHandler();
             FootyNoise();
         }
 
+        public void Shoot()
+        {
 
-       
+           // gunFlash.Play();
+
+            Vector3 forward = weaponCamera.transform.TransformDirection(Vector3.forward) * 2;
+            //  Ray ray = Camera.main.ViewportPointToRay(forward);
+            Debug.DrawRay(playerCamera.transform.position, forward, Color.green);
+            RaycastHit hit;
+
+            if (Physics.Raycast(weaponCamera.transform.position + forward, weaponCamera.transform.position + forward * 10, out hit))
+            {
+                Debug.Log(" a enemy ? " + hit.transform.gameObject.name);
+                if (hit.collider.isTrigger == true)
+                {
+
+                    Debug.Log(" an enemy by trigger >>>> " + hit.transform.gameObject.name);
+                    PhotonNetwork.Destroy(hit.transform.gameObject);
+                }
+
+                if (hit.transform.gameObject.name == ("Zombie1"))
+                {
+                    Debug.Log(" an enemy by name >>>> " + hit.transform.gameObject.name);
+                    PhotonNetwork.Destroy(hit.transform.gameObject);
+
+                }
+                if (hit.transform.gameObject.name == ("Zombie2"))
+                {
+                    Debug.Log(" a enemy by name >>>> " + hit.transform.gameObject.name);
+                    PhotonNetwork.Destroy(hit.transform.gameObject);
+
+                }
+
+
+
+
+            }
+
+        }
+
         private void InputHandler()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
             float inputVertical = Input.GetAxis("Vertical");
             bool inputJump = Input.GetButtonDown("Jump");
-            bool inputShot = Input.GetButtonDown("Fire");
+
             bool lostFooting = false;
 
             if (characterController.isGrounded)
@@ -126,10 +169,7 @@ namespace myTest
                 lostFooting = true;
             }
 
-            if (inputShot) {
-                Debug.Log("pew pew");
-                gunFlash.Play();
-            }
+
             if (lostFooting) velocityAtJump = moveSpeed;
             moveDirection = new Vector3(inputHorizontal, 0, inputVertical);
             if (moveDirection.magnitude > 1) moveDirection = moveDirection.normalized;
@@ -141,16 +181,18 @@ namespace myTest
             characterController.Move(moveDirection);
         }
 
-       
+
         private void FootyNoise()
         {
             float inputHorizontal = Input.GetAxis("Horizontal");
             float inputVertical = Input.GetAxis("Vertical");
             footTimer += Time.deltaTime;
 
-            if(characterController.isGrounded && footTimer > 0.5f ){
-                if(inputHorizontal > 0 || inputVertical > 0){
-                    Debug.Log("The foot noise comith");
+            if (characterController.isGrounded && footTimer > 0.5f)
+            {
+                if (inputHorizontal > 0 || inputVertical > 0)
+                {
+                    //    Debug.Log("The foot noise comith");
                     FMODUnity.RuntimeManager.PlayOneShot(footSteps);
                     footTimer = 0.0f;
                 }
