@@ -533,11 +533,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1627729936789749113}
     m_Modifications:
-    - target: {fileID: 1504173477516857525, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2255251690002432484, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
         type: 3}
       propertyPath: m_RootOrder
@@ -597,11 +592,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Held M4 Carbine
-      objectReference: {fileID: 0}
-    - target: {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
-        type: 3}
-      propertyPath: fireRate
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
         type: 3}

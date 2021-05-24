@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 887217711958912038}
   - component: {fileID: 2773248835123475}
   - component: {fileID: 4887225128524833500}
+  - component: {fileID: 6229216345096142820}
   m_Layer: 0
   m_Name: Survivor1(Clone)
   m_TagString: Player
@@ -347,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8792b3b5d599b4c8d5d0282acb07e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
+  camera: {fileID: 7862951427916630799}
   CameraManager: {fileID: 0}
   graphics: {fileID: 2581145484998277494}
   survivorGraphics: {fileID: 2581145484998277494}
@@ -400,10 +401,11 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
   - {fileID: 2773248835123475}
   - {fileID: 4887225128524833500}
+  - {fileID: 6229216345096142820}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -494,6 +496,25 @@ MonoBehaviour:
     LayerIndex: 0
   - SynchronizeType: 1
     LayerIndex: 1
+--- !u!114 &6229216345096142820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2581145484998277494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5504b815bf346a78346e844a92ac39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunDamage: 1
+  fireRate: 0.1
+  weaponRange: 50
+  hitforce: 100
+  gunEnd: {fileID: 3772037543859540925}
+  gunFlash: {fileID: 2639562743096539008}
+  playerCamera: {fileID: 7862951427916630799}
 --- !u!1 &3271426416573589792
 GameObject:
   m_ObjectHideFlags: 0
@@ -2124,15 +2145,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f17f566331aec4419b37c1960e5c98e, type: 3}
---- !u!224 &2274475825515826828 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2255283323273562680, guid: 2f17f566331aec4419b37c1960e5c98e,
-    type: 3}
-  m_PrefabInstance: {fileID: 62187886589559988}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2274475825515826831 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2255283323273562683, guid: 2f17f566331aec4419b37c1960e5c98e,
+    type: 3}
+  m_PrefabInstance: {fileID: 62187886589559988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &2274475825515826828 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2255283323273562680, guid: 2f17f566331aec4419b37c1960e5c98e,
     type: 3}
   m_PrefabInstance: {fileID: 62187886589559988}
   m_PrefabAsset: {fileID: 0}
@@ -2301,10 +2322,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
         type: 3}
+      propertyPath: gunEnd
+      value: 
+      objectReference: {fileID: 3772037543859540925}
+    - target: {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+        type: 3}
+      propertyPath: gunFlash
+      value: 
+      objectReference: {fileID: 2639562743096539008}
+    - target: {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+        type: 3}
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 7862951427916630799}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4dcb2d665a5cb884ba0541eb4136ed30, type: 3}
 --- !u!1 &3842847168062447842 stripped
 GameObject:
@@ -2315,6 +2347,18 @@ GameObject:
 --- !u!4 &3842847168062717158 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2255251690002432484, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+    type: 3}
+  m_PrefabInstance: {fileID: 3033396815720332546}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3772037543859540925 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2179797728725364415, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+    type: 3}
+  m_PrefabInstance: {fileID: 3033396815720332546}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2639562743096539008 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1060973751653386882, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
     type: 3}
   m_PrefabInstance: {fileID: 3033396815720332546}
   m_PrefabAsset: {fileID: 0}

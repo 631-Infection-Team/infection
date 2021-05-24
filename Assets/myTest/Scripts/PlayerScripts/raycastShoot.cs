@@ -2,9 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-public class raycastShoot : MonoBehaviourPun
+
+namespace myTest
 {
 
+public class raycastShoot : MonoBehaviourPunCallbacks, IPunObservable
+{
+    #region IPunObservable implementation
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting && photonView.IsMine == true)
+        {
+        // We own this player: send the others our data
+        stream.SendNext(IsFiring);
+        stream.SendNext(player.health);
+        }
+        else
+        {
+        // Network player, receive data
+        this.IsFiring = (bool)stream.ReceiveNext();
+        this.player.health = (int)stream.ReceiveNext();
+        }
+    }
+    #endregion
+
+
+    bool IsFiring;
     public int gunDamage = 1;
     public float fireRate = .1f;
     public float weaponRange = 50f;
@@ -15,6 +39,7 @@ public class raycastShoot : MonoBehaviourPun
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f);
   //  private LineRenderer laserLine;
     private float nextFire;
+    private Player1 player;
 
     void Start()
     {
@@ -22,18 +47,29 @@ public class raycastShoot : MonoBehaviourPun
         {
             return;
         }
+        player = GetComponent<Player1>();
        // laserLine = GetComponent<LineRenderer>();
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire") ) {
-            gunFlash.Play();
-        //    nextFire = Time.deltaTime + fireRate;
-            //StartCoroutine(ShotEffect());
-            Shoot(); 
-        
-        }
+         if (Input.GetButtonDown("Fire"))
+            {
+                if (!IsFiring)
+                {
+                     gunFlash.Play();
+                    Shoot(); 
+                    IsFiring = true;
+                }
+            }
+            if (Input.GetButtonUp("Fire"))
+            {
+                if (IsFiring)
+                {
+                    IsFiring = false;
+                }
+            }
+     
     }
 
     private IEnumerator ShotEffect()
@@ -42,6 +78,7 @@ public class raycastShoot : MonoBehaviourPun
         yield return shotDuration;
        // laserLine.enabled = false;
     }
+
     public void Shoot()
     {
 
@@ -52,13 +89,18 @@ public class raycastShoot : MonoBehaviourPun
         RaycastHit hit;
 
        // laserLine.SetPosition(0, gunEnd.position);
-        if (Physics.Raycast(rayOrigin, playerCamera.transform.forward, out hit, weaponRange))
+        if(Physics.Raycast(rayOrigin, playerCamera.transform.forward, out hit, weaponRange))
         {
          //   laserLine.SetPosition(1, hit.point);
 
             EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+             Player1 enemyPlayer = hit.collider.GetComponent<Player1>();
 
-            if (enemyHealth != null)
+             if(enemyPlayer != null){
+
+                 enemyPlayer.photonView.RPC("Damage", RpcTarget.All, gunDamage);
+             }
+            else if (enemyHealth != null)
             {
                 Debug.Log("enemy health deducted");
                 enemyHealth.DeductHealth(gunDamage);
@@ -68,10 +110,20 @@ public class raycastShoot : MonoBehaviourPun
                 hit.rigidbody.AddForce(-hit.normal * hitforce);
             }
         }
+    }
        // else {
            // laserLine.SetPosition(1, rayOrigin + (playerCamera.transform.forward * weaponRange));
        // }
-            
+        [PunRPC]
+        void Damage(int gunDamage, PhotonMessageInfo info)
+        {
 
+            if(photonView.IsMine){ player.health =-gunDamage;}
+            // the photonView.RPC() call is the same as without the info parameter.
+            // the info.Sender is the player who called the RPC.
+            
+        }
+
+    
     }
 }

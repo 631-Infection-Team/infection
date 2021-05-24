@@ -67,5 +67,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2775958903744312333, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 73a45715cf4fa0c42ad1ee1f477567c5, type: 3}
