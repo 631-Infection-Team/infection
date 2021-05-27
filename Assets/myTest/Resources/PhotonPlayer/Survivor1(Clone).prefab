@@ -2182,15 +2182,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f17f566331aec4419b37c1960e5c98e, type: 3}
---- !u!1 &2274475825515826831 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2255283323273562683, guid: 2f17f566331aec4419b37c1960e5c98e,
-    type: 3}
-  m_PrefabInstance: {fileID: 62187886589559988}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2274475825515826828 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2255283323273562680, guid: 2f17f566331aec4419b37c1960e5c98e,
+    type: 3}
+  m_PrefabInstance: {fileID: 62187886589559988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2274475825515826831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2255283323273562683, guid: 2f17f566331aec4419b37c1960e5c98e,
     type: 3}
   m_PrefabInstance: {fileID: 62187886589559988}
   m_PrefabAsset: {fileID: 0}
@@ -2372,8 +2372,8 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 7862951427916630799}
-    m_RemovedComponents:
-    - {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30, type: 3}
+    m_RemovedComponents: [{fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+        type: 3}]
   m_SourcePrefab: {fileID: 100100000, guid: 4dcb2d665a5cb884ba0541eb4136ed30, type: 3}
 --- !u!1 &3842847168062447842 stripped
 GameObject:
