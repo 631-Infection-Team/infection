@@ -90,6 +90,7 @@ namespace myTest
                     if(PhotonNetwork.PlayerList[0].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {
                         PhotonNetwork.Instantiate(Path.Combine("PhotonPlayer", "Survivor1(Clone)"), new Vector3(-20f, 3f, -15f), Quaternion.identity, 0);
+               
                     }
                     else if (PhotonNetwork.PlayerList[1].UserId == PhotonNetwork.LocalPlayer.UserId)
                     {

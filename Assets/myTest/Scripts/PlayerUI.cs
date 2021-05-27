@@ -45,7 +45,7 @@ namespace myTest
 
 		private Animation _timerAnim = null;
 
-		PlayerManager target;
+		Player1 target;
 
 		float characterControllerHeight;
 
@@ -131,11 +131,11 @@ namespace myTest
 
 
 			// Reflect the Player Health
-			/*
+			
 			if (playerHealthSlider != null) {
-				playerHealthSlider.value = target.Health;
+				playerHealthSlider.value = target.health;
 			}
-			*/
+			
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace myTest
 		/// Assigns a Player Target to Follow and represent.
 		/// </summary>
 		/// <param name="target">Target.</param>
-		public void SetTarget(PlayerManager _target){
+		public void SetTarget(Player1 _target){
 
 			if (_target == null) {
 				Debug.LogError("<Color=Red><b>Missing</b></Color> PlayMakerManager target for PlayerUI.SetTarget.", this);

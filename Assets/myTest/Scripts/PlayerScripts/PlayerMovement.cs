@@ -15,7 +15,7 @@ namespace myTest
         public string footSteps;
 
         [Header("Components")]
-        // public Player1 player;
+        
         public CharacterController characterController;
         private PhotonView photonView;
         [Header("Movement")]
@@ -38,7 +38,11 @@ namespace myTest
         [SerializeField] GameObject playerCanvas;
         [SerializeField] GameObject weapon;
         [SerializeField] Text playerName;
-    //    [SerializeField] ParticleSystem gunFlash;
+        
+        [SerializeField]
+        private float directionDampTime = .25f;
+        [SerializeField] public Animator animator;
+
         public LayerMask layer;
 
         private void Awake()
@@ -47,6 +51,11 @@ namespace myTest
             playerName.text = PlayerUserName;
             characterController = GetComponent<CharacterController>();
             photonView = GetComponent<PhotonView>();
+            animator = GetComponent<Animator>();
+            if (!animator)
+            {
+                Debug.LogError("PlayerAnimatorManager is Missing Animator Component", this);
+            }
             //var coll = gunFlash.collision;
             //coll.enabled = true;
 
@@ -89,51 +98,13 @@ namespace myTest
                 GameObject.Find("GameManager").GetComponent<Match>().activeDeathUI();
             }
             Look();
-           // if (Input.GetButtonDown("Fire")) { Shoot(); }
+          
             InputHandler();
             GravityHandler();
             FootyNoise();
         }
 
-        public void Shoot()
-        {
-
-           // gunFlash.Play();
-
-            Vector3 forward = weaponCamera.transform.TransformDirection(Vector3.forward) * 2;
-            //  Ray ray = Camera.main.ViewportPointToRay(forward);
-            Debug.DrawRay(playerCamera.transform.position, forward, Color.green);
-            RaycastHit hit;
-
-            if (Physics.Raycast(weaponCamera.transform.position + forward, weaponCamera.transform.position + forward * 10, out hit))
-            {
-                Debug.Log(" a enemy ? " + hit.transform.gameObject.name);
-                if (hit.collider.isTrigger == true)
-                {
-
-                    Debug.Log(" an enemy by trigger >>>> " + hit.transform.gameObject.name);
-                    PhotonNetwork.Destroy(hit.transform.gameObject);
-                }
-
-                if (hit.transform.gameObject.name == ("Zombie1"))
-                {
-                    Debug.Log(" an enemy by name >>>> " + hit.transform.gameObject.name);
-                    PhotonNetwork.Destroy(hit.transform.gameObject);
-
-                }
-                if (hit.transform.gameObject.name == ("Zombie2"))
-                {
-                    Debug.Log(" a enemy by name >>>> " + hit.transform.gameObject.name);
-                    PhotonNetwork.Destroy(hit.transform.gameObject);
-
-                }
-
-
-
-
-            }
-
-        }
+       
 
         private void InputHandler()
         {
@@ -161,9 +132,11 @@ namespace myTest
                     }
                 }
             }
-
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (isGrounded && inputJump)
             {
+               
+                animator.SetTrigger("Jump");
                 verticalVelocity = jumpSpeed;
                 isGrounded = false;
                 lostFooting = true;

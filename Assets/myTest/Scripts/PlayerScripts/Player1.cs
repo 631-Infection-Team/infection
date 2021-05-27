@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 using Photon.Pun;
-
+using System.Collections;
 
 namespace myTest
 {
@@ -9,7 +9,7 @@ namespace myTest
     public class Player1 : MonoBehaviourPun
     {
         public static GameObject LocalPlayerInstance;
-        private PhotonView photonView;
+       
    
         
         public new Camera camera;
@@ -19,9 +19,11 @@ namespace myTest
         public GameObject zombieGraphics;
         public GameObject hud;
 
+        private Animator playerAnim; 
+
         [Header("Health")]
-        [SerializeField] public int health = 100;
-        [SerializeField] private int maxHealth = 100;
+        [SerializeField] public int health = 10;
+        [SerializeField] private int maxHealth = 10;
          public bool isDead = false;
 
 
@@ -37,6 +39,17 @@ namespace myTest
         //    Cursor.lockState = CursorLockMode.Locked;
         //    Cursor.visible = false;
         //}
+
+        public void Awake()
+        {
+
+            if (photonView.IsMine)
+            {
+                Player1.LocalPlayerInstance = this.gameObject;
+            }
+
+            DontDestroyOnLoad(this.gameObject);
+        }
         void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadingMode)
         {
             this.CalledOnLevelWasLoaded(scene.buildIndex);
@@ -48,22 +61,15 @@ namespace myTest
             {
                 transform.position = new Vector3(0f, 5f, 0f);
             }
-          //  GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
-            //_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
         }
 
 
-        public void Awake()
-        {
-            if (photonView.IsMine)
-            {
-                PlayerManager.LocalPlayerInstance = this.gameObject;
-            }
-            DontDestroyOnLoad(this.gameObject);
-        }
+       
         public void Start()
         {
+            SetDefaults();
             PlayerCamera playerCamera = this.gameObject.GetComponent<PlayerCamera>();
+            playerAnim = this.gameObject.GetComponent<Animator>();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
@@ -71,7 +77,6 @@ namespace myTest
         {
             if (photonView.IsMine)
             {
-             //   this.ProcessInputs();
                 if (health <= 0f)
                 {
                     GameManager.Instance.LeaveRoom();
@@ -91,36 +96,6 @@ namespace myTest
             }
         }
 
-        //public void Heal(int amount = 100)
-        //{
-        //    health = Mathf.Clamp(health + amount, 0, maxHealth);
-        //}
-
-        //public void TakeDamage(int amount, uint sourceID)
-        //{
-        //    health = Mathf.Clamp(health -= amount, 0, maxHealth);
-        
-
-        //    if (health <= 0)
-        //    {
-        //        if (team == Team.SURVIVOR)
-        //        {
-
-        //            SetDefaults();
-        //        }
-        //        else
-        //        {
-        //            Death(sourceID);
-        //        }
-        //    }
-        //}
-
-        //public void Freeze()
-        //{
-        //    weapon.enabled = false;
-        //    infectedWeapon.enabled = false;
-        //    pickupBehavior.enabled = false;
-        //}
 
         private void SetDefaults()
         {
@@ -128,14 +103,59 @@ namespace myTest
             isDead = false;
         }
 
-        //private void Death(uint sourceID)
-        //{
-        //    health = 0;
-        //    isDead = true;
+        [PunRPC]
+        public void TakeDamage(int amount, string enemyName)
+        {
+            if (isDead) return;
+            if (photonView.IsMine)
+            {
+                playerAnim.SetTrigger("hit");
+                health -= amount;
+                Debug.Log("HEALTH" + health);
+                if (health <= 0)
+                {
+                    
+                    this.photonView.RPC("Death", RpcTarget.All, enemyName);
+                }
+              
+            }
+        
+        }
 
-        //    RpcOnDeath();
-        //}
+        /// <summary>
+        /// RPC function to declare death of player.
+        /// </summary>
+        /// <param name="enemyName">Enemy's name who cause this player's death.</param>
+        [PunRPC]
+        void Death(string enemyName)
+        {
+            isDead = true;
 
+            if (photonView.IsMine)
+            {
+                playerAnim.SetBool("Death_b", true);
+                StartCoroutine("DestroyPlayer");
+            }
+            
+        }
 
+        IEnumerator DestroyPlayer(float delayTime)
+        {
+            Debug.Log("destroying player");
+            yield return new WaitForSeconds(delayTime);
+            playerAnim.SetInteger("DeathType_int", 2);
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(health);
+            }
+            else
+            {
+                health = (int)stream.ReceiveNext();
+            }
+        }
     }
 }

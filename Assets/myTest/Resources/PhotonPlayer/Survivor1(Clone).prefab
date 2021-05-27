@@ -221,10 +221,11 @@ GameObject:
   - component: {fileID: 6980358002846860768}
   - component: {fileID: 2947481972445142805}
   - component: {fileID: 6054926849289151878}
+  - component: {fileID: 6229216345096142820}
+  - component: {fileID: 7029951016932134987}
   - component: {fileID: 887217711958912038}
   - component: {fileID: 2773248835123475}
   - component: {fileID: 4887225128524833500}
-  - component: {fileID: 6229216345096142820}
   m_Layer: 0
   m_Name: Survivor1(Clone)
   m_TagString: Player
@@ -261,7 +262,7 @@ Animator:
   m_GameObject: {fileID: 2581145484998277494}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f42af7d2aef2a0c44889171330a6e1a1, type: 3}
-  m_Controller: {fileID: 9100000, guid: f297797635a2b7445ad2ea55cec7353b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5097000c9e692bd439cecf4537125fbd, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -354,8 +355,9 @@ MonoBehaviour:
   survivorGraphics: {fileID: 2581145484998277494}
   zombieGraphics: {fileID: 0}
   hud: {fileID: 0}
-  health: 100
-  maxHealth: 100
+  playerAnim: {fileID: 0}
+  health: 10
+  maxHealth: 10
   isDead: 0
 --- !u!114 &6054926849289151878
 MonoBehaviour:
@@ -384,6 +386,39 @@ MonoBehaviour:
   layer:
     serializedVersion: 2
     m_Bits: 512
+--- !u!114 &6229216345096142820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2581145484998277494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5504b815bf346a78346e844a92ac39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunDamage: 1
+  fireRate: 0.1
+  weaponRange: 50
+  hitforce: 100
+  gunEnd: {fileID: 3772037543859540925}
+  gunFlash: {fileID: 2639562743096539008}
+  playerCamera: {fileID: 7862951427916630799}
+--- !u!114 &7029951016932134987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2581145484998277494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243d3eb0f26541a41a5c9c57d9e85d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directionDampTime: 0.25
+  animator: {fileID: 5814538901914849402}
 --- !u!114 &887217711958912038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,7 +459,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_UseLocal: 0
 --- !u!114 &4887225128524833500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,81 +475,83 @@ MonoBehaviour:
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
   m_SynchronizeParameters:
-  - Type: 1
-    SynchronizeType: 1
-    Name: MoveSpeed
-  - Type: 9
-    SynchronizeType: 1
-    Name: Jump
-  - Type: 9
-    SynchronizeType: 1
-    Name: Land
-  - Type: 9
-    SynchronizeType: 0
-    Name: Pickup
-  - Type: 9
-    SynchronizeType: 0
-    Name: PickupFast
   - Type: 4
     SynchronizeType: 0
     Name: Grounded
+  - Type: 1
+    SynchronizeType: 0
+    Name: Speed_f
+  - Type: 3
+    SynchronizeType: 0
+    Name: Animation_int
+  - Type: 4
+    SynchronizeType: 0
+    Name: Death_b
+  - Type: 4
+    SynchronizeType: 0
+    Name: Jump_b
+  - Type: 4
+    SynchronizeType: 0
+    Name: Crouch_b
+  - Type: 3
+    SynchronizeType: 0
+    Name: WeaponType_int
+  - Type: 4
+    SynchronizeType: 0
+    Name: FullAuto_b
+  - Type: 4
+    SynchronizeType: 0
+    Name: Shoot_b
   - Type: 9
     SynchronizeType: 0
-    Name: ButtonPress
+    Name: Shoot_t
+  - Type: 4
+    SynchronizeType: 0
+    Name: Reload_b
   - Type: 9
     SynchronizeType: 0
-    Name: Throw
-  - Type: 9
+    Name: Reload_t
+  - Type: 4
     SynchronizeType: 0
-    Name: Win
-  - Type: 9
+    Name: Static_b
+  - Type: 1
     SynchronizeType: 0
-    Name: Lose
-  - Type: 9
+    Name: Head_Horizontal_f
+  - Type: 1
     SynchronizeType: 0
-    Name: Lose2
-  - Type: 9
+    Name: Head_Vertical_f
+  - Type: 1
     SynchronizeType: 0
-    Name: Wave
-  - Type: 9
+    Name: Blend(DontTouch)
+  - Type: 3
     SynchronizeType: 0
-    Name: No
-  - Type: 9
+    Name: DeathType_int
+  - Type: 1
     SynchronizeType: 0
-    Name: Shrug
-  - Type: 9
+    Name: Body_Vertical_f
+  - Type: 1
     SynchronizeType: 0
-    Name: Yes
-  - Type: 9
+    Name: Body_Horizontal_f
+  - Type: 3
     SynchronizeType: 0
-    Name: Conversation
-  - Type: 9
-    SynchronizeType: 0
-    Name: Dance
+    Name: MeleeType_int
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
   - SynchronizeType: 1
     LayerIndex: 1
---- !u!114 &6229216345096142820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2581145484998277494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5504b815bf346a78346e844a92ac39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gunDamage: 1
-  fireRate: 0.1
-  weaponRange: 50
-  hitforce: 100
-  gunEnd: {fileID: 3772037543859540925}
-  gunFlash: {fileID: 2639562743096539008}
-  playerCamera: {fileID: 7862951427916630799}
+  - SynchronizeType: 0
+    LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
+  - SynchronizeType: 0
+    LayerIndex: 5
+  - SynchronizeType: 0
+    LayerIndex: 6
+  - SynchronizeType: 0
+    LayerIndex: 7
 --- !u!1 &3271426416573589792
 GameObject:
   m_ObjectHideFlags: 0
