@@ -3265,6 +3265,7 @@ GameObject:
   - component: {fileID: 3140301717197427998}
   - component: {fileID: 1915891855205659042}
   - component: {fileID: 6790696996728093388}
+  - component: {fileID: 6559213576874836944}
   - component: {fileID: 3862155182957319005}
   - component: {fileID: 1595746756228018026}
   - component: {fileID: 2313505507189331557}
@@ -3304,7 +3305,7 @@ Animator:
   m_GameObject: {fileID: 8489934461504641706}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f42af7d2aef2a0c44889171330a6e1a1, type: 3}
-  m_Controller: {fileID: 9100000, guid: f297797635a2b7445ad2ea55cec7353b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5097000c9e692bd439cecf4537125fbd, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3403,6 +3404,8 @@ MonoBehaviour:
   playerCanvas: {fileID: 8474959199625120459}
   weapon: {fileID: 0}
   playerName: {fileID: 7042915375642985983}
+  directionDampTime: 0.25
+  animator: {fileID: 6747314441001653800}
   layer:
     serializedVersion: 2
     m_Bits: 0
@@ -3418,15 +3421,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8792b3b5d599b4c8d5d0282acb07e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
-  CameraManager: {fileID: 0}
+  camera: {fileID: 2895470458923617983}
+  CameraManager: {fileID: 5594997553891802408}
   graphics: {fileID: 8489934461504641706}
   survivorGraphics: {fileID: 8489934461504641706}
   zombieGraphics: {fileID: 0}
   hud: {fileID: 0}
-  health: 100
-  maxHealth: 100
+  health: 10
+  maxHealth: 10
   isDead: 0
+--- !u!114 &6559213576874836944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8489934461504641706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5504b815bf346a78346e844a92ac39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunDamage: 1
+  fireRate: 0.1
+  weaponRange: 50
+  hitforce: 100
+  gunEnd: {fileID: 5356803471949448785}
+  gunFlash: {fileID: 6534252592968557164}
+  playerCamera: {fileID: 2895470458923617983}
 --- !u!114 &3862155182957319005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3446,6 +3468,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 6559213576874836944}
   - {fileID: 1595746756228018026}
   - {fileID: 2313505507189331557}
   sceneViewId: 2
@@ -3482,62 +3505,83 @@ MonoBehaviour:
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
   m_SynchronizeParameters:
-  - Type: 1
-    SynchronizeType: 1
-    Name: MoveSpeed
-  - Type: 9
-    SynchronizeType: 1
-    Name: Jump
-  - Type: 9
-    SynchronizeType: 1
-    Name: Land
-  - Type: 9
-    SynchronizeType: 0
-    Name: Pickup
-  - Type: 9
-    SynchronizeType: 0
-    Name: PickupFast
   - Type: 4
     SynchronizeType: 0
     Name: Grounded
+  - Type: 1
+    SynchronizeType: 0
+    Name: Speed_f
+  - Type: 3
+    SynchronizeType: 0
+    Name: Animation_int
+  - Type: 4
+    SynchronizeType: 0
+    Name: Death_b
+  - Type: 4
+    SynchronizeType: 0
+    Name: Jump_b
+  - Type: 4
+    SynchronizeType: 0
+    Name: Crouch_b
+  - Type: 3
+    SynchronizeType: 0
+    Name: WeaponType_int
+  - Type: 4
+    SynchronizeType: 0
+    Name: FullAuto_b
+  - Type: 4
+    SynchronizeType: 0
+    Name: Shoot_b
   - Type: 9
     SynchronizeType: 0
-    Name: ButtonPress
+    Name: Shoot_t
+  - Type: 4
+    SynchronizeType: 0
+    Name: Reload_b
   - Type: 9
     SynchronizeType: 0
-    Name: Throw
-  - Type: 9
+    Name: Reload_t
+  - Type: 4
     SynchronizeType: 0
-    Name: Win
-  - Type: 9
+    Name: Static_b
+  - Type: 1
     SynchronizeType: 0
-    Name: Lose
-  - Type: 9
+    Name: Head_Horizontal_f
+  - Type: 1
     SynchronizeType: 0
-    Name: Lose2
-  - Type: 9
+    Name: Head_Vertical_f
+  - Type: 1
     SynchronizeType: 0
-    Name: Wave
-  - Type: 9
+    Name: Blend(DontTouch)
+  - Type: 3
     SynchronizeType: 0
-    Name: No
-  - Type: 9
+    Name: DeathType_int
+  - Type: 1
     SynchronizeType: 0
-    Name: Shrug
-  - Type: 9
+    Name: Body_Vertical_f
+  - Type: 1
     SynchronizeType: 0
-    Name: Yes
-  - Type: 9
+    Name: Body_Horizontal_f
+  - Type: 3
     SynchronizeType: 0
-    Name: Conversation
-  - Type: 9
-    SynchronizeType: 0
-    Name: Dance
+    Name: MeleeType_int
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
   - SynchronizeType: 1
     LayerIndex: 1
+  - SynchronizeType: 0
+    LayerIndex: 2
+  - SynchronizeType: 0
+    LayerIndex: 3
+  - SynchronizeType: 0
+    LayerIndex: 4
+  - SynchronizeType: 0
+    LayerIndex: 5
+  - SynchronizeType: 0
+    LayerIndex: 6
+  - SynchronizeType: 0
+    LayerIndex: 7
 --- !u!1 &8593870443855024824
 GameObject:
   m_ObjectHideFlags: 0
@@ -3918,6 +3962,18 @@ PrefabInstance:
 --- !u!4 &5430005703248013578 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2255251690002432484, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+    type: 3}
+  m_PrefabInstance: {fileID: 6059314145008855278}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5356803471949448785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2179797728725364415, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
+    type: 3}
+  m_PrefabInstance: {fileID: 6059314145008855278}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6534252592968557164 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1060973751653386882, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
     type: 3}
   m_PrefabInstance: {fileID: 6059314145008855278}
   m_PrefabAsset: {fileID: 0}

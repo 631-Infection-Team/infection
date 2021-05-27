@@ -355,7 +355,6 @@ MonoBehaviour:
   survivorGraphics: {fileID: 2581145484998277494}
   zombieGraphics: {fileID: 0}
   hud: {fileID: 0}
-  playerAnim: {fileID: 0}
   health: 10
   maxHealth: 10
   isDead: 0
@@ -383,6 +382,8 @@ MonoBehaviour:
   playerCanvas: {fileID: 8191053600761894984}
   weapon: {fileID: 3842847168062447842}
   playerName: {fileID: 2274475824403551288}
+  directionDampTime: 0.25
+  animator: {fileID: 0}
   layer:
     serializedVersion: 2
     m_Bits: 512
@@ -2182,15 +2183,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f17f566331aec4419b37c1960e5c98e, type: 3}
---- !u!224 &2274475825515826828 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2255283323273562680, guid: 2f17f566331aec4419b37c1960e5c98e,
-    type: 3}
-  m_PrefabInstance: {fileID: 62187886589559988}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2274475825515826831 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2255283323273562683, guid: 2f17f566331aec4419b37c1960e5c98e,
+    type: 3}
+  m_PrefabInstance: {fileID: 62187886589559988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &2274475825515826828 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2255283323273562680, guid: 2f17f566331aec4419b37c1960e5c98e,
     type: 3}
   m_PrefabInstance: {fileID: 62187886589559988}
   m_PrefabAsset: {fileID: 0}
@@ -2372,8 +2373,8 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 7862951427916630799}
-    m_RemovedComponents: [{fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30,
-        type: 3}]
+    m_RemovedComponents:
+    - {fileID: 7854989535377661486, guid: 4dcb2d665a5cb884ba0541eb4136ed30, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4dcb2d665a5cb884ba0541eb4136ed30, type: 3}
 --- !u!1 &3842847168062447842 stripped
 GameObject:
