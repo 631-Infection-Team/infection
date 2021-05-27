@@ -7921,7 +7921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c089ef13041ab234ab90727807031857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayersPerRoom: 4
+  maxPlayersPerRoom: 5
   LobbyPanel: {fileID: 133710694}
   PlayerScrollView: {fileID: 560713764}
   WaitingText: {fileID: 748112087}
