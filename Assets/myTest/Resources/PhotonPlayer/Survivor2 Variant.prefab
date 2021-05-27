@@ -82,6 +82,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Survivor2 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4235729983373041094, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[5].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235729983373041094, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[6].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235729983373041094, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[9].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235729983373041094, guid: 0d00596e41815b345a1c3a58a6d68338,
+        type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[10].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4594916544140535334, guid: 0d00596e41815b345a1c3a58a6d68338,
         type: 3}
       propertyPath: m_AnchorMax.x

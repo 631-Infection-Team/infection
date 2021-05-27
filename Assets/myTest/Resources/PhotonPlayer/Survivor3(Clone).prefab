@@ -3222,6 +3222,7 @@ GameObject:
   - component: {fileID: 5550703018457512830}
   - component: {fileID: 4571828175730449601}
   - component: {fileID: 6447913601573606872}
+  - component: {fileID: 84772706587098167}
   - component: {fileID: 88212296605878002}
   - component: {fileID: 4091076862534811766}
   - component: {fileID: 2409780071412619606}
@@ -3229,7 +3230,7 @@ GameObject:
   - component: {fileID: 4288642066640939251}
   m_Layer: 0
   m_Name: Survivor3(Clone)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3309,7 +3310,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8152987785078841577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 687b6426f704a644d8727ee8b434819e, type: 3}
   m_Name: 
@@ -3333,7 +3334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   footSteps: event:/Player/SFX/Footsteps
-  characterController: {fileID: 0}
+  characterController: {fileID: 84772706587098167}
   isGrounded: 0
   mouseSensitivity: 100
   playerBody: {fileID: 554581515404332358}
@@ -3349,6 +3350,24 @@ MonoBehaviour:
   layer:
     serializedVersion: 2
     m_Bits: 0
+--- !u!143 &84772706587098167
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152987785078841577}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &88212296605878002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3449,19 +3468,19 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: Grounded
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Speed_f
   - Type: 3
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Animation_int
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Death_b
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Jump_b
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Crouch_b
   - Type: 3
     SynchronizeType: 0
@@ -3470,7 +3489,7 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: FullAuto_b
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Shoot_b
   - Type: 9
     SynchronizeType: 0
